@@ -1,0 +1,26 @@
+version: '2'
+services:
+  db:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=C4FYD4k3WTAypfQ
+      - POSTGRES_USER=postgres
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      args:
+        VERSION: "0.0.1"
+    ports:
+      - "8080:4000"
+    links:
+      - db:db
+    depends_on:
+      - db
+    environment:
+      - MIX_ENV=prod
+      - PORT=4000

@@ -36,6 +36,8 @@ defmodule Newline.Mixfile do
       :postgrex,
       :absinthe,
       :absinthe_plug,
+      :absinthe_ecto,
+      :ja_serializer,
       :comeonin,
       :bamboo,
       :ueberauth,

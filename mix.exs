@@ -35,11 +35,14 @@ defmodule Newline.Mixfile do
       :phoenix_ecto,
       :postgrex,
       :absinthe,
+      :absinthe_plug,
+      :comeonin,
       :bamboo,
       :ueberauth,
       :guardian,
       :corsica,
-      :timex
+      :timex,
+      :timex_ecto
     ]
   end
 
@@ -78,7 +81,9 @@ defmodule Newline.Mixfile do
       {:comeonin, "~> 3.0"},
       {:bamboo, "~> 0.8.0"},
       {:poison, "~> 2.0"},
-      {:ja_serializer, "~> 0.12.0"}
+      {:ja_serializer, "~> 0.12.0"},
+      {:distillery, "~> 1.3"},
+      {:mix_docker, "~> 0.4.2"}
     ]
   end
 

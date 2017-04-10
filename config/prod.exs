@@ -22,6 +22,28 @@ config :logger, level: :info
 config :newline, Newline.Mailer,
   adapter: Bamboo.LocalAdapter
 
+config :tzdata, :autoupdate, :disabled
+
+config :guardian, Guardian,
+  allowed_algos: ["HS512"], # optional
+  verify_module: Guardian.JWT,  # optional
+  issuer: "Micro.#{Mix.env}",
+  ttl: { 30, :days },
+  verify_issuer: true, # optional
+  secret_key: to_string(Mix.env) <> "883z8H+L7TzqHAWozJ3lIORLjViEHH+ZfbOtll8Y7+afbASpdfZzp7gkgUzAKqAP",
+  serializer: Newline.GuardianSerializer,
+  permissions: %{default: [:read, :write]}
+
+config :newline, Newline.Endpoint,
+  secret_key_base: "${SECRET_KEY_BASE}",
+  render_errors: [view: Newline.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: Newline.PubSub,
+           adapter: Phoenix.PubSub.PG2],
+  server: true,
+  # use {:system, var} if library supports it
+  http: [port: {:system, "PORT"}],  
+  # use ${VAR} syntax to replace config on startup
+  url: [ host: "${HOST}", port: {:system, "PORT"} ]  
 
 # ## SSL Support
 #

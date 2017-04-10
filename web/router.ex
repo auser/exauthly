@@ -46,12 +46,12 @@ defmodule Newline.Router do
     forward "/", Absinthe.Plug, schema: Newline.Schema
   end
 
-  if Mix.env == :dev do
+  # if Mix.env == :dev do
     scope "/graphiql" do
       pipe_through [:api, :bearer_auth, :gql_context]
       forward "/", Absinthe.Plug.GraphiQL, schema: Newline.Schema
     end
-  end
+  # end
 
   scope "/api", Newline do
     pipe_through [:api, :bearer_auth, :current_user]

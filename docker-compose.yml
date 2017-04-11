@@ -9,6 +9,7 @@ services:
       - POSTGRES_USER=postgres
     volumes:
       - ./data:/var/lib/postgresql/data
+    restart: always
 
   app:
     build:
@@ -24,3 +25,4 @@ services:
     environment:
       - MIX_ENV=prod
       - PORT=4000
+    restart: always

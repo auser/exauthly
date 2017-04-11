@@ -12,4 +12,4 @@ RUN chown -R default ./releases
 
 USER default
 
-ENTRYPOINT ["/opt/app/bin/newline"]
+CMD ["/opt/app/bin/newline", "foreground"]

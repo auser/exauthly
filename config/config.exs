@@ -17,6 +17,17 @@ config :newline, Newline.Endpoint,
   pubsub: [name: Newline.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
+config :guardian, Guardian,
+  allowed_algos: ["HS512"], # optional
+  verify_module: Guardian.JWT,  # optional
+  issuer: "Micro.#{Mix.env}",
+  ttl: { 30, :days },
+  verify_issuer: true, # optional
+  secret_key: to_string(Mix.env) <> "883z8H+L7TzqHAWozJ3lIORLjViEHH+ZfbOtll8Y7+afbASpdfZzp7gkgUzAKqAP",
+  serializer: Newline.GuardianSerializer,
+  permissions: %{default: [:read, :write]}
+  
+  
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

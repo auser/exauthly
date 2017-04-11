@@ -55,6 +55,11 @@ defmodule Newline.Mixfile do
   # Specifies your project dependencies.
   #
   # Type `mix help deps` for examples and options.
+  defp deps(:test) do
+    deps(:dev) ++ [
+      {:ex_machina, "~> 2.0"}
+    ]
+  end
   defp deps(:dev) do
     deps(:all) ++ [
       {:remix, "~> 0.0"}

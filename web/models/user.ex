@@ -22,6 +22,15 @@ defmodule Newline.User do
     timestamps()
   end
 
+    @doc """
+  Builds a changeset based on the `struct` and `params`.
+  """
+  def changeset(struct, params \\ %{}) do
+    struct
+    |> cast(params, [:first_name, :last_name, :email])
+    |> validate_required([:email])
+  end
+
   # When a user signs up
   def signup_changeset(user, params \\ %{}) do
     user
@@ -30,6 +39,24 @@ defmodule Newline.User do
     |> update_change(:email, &String.downcase/1)
     |> validate_email_format(:email)
     |> unique_constraint(:email, message: "Email already taken")
+    |> validate_length(:password, min: 5, max: 128)
+    |> generate_encrypted_password
+  end
+
+  # When a user requests a password reset
+  def reset_password_request_changeset(user, params \\ %{}) do
+    user
+    |> cast(params, [:email])
+    |> validate_required([:email])
+    |> put_change(:password_reset_timestamp, Timex.now)
+    |> put_token(:password_reset_token)
+  end
+
+  # When a user comes back with a token
+  def reset_password_changeset(user, params \\ %{}) do
+    user
+    |> cast(params, [:password])
+    |> validate_required([:password])
     |> validate_length(:password, min: 5, max: 128)
     |> generate_encrypted_password
   end
@@ -64,5 +91,24 @@ defmodule Newline.User do
       _ ->
         current_changeset
     end
+  end
+
+  # Token
+  defp put_token(changeset, field) do
+    case changeset do
+      %Ecto.Changeset{valid?: true} ->
+        # Valid changeset
+        token = generate_token()
+        put_change(changeset, field, token)
+      _ ->
+        changeset
+    end
+  end
+
+  defp generate_token do
+    50
+    |> :crypto.strong_rand_bytes
+    |> Base.url_encode64
+    |> binary_part(0, 50)
   end
 end

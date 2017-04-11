@@ -13,16 +13,6 @@ config :newline, Newline.Endpoint,
   check_origin: false,
   watchers: []
 
-config :guardian, Guardian,
-  allowed_algos: ["HS512"], # optional
-  verify_module: Guardian.JWT,  # optional
-  issuer: "Micro.#{Mix.env}",
-  ttl: { 30, :days },
-  verify_issuer: true, # optional
-  secret_key: to_string(Mix.env) <> "883z8H+L7TzqHAWozJ3lIORLjViEHH+ZfbOtll8Y7+afbASpdfZzp7gkgUzAKqAP",
-  serializer: Newline.GuardianSerializer,
-  permissions: %{default: [:read, :write]}
-
 
 # Watch static and templates for browser reloading.
 config :newline, Newline.Endpoint,

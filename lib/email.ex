@@ -3,16 +3,24 @@ defmodule Newline.Email do
   alias Newline.{User}
 
   def welcome_email(user) do
-    from_postmaster()
-    |> to("#{Newline.UserHelpers.full_name(user)} <#{user.email}>")
+    from_postmaster(user)
     |> subject("Welcome to Fullstack.io")
     |> render("welcome_email_en.text")
   end
 
-  defp from_postmaster do
+  def password_reset_request_email(user) do
+    from_postmaster(user)
+    |> subject("You requested a password reset")
+    |> assign(:url, "http://localhost:4000") # TODO: Update
+    |> assign(:token, user.password_reset_token)
+    |> render("password_reset_email_en.text")
+  end
+
+  defp from_postmaster(user) do
     new_email
     |> from("Fullstack <hello@fullstack.io>")
     |> put_header("Reply-To", "hello@fullstack.io")
+    |> to("#{Newline.UserHelpers.full_name(user)} <#{user.email}>")
   end
 
 end

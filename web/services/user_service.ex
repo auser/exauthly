@@ -1,7 +1,14 @@
 defmodule Newline.UserService do
+  @moduledoc """
+  A module to provide handlingn underlying business logic
+  for handling anything to do with users.
+  """
   use Newline.Web, :service
   alias Newline.{Email, Mailer, Repo, User}
 
+  @doc """
+  Handle user signup
+  """
   def user_signup(params) do
     changeset = User.signup_changeset(%User{}, params)
 
@@ -42,7 +49,30 @@ defmodule Newline.UserService do
     end
   end
 
-    @doc """
+  @doc """
+  Reset a user's password'
+  """
+  def password_reset(token, password) do
+    case user_by_password_token(token) do
+      nil -> {:error, :not_found}
+      user = %User{} ->
+        user
+        |> User.reset_password_changeset(%{password: password})
+        |> Repo.update!
+        |> send_password_reset_email
+        {:ok, user}
+    end
+  end
+
+  defp user_by_password_token(token) do
+    query = from u in User,
+            where: u.password_reset_token == ^token
+            and u.password_reset_timestamp > fragment("now() - interval '48hours'"),
+            select: u
+    Repo.one(query)
+  end
+
+  @doc """
   Send a welcome email to a new user
   """
   def send_welcome_email(_params, user) do
@@ -52,9 +82,21 @@ defmodule Newline.UserService do
     {:ok, user}
   end
 
+  @doc """
+  Send a password reset request email
+  """
   def send_password_reset_request_email(user) do
     user
     |> Email.password_reset_request_email
+    |> Mailer.deliver_later
+  end
+
+  @doc """
+  Send a password reset email
+  """
+  def send_password_reset_email(user) do
+    user
+    |> Email.password_reset_email
     |> Mailer.deliver_later
   end
 

@@ -13,6 +13,12 @@ defmodule Newline.Email do
     |> subject("You requested a password reset")
     |> assign(:url, "http://localhost:4000") # TODO: Update
     |> assign(:token, user.password_reset_token)
+    |> render("password_reset_request_email_en.text")
+  end
+
+  def password_reset_email(user) do
+    from_postmaster(user)
+    |> subject("Your password was reset")
     |> render("password_reset_email_en.text")
   end
 

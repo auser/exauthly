@@ -58,6 +58,8 @@ defmodule Newline.User do
     |> cast(params, [:password])
     |> validate_required([:password])
     |> validate_length(:password, min: 5, max: 128)
+    |> put_change(:password_reset_token, nil)
+    |> put_change(:password_reset_timestamp, nil)
     |> generate_encrypted_password
   end
 

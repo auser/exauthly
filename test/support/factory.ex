@@ -15,4 +15,10 @@ defmodule Newline.Factory do
     }
   end
 
+  def organization_factory do
+    %Newline.Organization{
+      name: 'Fullstack'
+    }
+  end
+
 end

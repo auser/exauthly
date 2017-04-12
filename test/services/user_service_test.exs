@@ -27,4 +27,18 @@ defmodule Newline.UserServiceTest do
     assert foundUser.password_reset_token == nil
   end
 
+  test "password change succeeds with old password" do
+    user = build(:user) |> Repo.insert!
+    params = %{"old_password" => "Something", "new_password" => "aNews0mthing"}
+    {:ok, newUser} = UserService.change_password(user, params)
+    assert User.check_user_password(newUser, "aNews0mthing")
+  end
+
+  test "password fails with bad password" do
+    user = build(:user) |> Repo.insert!
+    params = %{"old_password" => "Something", "new_password" => "no"}
+    {:error, cs} = UserService.change_password(user, params)
+    refute cs.valid?
+  end
+
 end

@@ -35,6 +35,18 @@ defmodule Newline.UserService do
   end
 
   @doc """
+  Change a user's password'
+  """
+  def change_password(current_user, %{"old_password" => old_pass, "new_password" => new_pass}) do
+    if User.check_user_password(current_user, old_pass) do
+      User.change_password_changeset(current_user, %{password: new_pass})
+      |> Repo.update
+    else
+      {:error, :bad_password}
+    end
+  end
+
+  @doc """
   Request a new password
   """
   def request_password_reset(email) do

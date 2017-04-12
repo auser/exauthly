@@ -1,6 +1,6 @@
 defmodule Newline.Email do
   use Bamboo.Phoenix, view: Newline.EmailView
-  alias Newline.{User}
+  # alias Newline.{User}
 
   def welcome_email(user) do
     from_postmaster(user)

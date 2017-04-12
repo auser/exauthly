@@ -63,6 +63,17 @@ defmodule Newline.User do
     |> generate_encrypted_password
   end
 
+  @doc """
+  Changeset for updating a user's password
+  """
+  def change_password_changeset(user, params \\ %{}) do
+    user
+    |> cast(params, [:password])
+    |> validate_required([:password])
+    |> validate_length(:password, min: 5, max: 128)
+    |> generate_encrypted_password
+  end
+
   # When a user is getting updated
   def update_changeset(user, params \\ %{}) do
     user
@@ -75,14 +86,20 @@ defmodule Newline.User do
   def authenticate_by_email_and_pass(%{email: email, password: password} = _params) do
     user = Repo.get_by(Newline.User, email: String.downcase(email))
     cond do
-      user && checkpw(password, user.encrypted_password) ->
-        {:ok, user}
+      check_user_password(user, password) -> {:ok, user}
       user ->
         {:error, "Your password does not match with the password we have on record"}
       true ->
         dummy_checkpw()
         {:error, "We couldn't find a user associated with the email #{email}"}
     end
+  end
+
+  @doc """
+  Check a user's password with bcrypt'
+  """
+  def check_user_password(user, password) do
+    user && checkpw(password, user.encrypted_password)
   end
 
   # Helpers

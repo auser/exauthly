@@ -77,4 +77,21 @@ defmodule Newline.UserTest do
     assert user2.encrypted_password != user1.encrypted_password
   end
 
+  test "change password reset", %{valid_user: user} do
+    user1 = user |> Repo.insert!
+    user2 = 
+      User.change_password_changeset(user1, %{password: "av4l1dPassw0rd"})
+      |> Repo.update!
+    assert user2.encrypted_password != user1.encrypted_password
+  end
+
+  test "change password fails with short password", %{valid_user: user} do
+    user1 = user |> Repo.insert!
+    {:error, changeset} =
+      User.change_password_changeset(user1, %{password: "no"})
+      |> Repo.update
+    refute changeset.valid?
+    assert length(changeset.errors) == 1
+  end
+
 end

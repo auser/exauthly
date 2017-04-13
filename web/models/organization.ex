@@ -20,12 +20,20 @@ defmodule Newline.Organization do
   end
 
   @doc """
-  Create an organization membership
+  Create an organization
   """
   def create_changeset(org, params \\ %{}) do
     org
     |> cast(params, [:name])
     |> validate_required([:name])
     |> validate_length(:name, min: 1, max: 255)
+  end
+
+  @doc """
+  Update an organization
+  """
+  def update_changeset(org, params \\ %{}) do
+    org
+    |> cast(params, [:name])
   end
 end

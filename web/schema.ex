@@ -6,6 +6,9 @@ defmodule Newline.Schema do
     field :users, list_of(:user) do
       resolve &Newline.UserResolver.all/2
     end
+    field :organizations, list_of(:organization) do
+      resolve &Newline.OrganizationResolver.all/2
+    end
   end
 
   mutation do

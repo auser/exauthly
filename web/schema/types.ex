@@ -9,6 +9,11 @@ defmodule Newline.Schema.Types do
     field :email, :string
 
     field :token, :string
+    field :current_organization, :organization
+  end
+
+  object :organization do
+    field :name, :string
   end
 
   object :session do

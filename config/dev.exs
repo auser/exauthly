@@ -29,6 +29,8 @@ config :newline, Newline.Endpoint,
 config :newline, Newline.Mailer,
   adapter: Bamboo.LocalAdapter
 
+config :newline, :analytics, Pomerol.Analytics.InMemoryAPI
+
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"
 

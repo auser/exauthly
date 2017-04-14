@@ -90,7 +90,8 @@ defmodule Newline.Mixfile do
       {:poison, "~> 2.0"},
       {:ja_serializer, "~> 0.12.0"},
       {:distillery, "~> 1.3"},
-      {:mix_docker, "~> 0.4.2"}
+      {:mix_docker, "~> 0.4.2"},
+      {:segment, "~> 0.1"}
     ]
   end
 

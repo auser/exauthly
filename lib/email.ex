@@ -23,7 +23,7 @@ defmodule Newline.Email do
   end
 
   defp from_postmaster(user) do
-    new_email
+    new_email()
     |> from("Fullstack <hello@fullstack.io>")
     |> put_header("Reply-To", "hello@fullstack.io")
     |> to("#{Newline.UserHelpers.full_name(user)} <#{user.email}>")

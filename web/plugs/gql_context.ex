@@ -1,4 +1,7 @@
 defmodule Newline.Plug.Context do
+  @moduledoc """
+  This plug adds the context argument to GraphQL requests
+  """
   @behaviour Plug
 
   import Plug.Conn

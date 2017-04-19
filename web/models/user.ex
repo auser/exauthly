@@ -19,6 +19,10 @@ defmodule Newline.User do
     field :password_reset_token, :string
     field :password_reset_timestamp, Timex.Ecto.DateTime
 
+    has_many :organization_memberships, Newline.OrganizationMembership, foreign_key: :member_id
+    has_many :organizations, through: [:organization_memberships, :organization]
+    belongs_to :current_organization, Newline.Organization
+
     timestamps()
   end
 
@@ -77,10 +81,12 @@ defmodule Newline.User do
   # When a user is getting updated
   def update_changeset(user, params \\ %{}) do
     user
-    |> cast(params, [:first_name, :last_name, :email, :admin])
+    |> cast(params, [:first_name, :last_name, :email, :admin, :current_organization_id])
     |> update_change(:email, &String.downcase/1)
     |> validate_email_format(:email)
     |> unique_constraint(:email, message: "Email already taken")
+    |> foreign_key_constraint(:current_organization_id)
+    |> assoc_constraint(:current_organization)
   end
 
   def authenticate_by_email_and_pass(%{email: email, password: password} = _params) do

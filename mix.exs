@@ -62,7 +62,8 @@ defmodule Newline.Mixfile do
   end
   defp deps(:dev) do
     deps(:all) ++ [
-      {:remix, "~> 0.0"}
+      {:remix, "~> 0.0"},
+      {:mix_test_watch, "~> 0.3", only: :dev, runtime: false}
     ]
   end
   defp deps(_) do
@@ -91,7 +92,8 @@ defmodule Newline.Mixfile do
       {:ja_serializer, "~> 0.12.0"},
       {:distillery, "~> 1.3"},
       {:mix_docker, "~> 0.4.2"},
-      {:segment, "~> 0.1"}
+      {:segment, "~> 0.1"},
+      {:canary, "~> 1.1"}
     ]
   end
 

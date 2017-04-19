@@ -17,7 +17,15 @@ defmodule Newline.Factory do
 
   def organization_factory do
     %Newline.Organization{
-      name: 'Fullstack'
+      name: "Fullstack"
+    }
+  end
+
+  def organization_membership_factory do
+    %Newline.OrganizationMembership{
+      member: build(:user),
+      organization: build(:organization),
+      role: "owner"
     }
   end
 

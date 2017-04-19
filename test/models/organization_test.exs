@@ -18,4 +18,5 @@ defmodule Newline.OrganizationTest do
     cs = Organization.create_changeset(%Organization{})
     refute cs.valid?
   end
+
 end

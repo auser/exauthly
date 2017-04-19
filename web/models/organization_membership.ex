@@ -20,8 +20,8 @@ defmodule Newline.OrganizationMembership do
   Builds a changeset for adding a member to 
   this organization.
   """
-  def create_changeset(org, params \\ %{}) do
-    org
+  def create_changeset(struct, params \\ %{}) do
+    struct
     |> cast(params, [:member_id, :organization_id, :role])
     |> validate_required([:member_id, :organization_id, :role])
     |> assoc_constraint(:member)
@@ -32,15 +32,15 @@ defmodule Newline.OrganizationMembership do
   @doc """
   Builds changeset for updating membership
   """
-  def update_changeset(org, params \\ %{}) do
-    org
+  def update_changeset(struct, params \\ %{}) do
+    struct
     |> cast(params, [:role])
     |> validate_required([:role])
     |> validate_inclusion(:role, roles())
   end
 
   # Possible roles
-  defp roles do
-    ~w{ owner admin }
+  def roles do
+    ~w{ owner admin manager member }
   end
 end

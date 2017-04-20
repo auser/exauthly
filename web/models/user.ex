@@ -100,6 +100,7 @@ defmodule Newline.User do
         {:error, "We couldn't find a user associated with the email #{email}"}
     end
   end
+  def authenticate_by_email_and_pass(_), do: {:error, "bad_credentials"}
 
   @doc """
   Check a user's password with bcrypt'

@@ -41,6 +41,12 @@ defmodule Newline.BasePolicy do
   def get_role(_, _), do: nil
 
   @doc """
+  Is the user an admin
+  """
+  def site_admin?(%User{admin: true}), do: true
+  def site_admin?(_), do: false
+
+  @doc """
   Is a user the owner
   """
   def owner?("owner"), do: true

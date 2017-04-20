@@ -1,10 +1,11 @@
 defmodule Newline.UserResolver do
   import Newline.BaseResolver, only: [response: 1]
+  import Newline.BasePolicy, only: [site_admin?: 1]
 
   alias Newline.{User, Repo, UserService}
   
   def all(_args, %{context: %{current_user: user}}) when not is_nil(user) do
-    case user.admin do
+    case site_admin?(user) do
       true -> {:ok, Repo.all(User)}
       _ -> {:ok, user}
     end

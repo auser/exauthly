@@ -23,7 +23,8 @@ defmodule Newline.Router do
   end
 
   pipeline :ensure_auth do
-    plug Guardian.Plug.EnsureAuthenticated, handler: Newline.GuardianErrorHandler
+    plug Guardian.Plug.EnsureAuthenticated, 
+      handler: Newline.GuardianErrorHandler
   end
 
   pipeline :current_user do
@@ -32,6 +33,9 @@ defmodule Newline.Router do
 
   pipeline :check_admin do
     plug Newline.Plug.Admin
+    plug Guardian.Plug.EnsurePermissions, 
+      handler: Newline.GuardianErrorHandler, 
+      default: [:read, :write]
   end
 
   pipeline :gql_context do

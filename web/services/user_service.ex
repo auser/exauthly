@@ -1,4 +1,6 @@
 defmodule Newline.UserService do
+  import Newline.BasePolicy, only: [site_admin?: 1]
+
   @moduledoc """
   A module to provide handlingn underlying business logic
   for handling anything to do with users.
@@ -14,7 +16,8 @@ defmodule Newline.UserService do
 
     case Repo.transaction(insert(changeset, params)) do
       {:ok, %{user: user}} ->
-        {:ok, jwt, _full_claims} = user |> Guardian.encode_and_sign(:token)
+        this_user_claims = user_claims(user)
+        {:ok, jwt, _full_claims} = user |> Guardian.encode_and_sign(:access, this_user_claims)
         {:ok, Map.put(user, :token, jwt)}
       {:error, _failed_op, failed_changeset, _changes} ->
         {:error, failed_changeset}
@@ -22,16 +25,23 @@ defmodule Newline.UserService do
   end
 
   def user_login(params, login_claims \\ %{}) do
-    claims = Guardian.Claims.app_claims
-              |> Map.merge(login_claims)
-              |> Guardian.Claims.ttl({30, :days})
-
     case  User.authenticate_by_email_and_pass(params) do
-      {:ok, user} -> 
-        {:ok, jwt, _claims} = user |> Guardian.encode_and_sign(:token, claims)
+      {:ok, user} ->
+        this_user_claims = user_claims(user, login_claims)
+        {:ok, jwt, _claims} = user |> Guardian.encode_and_sign(:access, this_user_claims)
         {:ok, Map.put(user, :token, jwt)}
       {:error, reason} -> {:error, reason}
     end
+  end
+
+  defp user_claims(user, login_claims \\ %{}) do
+    perms = case site_admin?(user) do
+      true -> Map.merge(login_claims, %{ default: [:read, :write], admin: Guardian.Permissions.max })
+      false -> Map.merge(login_claims, %{ default: [:read, :write] })
+    end
+    Guardian.Claims.app_claims
+        |> Map.put(:perms, perms)
+        |> Guardian.Claims.ttl({30, :days})
   end
 
   @doc """

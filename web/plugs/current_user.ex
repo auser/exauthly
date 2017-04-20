@@ -10,7 +10,8 @@ defmodule Newline.Plug.CurrentUser do
       current_token ->
         with {:ok, claims} <- Guardian.decode_and_verify(current_token),
              {:ok, user} <- GuardianSerializer.from_token(claims["sub"]) do
-                Plug.Conn.assign(conn, :current_user, user)
+              conn = Plug.Conn.assign(conn, :current_user, user)
+              Plug.Conn.assign(conn, :claims, claims)
         else
           {:error, _reason} -> conn
         end

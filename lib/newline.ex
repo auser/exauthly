@@ -12,6 +12,8 @@ defmodule Newline do
       supervisor(Newline.Repo, []),
       # Start the endpoint when the application starts
       supervisor(Newline.Endpoint, []),
+      # Sweet expired tokens
+      worker(GuardianDb.ExpiredSweeper, []),
       # Start your own worker by calling: Newline.Worker.start_link(arg1, arg2, arg3)
       # worker(Newline.Worker, [arg1, arg2, arg3]),
     ]

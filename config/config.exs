@@ -25,7 +25,13 @@ config :guardian, Guardian,
   verify_issuer: true, # optional
   secret_key: to_string(Mix.env) <> "883z8H+L7TzqHAWozJ3lIORLjViEHH+ZfbOtll8Y7+afbASpdfZzp7gkgUzAKqAP",
   serializer: Newline.GuardianSerializer,
-  permissions: %{default: [:read, :write]}
+  permissions: %{default: [:read, :write]},
+  hooks: GuardianDb
+
+config :guardian_db, GuardianDb, 
+        repo: Newline.Repo,
+        schema_name: "auth_tokens",
+        sweep_interval: 120 # 120 minutes
   
   
 # Configures Elixir's Logger

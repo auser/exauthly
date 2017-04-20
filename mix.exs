@@ -42,6 +42,7 @@ defmodule Newline.Mixfile do
       :bamboo,
       :ueberauth,
       :guardian,
+      :guardian_db,
       :corsica,
       :timex,
       :timex_ecto
@@ -81,6 +82,7 @@ defmodule Newline.Mixfile do
       {:absinthe_plug, "~> 1.3.0-beta.0"},
       {:absinthe_ecto, git: "https://github.com/absinthe-graphql/absinthe_ecto.git"},
       {:guardian, "~> 0.14.2"},
+      {:guardian_db, "~> 0.8.0"},
       {:ueberauth, "~> 0.4.0"},
       {:timex, "~> 3.1"},
       {:timex_ecto, "~> 3.1"},

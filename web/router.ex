@@ -60,9 +60,11 @@ defmodule Newline.Router do
   scope "/api", Newline do
     pipe_through [:api, :bearer_auth, :current_user]
 
+    # public v1 routes
     scope "/v1", V1, as: :v1 do
       post "/signup", UserController, :create
       post "/login", SessionController, :create
+      post "/password/request", UserController, :request_password_reset, as: :reset
     end
   end
 

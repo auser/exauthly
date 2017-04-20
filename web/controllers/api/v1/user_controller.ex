@@ -15,4 +15,17 @@ defmodule Newline.V1.UserController do
         |> render(Newline.UserView, "error.json", changeset: changeset)
     end
   end
+
+  def request_password_reset(conn, %{"email" => email}) do
+    case UserService.request_password_reset(email) do
+      {:ok, _user} ->
+        conn
+        |> send_resp(200, "ok")
+      {:error, _reason} ->
+        conn
+        |> put_status(:not_found)
+        |> render(Newline.ErrorView, "error.json", errors: ["user does not exist"])
+    end
+  end
+
 end

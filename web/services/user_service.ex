@@ -16,28 +16,38 @@ defmodule Newline.UserService do
 
     case Repo.transaction(insert(changeset, params)) do
       {:ok, %{user: user}} ->
-        this_user_claims = user_claims(user)
-        {:ok, jwt, _full_claims} = user |> Guardian.encode_and_sign(:access, this_user_claims)
+        {:ok, jwt, _claims} = do_user_login(user)
         {:ok, Map.put(user, :token, jwt)}
       {:error, _failed_op, failed_changeset, _changes} ->
         {:error, failed_changeset}
     end
   end
 
+  @doc """
+  Handle user login
+  """
   def user_login(params, login_claims \\ %{}) do
     case  User.authenticate_by_email_and_pass(params) do
       {:ok, user} ->
-        this_user_claims = user_claims(user, login_claims)
-        {:ok, jwt, _claims} = user |> Guardian.encode_and_sign(:access, this_user_claims)
+        {:ok, jwt, _claims} = do_user_login(user, login_claims)
         {:ok, Map.put(user, :token, jwt)}
       {:error, reason} -> {:error, reason}
     end
   end
 
+  @doc """
+  Authenticate user
+  """
+  def do_user_login(user, login_claims \\ %{}) do
+    this_user_claims = user_claims(user, login_claims)
+    user |> Guardian.encode_and_sign(:access, this_user_claims)
+  end
+
+  # Assign user claims with admin
   defp user_claims(user, login_claims \\ %{}) do
     perms = case site_admin?(user) do
-      true -> Map.merge(login_claims, %{ default: [:read, :write], admin: Guardian.Permissions.max })
-      false -> Map.merge(login_claims, %{ default: [:read, :write] })
+      true -> Map.merge(%{ default: [:read, :write], admin: Guardian.Permissions.max }, login_claims)
+      false -> Map.merge(%{ default: [:read, :write] }, login_claims)
     end
     Guardian.Claims.app_claims
         |> Map.put(:perms, perms)
@@ -91,7 +101,8 @@ defmodule Newline.UserService do
         |> User.reset_password_changeset(%{password: password})
         |> Repo.update!
         |> send_password_reset_email
-        {:ok, user}
+        {:ok, jwt, claims} = do_user_login(user)
+        {:ok, user, jwt, claims}
     end
   end
 

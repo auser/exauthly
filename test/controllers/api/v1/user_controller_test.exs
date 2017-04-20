@@ -69,4 +69,20 @@ defmodule Newline.V1.UserControllerTest do
       conn |> response(422)
     end
   end
+
+  describe "password_reset" do
+    test "POST /api/v1/password/reset with existing token and new password succeeds", %{conn: conn} do
+      user = insert(:user, email: "forgetful@fullstack.io")
+      Newline.UserService.request_password_reset(user.email)
+      user = Repo.get_by!(User, email: user.email)
+
+      conn = post conn, "/api/v1/password/reset", %{token: user.password_reset_token, password: "n3wpassw0rd"}
+
+      assert conn |> response(200)
+      
+      new_user = Repo.get_by!(User, email: user.email)
+      assert User.check_user_password(new_user, "n3wpassw0rd")
+    end
+  end
+
 end

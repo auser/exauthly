@@ -69,6 +69,7 @@ defmodule Newline.Router do
       post "/signup", UserController, :create
       post "/login", SessionController, :create
       post "/password/request", UserController, :request_password_reset, as: :reset
+      post "/password/reset", UserController, :password_reset
     end
   end
 

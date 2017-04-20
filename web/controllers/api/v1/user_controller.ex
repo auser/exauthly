@@ -21,6 +21,9 @@ defmodule Newline.V1.UserController do
   end
   def create(conn, _), do: invalid_params(conn)
 
+  @doc """
+  Request a password reset
+  """
   def request_password_reset(conn, %{"email" => email}) do
     case UserService.request_password_reset(email) do
       {:ok, _user} ->
@@ -33,6 +36,22 @@ defmodule Newline.V1.UserController do
     end
   end
   def request_password_reset(conn, _), do: invalid_params(conn)
+
+  @doc """
+  Reset the user's password based on token""'
+  """
+  def password_reset(conn, %{"token" => token, "password" => password}) do
+    case UserService.password_reset(token, password) do
+      {:ok, user, jwt, _claims} ->
+        conn
+        |> put_status(:ok)
+        |> render(Newline.SessionView, "show.json", user_id: user.id, token: jwt)
+      {:error, _reason} ->
+        conn
+        |> put_status(:bad_request)
+        |> render(Newline.UserView, "error.json", errors: ["invalid or expired token"])
+    end
+  end
 
   defp invalid_params(conn) do
     conn

@@ -34,7 +34,7 @@ defmodule Newline.UserServiceTest do
     user = build(:user) |> Repo.insert!
     UserService.request_password_reset(user.email)
     foundUser = Repo.get(User, user.id)
-    {:ok, _} = UserService.password_reset(foundUser.password_reset_token, "newPassword")
+    {:ok, _, _, _} = UserService.password_reset(foundUser.password_reset_token, "newPassword")
     foundUser = Repo.get(User, user.id)
     assert foundUser.encrypted_password != user.encrypted_password
     assert foundUser.password_reset_token == nil

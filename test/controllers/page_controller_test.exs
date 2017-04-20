@@ -1,8 +1,8 @@
 defmodule Newline.PageControllerTest do
   use Newline.ConnCase
 
-  test "GET /", %{conn: conn} do
+  test "GET / includes a div#app", %{conn: conn} do
     conn = get conn, "/"
-    assert html_response(conn, 200) =~ "Welcome to Phoenix!"
+    assert html_response(conn, 200) =~ "<div id=\"app\"></div>"
   end
 end

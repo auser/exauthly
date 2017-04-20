@@ -12,13 +12,6 @@ defmodule Newline.Organization do
     timestamps()
   end
 
-  @required_fields ~w(name)
-
-  def changeset(model, params \\ %{}) do
-    model
-    |> cast(params, @required_fields)
-  end
-
   @doc """
   Create an organization
   """
@@ -27,6 +20,7 @@ defmodule Newline.Organization do
     |> cast(params, [:name])
     |> validate_required([:name])
     |> validate_length(:name, min: 1, max: 255)
+    |> unique_constraint(:name, message: "Organization name already taken")
   end
 
   @doc """

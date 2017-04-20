@@ -30,6 +30,12 @@ defmodule Newline.Schema do
     #   resolve &Newline.UserResolver.update/2
     # end
 
+    field :create_organization, type: :organization do
+      arg :name, non_null(:string)
+
+      resolve &Newline.OrganizationResolver.create_organization/2
+    end
+
     field :login, type: :session do
       arg :email, non_null(:string)
       arg :password, non_null(:string)

@@ -91,6 +91,7 @@ defmodule Newline.User do
 
   def authenticate_by_email_and_pass(%{email: email, password: password} = _params) do
     user = Repo.get_by(Newline.User, email: String.downcase(email))
+    IO.puts "email: #{inspect email} pass: #{inspect user.encrypted_password}"
     cond do
       check_user_password(user, password) -> {:ok, user}
       user ->

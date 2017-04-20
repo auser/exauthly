@@ -4,11 +4,11 @@ defmodule Newline.UserResolver do
 
   alias Newline.{User, Repo, UserService}
   
+  def all(_args, %{context: %{current_user: user, admin: true}}) when not is_nil(user) do
+    {:ok, Repo.all(User)}
+  end
   def all(_args, %{context: %{current_user: user}}) when not is_nil(user) do
-    case site_admin?(user) do
-      true -> {:ok, Repo.all(User)}
-      _ -> {:ok, user}
-    end
+    {:ok, user}
   end
   def all(_, _), do: {:error, "Unauthorized"}
 

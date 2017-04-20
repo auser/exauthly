@@ -114,11 +114,12 @@ defmodule Newline.UserService do
   end
 
   @doc """
-  Get user's memberships'
+  Get user's memberships
   """
   def user_with_organizations(user) do
-    Repo.get(User, user.id)
+    user = Repo.get(User, user.id)
     |> Repo.preload([:organizations, :organization_memberships, :current_organization])
+    %{organizations: user.organizations, current_organization: user.current_organization}
   end
 
 end

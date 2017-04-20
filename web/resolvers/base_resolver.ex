@@ -1,5 +1,7 @@
 defmodule Newline.BaseResolver do
   def response({status, payload}) do
+    IO.inspect(status)
+    IO.inspect(payload)
     case payload do
       %Ecto.Changeset{} = changeset ->
         {

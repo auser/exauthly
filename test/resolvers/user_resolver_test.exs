@@ -17,12 +17,11 @@ defmodule Newline.UserResolverTest do
     assert UserResolver.all(:something, %{}) == {:error, "Unauthorized"}
   end
 
-  test "all/2 returns all the users if the user is an admin", %{current_user: user} do
+  test "all/2 returns all the users if the user is an admin" do
     insert(:user)
     context = %{context: %{current_user: insert(:user, admin: true)}}
     {:ok, users} = UserResolver.all(:type, context)
-    assert length(users) == 3
-    assert Enum.at(users, 0).id == user.id
+    assert length(users) == 4
   end
 
   test "all/2 returns only the current user", %{context: context, current_user: current_user} do

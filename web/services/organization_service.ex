@@ -7,7 +7,7 @@ defmodule Newline.OrganizationService do
   Create an organization
   """
   def create_org(current_user, params) do
-    params = params |> Map.put("user_id", current_user.id)
+    params = params |> Map.put(:user_id, current_user.id)
     changeset = Organization.create_changeset(%Organization{}, params)
 
     result = 
@@ -31,8 +31,8 @@ defmodule Newline.OrganizationService do
   def insert(changeset, params) do
     Multi.new
     |> Multi.insert(:organization, changeset)
-    |> Multi.run(:insert_orgmember, &(insert_orgmember(params["user_id"], &1[:organization])))
-    |> Multi.run(:update_user_current_org, &(update_user_current_org(params["user_id"], &1[:organization])))
+    |> Multi.run(:insert_orgmember, &(insert_orgmember(params[:user_id], &1[:organization])))
+    |> Multi.run(:update_user_current_org, &(update_user_current_org(params[:user_id], &1[:organization])))
   end
 
   def insert_orgmember(user_id, org) do

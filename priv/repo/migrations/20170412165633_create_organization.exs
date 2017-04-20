@@ -7,5 +7,6 @@ defmodule Newline.Repo.Migrations.CreateOrganization do
 
       timestamps()
     end
+    create unique_index(:organizations, [:name])
   end
 end

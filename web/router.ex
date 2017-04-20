@@ -30,6 +30,10 @@ defmodule Newline.Router do
     plug Newline.Plug.CurrentUser
   end
 
+  pipeline :check_admin do
+    plug Newline.Plug.Admin
+  end
+
   pipeline :gql_context do
     plug Newline.Plug.Context
   end
@@ -41,7 +45,7 @@ defmodule Newline.Router do
   end
 
   scope "/graphql" do
-    pipe_through [:api, :bearer_auth, :gql_context]
+    pipe_through [:api, :bearer_auth, :gql_context, :check_admin]
 
     forward "/", Absinthe.Plug, schema: Newline.Schema
   end

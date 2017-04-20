@@ -17,7 +17,7 @@ defmodule Newline.Factory do
 
   def organization_factory do
     %Newline.Organization{
-      name: "Fullstack"
+      name: sequence(:name, &"fullstack-#{&1}")
     }
   end
 

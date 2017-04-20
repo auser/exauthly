@@ -14,6 +14,8 @@ defmodule Newline.Schema.Types do
 
   object :organization do
     field :name, :string
+    field :members, list_of(:user)
+    field :all, list_of(:user)
   end
 
   object :session do

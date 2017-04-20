@@ -25,6 +25,19 @@ defmodule Newline.UserService do
     end
   end
 
+  def user_login(params, login_claims \\ %{}) do
+    claims = Guardian.Claims.app_claims
+              |> Map.merge(login_claims)
+              |> Guardian.Claims.ttl({30, :days})
+
+    case  User.authenticate_by_email_and_pass(params) do
+      {:ok, user} -> 
+        {:ok, jwt, _claims} = user |> Guardian.encode_and_sign(:token, claims)
+        {:ok, Map.put(user, :token, jwt)}
+      {:error, reason} -> {:error, reason}
+    end
+  end
+
   @doc """
   insert a user by changeset
   """

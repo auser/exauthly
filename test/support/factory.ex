@@ -15,6 +15,11 @@ defmodule Newline.Factory do
     }
   end
 
+  def set_password(user, password) do
+    hashed_password = hashpwsalt(password)
+    %{user | encrypted_password: hashed_password}
+  end
+
   def organization_factory do
     %Newline.Organization{
       name: sequence(:name, &"fullstack-#{&1}")

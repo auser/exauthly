@@ -26,6 +26,7 @@ defmodule Newline.ConnCase do
       import Ecto.Query
 
       import Newline.Router.Helpers
+      import Newline.Factory
 
       # The default endpoint for testing
       @endpoint Newline.Endpoint

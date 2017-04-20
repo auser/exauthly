@@ -62,6 +62,7 @@ defmodule Newline.Router do
 
     scope "/v1", V1, as: :v1 do
       post "/signup", UserController, :create
+      post "/login", SessionController, :create
     end
   end
 

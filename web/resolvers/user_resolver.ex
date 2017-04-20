@@ -23,13 +23,14 @@ defmodule Newline.UserResolver do
   # end
 
   def login(params, _info) do
-    claims = Guardian.Claims.app_claims
-    |> Map.put("user", true)
-    |> Guardian.Claims.ttl({30, :days})
+    UserService.user_login(params) |> response
+    # claims = Guardian.Claims.app_claims
+    # |> Map.put("user", true)
+    # |> Guardian.Claims.ttl({30, :days})
 
-    with  {:ok, acc} <- User.authenticate_by_email_and_pass(params),
-          {:ok, jwt, _} <- Guardian.encode_and_sign(acc, :access, claims) do
-          {:ok, %{token: jwt}}
-    end
+    # with  {:ok, acc} <- User.authenticate_by_email_and_pass(params),
+    #       {:ok, jwt, _} <- Guardian.encode_and_sign(acc, :access, claims) do
+    #       {:ok, %{token: jwt}}
+    # end
   end
 end

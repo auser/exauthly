@@ -10,6 +10,19 @@ defmodule Newline.UserServiceTest do
     assert user != nil
   end
 
+  test "user_login() with correct creds returns token" do
+    user = build(:user) |> Repo.insert!
+    {:ok, foundUser} = UserService.user_login(%{email: user.email, password: user.password})
+    assert foundUser != nil
+    assert user.email == foundUser.email
+  end
+
+  test "user with incorrect creds returns error with reason" do
+    user = build(:user) |> Repo.insert!
+    {:error, reason} = UserService.user_login(%{email: user.email, password: "not a password"})
+    assert reason != nil
+  end
+
   test "request_password_reset sets password_reset_token" do
     user = build(:user) |> Repo.insert!
     {:ok, user1} = UserService.request_password_reset(user.email)

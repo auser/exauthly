@@ -49,6 +49,7 @@ defmodule Newline.Web do
       import Ecto.Query
 
       import Newline.Router.Helpers
+      import Newline.Controllers.ResponseHelpers
       import Newline.Gettext
     end
   end

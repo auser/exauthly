@@ -1,0 +1,2 @@
+defmodule Newline.Controllers.ResponseHelpers do
+end

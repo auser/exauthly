@@ -26,6 +26,9 @@ defmodule Newline.UserView do
       errors: errors
     }
   end
+  def render("error.json", %{message: message}) do
+    %{ errors: message }
+  end
 
   defp render_detail({message, values}) do
     Enum.reduce(values, message, fn {k, v}, acc -> String.replace(acc, "%{#{k}}", to_string(v)) end)

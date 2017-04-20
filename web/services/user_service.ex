@@ -12,16 +12,12 @@ defmodule Newline.UserService do
   def user_signup(params) do
     changeset = User.signup_changeset(%User{}, params)
 
-    result = 
-      insert(changeset, params)
-      |> Repo.transaction()
-
-    case result do
+    case Repo.transaction(insert(changeset, params)) do
       {:ok, %{user: user}} ->
         {:ok, jwt, _full_claims} = user |> Guardian.encode_and_sign(:token)
         {:ok, Map.put(user, :token, jwt)}
-      {:error, _failed_op, changeset, _changes} ->      
-        {:error, changeset}
+      {:error, _failed_op, failed_changeset, _changes} ->
+        {:error, failed_changeset}
     end
   end
 

@@ -49,9 +49,10 @@ defmodule Newline.V1.UserController do
       {:error, _reason} ->
         conn
         |> put_status(:bad_request)
-        |> render(Newline.UserView, "error.json", errors: ["invalid or expired token"])
+        |> render(Newline.UserView, "error.json", message: ["invalid or expired token"])
     end
   end
+  def password_reset(conn, _), do: invalid_params(conn)
 
   defp invalid_params(conn) do
     conn

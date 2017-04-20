@@ -18,3 +18,5 @@ newline.tar.gzrel/
 priv/static
 rel
 newline.tar.gz
+.env
+.env.dev

@@ -83,6 +83,18 @@ defmodule Newline.V1.UserControllerTest do
       new_user = Repo.get_by!(User, email: user.email)
       assert User.check_user_password(new_user, "n3wpassw0rd")
     end
+
+    test "POST /api/v1/password/reset with invalid token", %{conn: conn} do
+      conn = post conn, "/api/v1/password/reset", %{token: "not_valid_token", password: ""}
+      resp = json_response(conn, 400)
+      assert resp["errors"] == ["invalid or expired token"]
+    end
+
+    test "POST /api/v1/password/reset without a token", %{conn: conn} do
+      conn = post conn, "/api/v1/password/reset"
+      resp = json_response(conn, 422)
+      assert resp["errors"] == "Invalid params"
+    end
   end
 
 end

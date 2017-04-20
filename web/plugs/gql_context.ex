@@ -28,7 +28,6 @@ defmodule Newline.Plug.Context do
       current_token ->
         with {:ok, claims} <- Guardian.decode_and_verify(current_token),
             {:ok, user} <- GuardianSerializer.from_token(claims["sub"]) do
-              IO.inspect(claims)
               {:ok, %{current_user: user}}
         else
           {:error, _reason} -> {:error, "Invalid authorization token"}

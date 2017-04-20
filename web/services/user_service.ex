@@ -80,6 +80,7 @@ defmodule Newline.UserService do
     query = from u in User,
             where: u.password_reset_token == ^token
             and u.password_reset_timestamp > fragment("now() - interval '48hours'"),
+            preload: [:organizations],
             select: u
     Repo.one(query)
   end
@@ -110,6 +111,14 @@ defmodule Newline.UserService do
     user
     |> Email.password_reset_email
     |> Mailer.deliver_later
+  end
+
+  @doc """
+  Get user's memberships'
+  """
+  def user_with_organizations(user) do
+    Repo.get(User, user.id)
+    |> Repo.preload([:organizations, :organization_memberships, :current_organization])
   end
 
 end

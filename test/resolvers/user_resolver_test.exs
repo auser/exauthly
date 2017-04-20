@@ -19,7 +19,7 @@ defmodule Newline.UserResolverTest do
 
   test "all/2 returns all the users if the user is an admin" do
     insert(:user)
-    context = %{context: %{current_user: insert(:user, admin: true)}}
+    context = %{context: %{current_user: insert(:user, admin: true), admin: true}}
     {:ok, users} = UserResolver.all(:type, context)
     assert length(users) == 4
   end

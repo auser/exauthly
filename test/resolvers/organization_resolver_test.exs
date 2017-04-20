@@ -21,7 +21,8 @@ defmodule Newline.OrganizationResolverTest do
 
   test "all/2 returns all organizations for site admins", %{valid_org: org} do
     insert(:organization)
-    context = %{context: %{current_user: insert(:user, admin: true)}}
+    admin = insert(:user, admin: true)
+    context = %{context: %{current_user: admin, admin: true}}
     {:ok, orgs} = OrganizationResolver.all(:type, context)
     assert length(orgs) == 2
     assert Enum.at(orgs, 0).id == org.id
@@ -29,9 +30,9 @@ defmodule Newline.OrganizationResolverTest do
 
   test "all/2 returns only the organizations a user belongs to", %{context: context, valid_org: org} do
     {:ok, orgs} = OrganizationResolver.all(:type, context)
-    %{current_organization: _current_organization, organizations: orgs} = orgs
-    assert length(orgs) == 1
-    assert Enum.at(orgs, 0).name == org.name
+    %{current_organization: _current_organization, organizations: organizations} = orgs
+    assert length(organizations) == 1
+    assert Enum.at(organizations, 0).name == org.name
   end
 
 end

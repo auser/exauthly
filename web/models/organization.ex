@@ -14,7 +14,12 @@ defmodule Newline.Organization do
 
   @doc """
   Create an organization
+
+  ## Examples
+
+    iex> Organization.create_changeset(%Newline.Organization{}, %{name: "Fullstack.io"})
   """
+  @spec create_changeset(struct, map) :: Ecto.Changeset
   def create_changeset(org, params \\ %{}) do
     org
     |> cast(params, [:name])

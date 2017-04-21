@@ -14,7 +14,9 @@ use Mix.Config
 config :newline, Newline.Endpoint,
   http: [port: {:system, "PORT"}],
   url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/manifest.json"
+  url: [scheme: "https", host: "still-springs-97871.herokuapp.com", port: 443],
+  cache_static_manifest: "priv/static/manifest.json",
+  check_origin: ["http://sling-chat.s3-website-us-west-2.amazonaws.com"]
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -30,7 +32,7 @@ config :guardian, Guardian,
   issuer: "Micro.#{Mix.env}",
   ttl: { 30, :days },
   verify_issuer: true, # optional
-  secret_key: to_string(Mix.env) <> "883z8H+L7TzqHAWozJ3lIORLjViEHH+ZfbOtll8Y7+afbASpdfZzp7gkgUzAKqAP",
+  secret_key: to_string(Mix.env) <> System.get_env("GUARDIAN_SECRET_KEY"),
   serializer: Newline.GuardianSerializer,
   permissions: %{default: [:read, :write]}
 
@@ -44,6 +46,12 @@ config :newline, Newline.Endpoint,
   http: [port: {:system, "PORT"}],  
   # use ${VAR} syntax to replace config on startup
   url: [ host: "${HOST}", port: {:system, "PORT"} ]  
+
+config :newline, Newline.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  url: System.get_env("DATABASE_URL"),
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+  ssl: true
 
 # ## SSL Support
 #

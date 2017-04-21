@@ -1,0 +1,12 @@
+{application,fs,
+             [{description,"FS VXZ Listener"},
+              {vsn,"2.12.0"},
+              {registered,[]},
+              {applications,[kernel,stdlib]},
+              {mod,{fs_app,[]}},
+              {env,[{backwards_compatible,true}]},
+              {maintainers,["Maxim Sokhatsky","Vladimir Kirillov"]},
+              {licenses,["ISCL"]},
+              {links,[{"Github","https://github.com/synrc/fs"}]},
+              {modules,[fs,fs_app,fs_event_bridge,fs_server,fs_sup,fsevents,
+                        inotifywait,inotifywait_win32,kqueue]}]}.

@@ -1,0 +1,14 @@
+[
+{ "file"      : "/Users/auser/Development/elixir/mine/sellex/micro/newline/deps/fs/c_src/mac/cli.c"
+, "directory" : "/Users/auser/Development/elixir/mine/sellex/micro/newline/deps/fs"
+, "command"   : "clang -c -Wno-deprecated-declarations -g -Wall -fPIC -MMD -I\"/usr/local/Cellar/erlang/19.3/lib/erlang/lib/erl_interface-3.9.3/include\" -I\"/usr/local/Cellar/erlang/19.3/lib/erlang/erts-8.3/include\" /Users/auser/Development/elixir/mine/sellex/micro/newline/deps/fs/c_src/mac/cli.c -o /Users/auser/Development/elixir/mine/sellex/micro/newline/deps/fs/c_src/mac/cli.o"
+},
+{ "file"      : "/Users/auser/Development/elixir/mine/sellex/micro/newline/deps/fs/c_src/mac/compat.c"
+, "directory" : "/Users/auser/Development/elixir/mine/sellex/micro/newline/deps/fs"
+, "command"   : "clang -c -Wno-deprecated-declarations -g -Wall -fPIC -MMD -I\"/usr/local/Cellar/erlang/19.3/lib/erlang/lib/erl_interface-3.9.3/include\" -I\"/usr/local/Cellar/erlang/19.3/lib/erlang/erts-8.3/include\" /Users/auser/Development/elixir/mine/sellex/micro/newline/deps/fs/c_src/mac/compat.c -o /Users/auser/Development/elixir/mine/sellex/micro/newline/deps/fs/c_src/mac/compat.o"
+},
+{ "file"      : "/Users/auser/Development/elixir/mine/sellex/micro/newline/deps/fs/c_src/mac/main.c"
+, "directory" : "/Users/auser/Development/elixir/mine/sellex/micro/newline/deps/fs"
+, "command"   : "clang -c -Wno-deprecated-declarations -g -Wall -fPIC -MMD -I\"/usr/local/Cellar/erlang/19.3/lib/erlang/lib/erl_interface-3.9.3/include\" -I\"/usr/local/Cellar/erlang/19.3/lib/erlang/erts-8.3/include\" /Users/auser/Development/elixir/mine/sellex/micro/newline/deps/fs/c_src/mac/main.c -o /Users/auser/Development/elixir/mine/sellex/micro/newline/deps/fs/c_src/mac/main.o"
+}
+]

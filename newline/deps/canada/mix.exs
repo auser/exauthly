@@ -1,0 +1,29 @@
+defmodule Canada.Mixfile do
+  use Mix.Project
+
+  def project do
+    [app: :canada,
+     version: "1.0.1",
+     elixir: "~> 1.0",
+     package: package,
+     consolidate_protocols: Mix.env != :test,
+     description: """
+       A DSL for declarative permissions
+     """,
+     deps: deps]
+  end
+
+  def package do
+    [contributors: ["Jared Norman"],
+     licenses: ["MIT"],
+     links: %{github: "https://github.com/jarednorman/canada"}]
+  end
+
+  def application do
+    [applications: []]
+  end
+
+  defp deps do
+    [{:ex_doc, ">= 0.0.0", only: :dev}]
+  end
+end

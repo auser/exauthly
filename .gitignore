@@ -20,3 +20,5 @@ rel
 newline.tar.gz
 .env
 .env.dev
+node_modules
+newline/deps/

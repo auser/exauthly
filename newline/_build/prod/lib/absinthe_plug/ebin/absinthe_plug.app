@@ -1,0 +1,10 @@
+{application,absinthe_plug,
+             [{description,"absinthe_plug"},
+              {modules,['Elixir.Absinthe.Plug',
+                        'Elixir.Absinthe.Plug.GraphiQL',
+                        'Elixir.Absinthe.Plug.Parser',
+                        'Elixir.Absinthe.Plug.Types',
+                        'Elixir.Absinthe.Plug.Validation.HTTPMethod']},
+              {registered,[]},
+              {vsn,"1.3.0-beta.0"},
+              {applications,[kernel,stdlib,elixir,logger,plug,absinthe]}]}.

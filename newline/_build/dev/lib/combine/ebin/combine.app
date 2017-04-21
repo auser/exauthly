@@ -1,0 +1,10 @@
+{application,combine,
+             [{description,"A parser combinator library for Elixir projects."},
+              {modules,['Elixir.Combine','Elixir.Combine.Helpers',
+                        'Elixir.Combine.ParserState',
+                        'Elixir.Combine.Parsers.Base',
+                        'Elixir.Combine.Parsers.Binary',
+                        'Elixir.Combine.Parsers.Text']},
+              {registered,[]},
+              {vsn,"0.9.6"},
+              {applications,[kernel,stdlib,elixir]}]}.

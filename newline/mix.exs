@@ -26,6 +26,9 @@ defmodule Newline.Mixfile do
   end
   defp applications(_) do
     [
+      :canary,
+      :canada,
+      :segment,
       :phoenix, 
       :phoenix_pubsub, 
       :phoenix_html, 
@@ -65,7 +68,7 @@ defmodule Newline.Mixfile do
   end
   defp deps(:dev) do
     deps(:all) ++ [
-      {:remix, "~> 0.0"},
+      {:remix, "~> 0.0", only: :dev},
       {:mix_test_watch, "~> 0.3", only: :dev, runtime: false}
     ]
   end
@@ -99,7 +102,8 @@ defmodule Newline.Mixfile do
       {:distillery, "~> 1.3"},
       {:mix_docker, "~> 0.4.2"},
       {:segment, "~> 0.1"},
-      {:canary, "~> 1.1"}
+      {:canary, "~> 1.1"},
+      {:distillery, "~> 1.3"}
     ]
   end
 

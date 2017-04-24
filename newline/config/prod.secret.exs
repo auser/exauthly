@@ -17,6 +17,6 @@ config :newline, Newline.Repo,
   username: "postgres",
   password: "C4FYD4k3WTAypfQ",
   database: "newline_prod",
-  hostname: "db",
+  hostname: "localhost",
   port: 5432,
   pool_size: 20

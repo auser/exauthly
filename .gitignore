@@ -22,3 +22,4 @@ newline.tar.gz
 .env.dev
 node_modules
 deps/
+_build

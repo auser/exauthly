@@ -19,7 +19,7 @@ defmodule Newline.Web do
   def service do
     quote do
       import Ecto
-      import Ecto.Query, only: [from: 1, from: 2]
+      import Ecto.Query, only: [from: 1, from: 2, where: 3]
       alias Ecto.Changeset
       alias Ecto.Multi
       alias Newline.Repo

@@ -1,7 +1,7 @@
 defmodule Newline.Organization do
   use Newline.Web, :model
 
-  alias Newline.{OrganizationMembership}
+  alias Newline.{OrganizationMembership, Organization}
 
   schema "organizations" do
     field :name, :string
@@ -34,10 +34,8 @@ defmodule Newline.Organization do
   def update_changeset(org, params \\ %{}) do
     org
     |> cast(params, [:name])
+    |> validate_required([:name])
+    |> validate_length(:name, min: 1, max: 255)
+    |> unique_constraint(:name, message: "Organization name already taken")
   end
-
-  @doc """
-  Get the organization owner
-  """
-  
 end

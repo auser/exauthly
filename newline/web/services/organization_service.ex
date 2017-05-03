@@ -31,23 +31,50 @@ defmodule Newline.OrganizationService do
   def insert(changeset, params) do
     Multi.new
     |> Multi.insert(:organization, changeset)
-    |> Multi.run(:insert_orgmember, &(insert_orgmember(params[:user_id], &1[:organization])))
+    |> Multi.run(:insert_orgmember, &(insert_orgmember(params[:user_id], &1[:organization], "owner")))
     |> Multi.run(:update_user_current_org, &(update_user_current_org(params[:user_id], &1[:organization])))
   end
+  
+  @doc """
+  Get the owner of this group
+  """
+  def get_owner(%Organization{id: organization_id}) do
+    query = from m in OrganizationMembership,
+      where: m.organization_id == ^organization_id and m.role == "owner",
+      join: u in User, where: u.id == m.member_id,
+      select: u
 
-  def insert_orgmember(user_id, org) do
+    Repo.one(query)
+  end
+  def get_owner(_), do: nil
+
+  @doc """
+  Get members of a group
+  """
+  def get_members(%Organization{id: organization_id}) do
+    query = from m in OrganizationMembership,
+      where: m.organization_id == ^organization_id,
+      order_by: [m.inserted_at],
+      join: u in User, where: u.id == m.member_id,
+      select: %{user: u, role: m.role}
+    
+    Repo.all(query)
+  end
+  def get_members(_), do: []
+
+  def insert_orgmember(user_id, org, role \\ "member") do
     OrganizationMembership.create_changeset(
       %OrganizationMembership{}, %{
         organization_id: org.id,
         member_id: user_id,
-        role: "owner"
+        role: role
       }
     )
     |> Repo.insert
     {:ok, org}
   end
 
-  def update_user_current_org(user_id, org) do
+  defp update_user_current_org(user_id, org) do
     user = Repo.get!(User, user_id)
     User.update_changeset(user, %{
       current_organization_id: org.id

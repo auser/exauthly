@@ -5,8 +5,8 @@ defmodule Newline.OrganizationTest do
 
   setup do
     {:ok, 
-      valid_user: build(:user),
-      valid_org: build(:organization)}
+      user: build(:user),
+      org: build(:organization)}
   end
 
   test "is created with valid name" do

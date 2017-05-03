@@ -35,4 +35,9 @@ defmodule Newline.Organization do
     org
     |> cast(params, [:name])
   end
+
+  @doc """
+  Get the organization owner
+  """
+  
 end

@@ -54,4 +54,14 @@ defmodule Newline.UserServiceTest do
     refute cs.valid?
   end
 
+  describe "user_with_organizations" do
+    setup do
+      user = build(:user) |> Repo.insert!
+      %{user: user}
+    end
+    test "finds the user memberships", %{user: user} do
+      assert UserService.user_with_organizations(user).organizations === []
+    end
+  end
+
 end

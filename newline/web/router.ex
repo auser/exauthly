@@ -49,7 +49,7 @@ defmodule Newline.Router do
   end
 
   scope "/graphql" do
-    pipe_through [:api, :bearer_auth, :gql_context, :check_admin]
+    pipe_through [:api, :bearer_auth, :gql_context]
 
     forward "/", Absinthe.Plug, schema: Newline.Schema
   end

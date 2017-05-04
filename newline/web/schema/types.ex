@@ -18,9 +18,9 @@ defmodule Newline.Schema.Types do
     field :all, list_of(:user)
   end
 
-  object :session do
-    field :token, :string
-  end
+  # object :session do
+  #   field :token, :string
+  # end
 
   input_object :update_user_params do
     field :first_name, :string

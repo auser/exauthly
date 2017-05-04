@@ -116,6 +116,13 @@ defmodule Newline.UserService do
   end
 
   @doc """
+  User profile
+  """
+  def user_profile(user) do
+    {:ok, user}
+  end
+
+  @doc """
   Send a welcome email to a new user
   """
   def send_welcome_email(_params, user) do

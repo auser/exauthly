@@ -7,14 +7,10 @@ defmodule Newline.OrganizationServiceTest do
   alias Newline.{OrganizationService, Repo}
 
   describe "create_org" do
-    setup do
-      user = build(:user) |> Repo.insert!
-      {:ok, org} = OrganizationService.create_org(user, %{name: "Fullstack"})
-      %{user: user, org: org}
-    end
+    setup [:create_user, :create_organization]
 
     test "creates an organization with a name", %{org: org} do
-      assert org.name === "Fullstack"
+      assert org.name === "Fullstack.io"
     end
 
     test "creates an organization with the user set as the owner", %{user: user, org: org} do
@@ -34,6 +30,13 @@ defmodule Newline.OrganizationServiceTest do
       owner = OrganizationService.get_owner(org)
       assert owner.id == user.id
       assert owner.email == user.email
+    end
+
+    test "gets owner with multiple users", %{org: org, user: user} do
+      user1 = build(:user) |> Repo.insert!
+      {:ok, _} = OrganizationService.insert_orgmember(user1.id, org)
+      owner = OrganizationService.get_owner(org)
+      assert owner.id == user.id
     end
   end
 

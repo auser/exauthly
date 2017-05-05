@@ -3,7 +3,7 @@ defmodule Newline.UserTest do
   import Newline.Factory
   alias Newline.{User, Repo}
 
-  @valid_attrs %{email: "some content"}
+  @valid_attrs %{email: "ari@fullstack.io", role: "user"}
   @invalid_attrs %{}
 
   setup do

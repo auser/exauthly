@@ -14,6 +14,7 @@ defmodule Newline.User do
     field :password, :string, virtual: true
     field :encrypted_password, :string
 
+    field :role, :string, default: "user"
     field :admin, :boolean, default: false
     
     field :password_reset_token, :string
@@ -26,6 +27,13 @@ defmodule Newline.User do
     timestamps()
   end
 
+  @valid_name_length [min: 1, max: 64]
+  @valid_password_length [min: 5, max: 128]
+  @valid_roles ~w(user admin superadmin)
+
+  def valid_name_length, do: @valid_name_length
+  def valid_roles, do: @valid_roles
+
   @doc """
   Builds a changeset based on the `struct` and `params`.
   """
@@ -33,17 +41,18 @@ defmodule Newline.User do
     struct
     |> cast(params, [:first_name, :last_name, :email])
     |> validate_required([:email])
+    |> validate_email_format(:email)
   end
 
   # When a user signs up
   def signup_changeset(user, params \\ %{}) do
     user
+    |> __MODULE__.changeset(params)
     |> cast(params, [:email, :password])
     |> validate_required([:email, :password])
     |> update_change(:email, &String.downcase/1)
-    |> validate_email_format(:email)
     |> unique_constraint(:email, message: "Email already taken")
-    |> validate_length(:password, min: 5, max: 128)
+    |> validate_length(:password, @valid_password_length)
     |> generate_encrypted_password
   end
 

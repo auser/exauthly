@@ -3,7 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "form-schema-validation": "^1.6.0",
+    "isomorphic-fetch": "^2.2.1",
     "react": "^15.5.4",
+    "react-apollo": "^1.2.0",
+    "react-components-form": "^2.0.0",
     "react-dom": "^15.5.4"
   },
   "devDependencies": {
@@ -15,6 +19,7 @@
     "isomorphic-fetch": "^2.2.1",
     "moment": "^2.18.1",
     "normalize.css": "^7.0.0",
+    "proptypes": "^1.0.0",
     "react-redux": "^5.0.4",
     "react-router-dom": "^4.1.1",
     "react-scripts": "0.9.5",

@@ -1,0 +1,7 @@
+export const CHANGE_FORM = 'AUTH_CHANGE_FORM'
+export const LOGIN_REQUEST = 'AUTH_LOGIN_REQUEST'
+
+export default {
+  CHANGE_FORM,
+  LOGIN_REQUEST,
+}

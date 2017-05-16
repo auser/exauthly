@@ -13,10 +13,17 @@ use Mix.Config
 # which you typically run after static files are built.
 config :newline, Newline.Endpoint,
   http: [port: {:system, "PORT"}],
-  url: [host: "example.com", port: 80],
-  url: [scheme: "https", host: "still-springs-97871.herokuapp.com", port: 443],
+  url: [scheme: "https", host: "ancient-journey-77024.herokuapp.com", port: 443],
+  force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/manifest.json",
-  check_origin: ["http://newline-frontend.s3-website-us-west-2.amazonaws.com"]
+  check_origin: ["http://newline-frontend.s3-website-us-west-2.amazonaws.com"],
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
+  render_errors: [view: Newline.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: Newline.PubSub,
+           adapter: Phoenix.PubSub.PG2],
+  server: true,
+  # use {:system, var} if library supports it
+  http: [port: {:system, "PORT"}]
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -36,17 +43,6 @@ config :guardian, Guardian,
   serializer: Newline.GuardianSerializer,
   permissions: %{default: [:read, :write]}
 
-config :newline, Newline.Endpoint,
-  secret_key_base: "${SECRET_KEY_BASE}",
-  render_errors: [view: Newline.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Newline.PubSub,
-           adapter: Phoenix.PubSub.PG2],
-  server: true,
-  # use {:system, var} if library supports it
-  http: [port: {:system, "PORT"}],  
-  # use ${VAR} syntax to replace config on startup
-  url: [ host: "${HOST}", port: {:system, "PORT"} ]  
-
 # config :newline, Newline.Repo,
 #   adapter: Ecto.Adapters.Postgres,
 #   url: System.get_env("DATABASE_URL"),
@@ -55,12 +51,9 @@ config :newline, Newline.Endpoint,
 
 config :newline, Newline.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: System.get_env("DATA_DB_USER"),
-  password: System.get_env("DATA_DB_PASS"),
-  hostname: System.get_env("DATA_DB_HOST"),
-  database: "newline",
+  url: System.get_env("DATABASE_URL"),
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
-  ssl: false
+  ssl: true
 
 # ## SSL Support
 #
@@ -101,4 +94,4 @@ config :newline, Newline.Repo,
 
 # Finally import the config/prod.secret.exs
 # which should be versioned separately.
-import_config "prod.secret.exs"
+# import_config "prod.secret.exs"

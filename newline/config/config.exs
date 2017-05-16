@@ -11,7 +11,8 @@ config :newline,
 
 # Configures the endpoint
 config :newline, Newline.Endpoint,
-  url: [host: "localhost"],
+  http: [port: 4000],
+  url: [ip: {0, 0, 0, 0}, port: 80],
   secret_key_base: "tfw45t1CsAHayWHb2MzTzNeQ0tB45U9U/8UijxcyEhPRfsnB37vZvukvRQ/LH3pX",
   render_errors: [view: Newline.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Newline.PubSub,
@@ -54,7 +55,16 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-config :mix_docker, image: "auser/newline"
+# config :mix_docker, image: "auser/newline"
+
+config :newline, Newline.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  username: System.get_env("DATA_DB_USER") || "postgres",
+  password: System.get_env("DATA_DB_PASS") || "postgres",
+  hostname: System.get_env("DATA_DB_HOST") || "localhost",
+  database: "newline",
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+  ssl: false
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

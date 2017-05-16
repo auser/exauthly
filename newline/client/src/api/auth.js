@@ -1,7 +1,7 @@
 import {
   apiURL,
   httpPost
-} from '../utils/http'
+} from 'utils/http'
 
 export function loginRequest (payload) {
 

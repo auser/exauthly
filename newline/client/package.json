@@ -4,11 +4,14 @@
   "private": true,
   "dependencies": {
     "form-schema-validation": "^1.6.0",
+    "graphql-tag": "^2.0.0",
     "isomorphic-fetch": "^2.2.1",
     "react": "^15.5.4",
     "react-apollo": "^1.2.0",
     "react-components-form": "^2.0.0",
-    "react-dom": "^15.5.4"
+    "react-dom": "^15.5.4",
+    "store": "^2.0.4",
+    "subscriptions-transport-ws": "^0.6.0"
   },
   "devDependencies": {
     "animate.css": "^3.5.2",
@@ -28,9 +31,9 @@
     "redux-saga": "^0.15.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "NODE_PATH=./src react-scripts start",
+    "build": "NODE_PATH=./src react-scripts build",
+    "test": "NODE_PATH=./src react-scripts test --env=jsdom",
+    "eject": "NODE_PATH=./src react-scripts eject"
   }
 }

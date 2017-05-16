@@ -1,10 +1,14 @@
 import React, {Component} from 'react'
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag'
+
 import T from 'prop-types'
 import {connect} from 'react-redux'
 import { Form, TextField, SubmitField } from 'react-components-form';
+import ErrorMessage from 'components/common/ErrorMessage'
 import Schema from 'form-schema-validation';
 
-import {loginRequest} from '../../store/actions'
+import { successfulLogin, errorLogin } from 'store/actions'
 
 const loginSchema = new Schema({
   email: { type: String, required: true },
@@ -19,12 +23,11 @@ class Login extends Component {
   }
 
   render () {
-    let {dispatch} = this.props
-    let {formState, currentlySending, error} = this.props.data
-
+    const { auth } = this.props
     return (
       <div className='form-page__wrapper'>
         <div className='form-page__form-wrapper'>
+          {auth.error && <ErrorMessage error={auth.error} />}
           <div className='form-page__form-header'>
             <h2 className='form-page__form-heading'>Login</h2>
           </div>
@@ -35,15 +38,16 @@ class Login extends Component {
           >
             <TextField name="email" label="Email" type="text" />
             <TextField name="password" label="Password" type="password" />
-            <SubmitField value="Submit" />
+            <SubmitField value="Submit" type="submit" />
           </Form>
         </div>
       </div>
     )
   }
 
-  _login (email, password) {
-    this.props.dispatch(loginRequest({email, password}))
+  _login ({ email, password }) {
+    console.log("_login")
+    this.props.submitLogin({ email, password })
   }
 }
 
@@ -53,6 +57,36 @@ Login.propTypes = {
   dispatch: T.func
 }
 
+const LOGIN_MUTATION = gql`
+mutation login($email:String!, $password:String!){
+  login(email:$email, password:$password){
+    token
+  }
+}
+`
+
+const withMutations = graphql(LOGIN_MUTATION, {
+  props: ({ ownProps, mutate }) => ({
+    submitLogin: ({ email, password }) => mutate({
+      variables: { email, password }
+    }).then(({ data }) => {
+      const { login } = data
+      ownProps.onSuccessfulLogin(login)
+    }).catch(ownProps.onErrorLogin)
+  })
+})
+
 export default connect(
-  (state) => ({ data: state.auth })
-)(Login)
+  (state) => ({ 
+    data: state.auth,
+    auth: state.auth,
+  }),
+  (dispatch) => ({
+    onSuccessfulLogin(token) {
+      dispatch(successfulLogin(token))
+    },
+    onErrorLogin (error) {
+      dispatch(errorLogin(error))
+    }
+  })
+)(withMutations(Login))

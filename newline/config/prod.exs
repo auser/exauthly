@@ -47,9 +47,18 @@ config :newline, Newline.Endpoint,
   # use ${VAR} syntax to replace config on startup
   url: [ host: "${HOST}", port: {:system, "PORT"} ]  
 
+# config :newline, Newline.Repo,
+#   adapter: Ecto.Adapters.Postgres,
+#   url: System.get_env("DATABASE_URL"),
+#   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
+#   ssl: false
+
 config :newline, Newline.Repo,
   adapter: Ecto.Adapters.Postgres,
-  url: System.get_env("DATABASE_URL"),
+  username: System.get_env("DATA_DB_USER"),
+  password: System.get_env("DATA_DB_PASS"),
+  hostname: System.get_env("DATA_DB_HOST"),
+  database: "newline",
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
   ssl: false
 

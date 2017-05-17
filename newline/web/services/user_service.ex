@@ -6,7 +6,7 @@ defmodule Newline.UserService do
   for handling anything to do with users.
   """
   use Newline.Web, :service
-  alias Newline.{Email, Mailer, Repo, User}
+  alias Newline.{Email, Mailer, Repo, User, OrganizationMembership}
 
   @doc """
   Handle user signup
@@ -151,7 +151,22 @@ defmodule Newline.UserService do
   end
 
   @doc """
-  Get user's memberships
+  Get user memberships
+  """
+  def user_memberships(user) do
+    # organization_query = from org in "organizations",
+                            # preload: 
+    membership_query = from m in OrganizationMembership,
+                        where: m.member_id == ^user.id,
+                        left_join: org in assoc(m, :organization),
+                        left_join: member in assoc(m, :member),
+                        preload: [organization: org, member: member]
+                        # select: [%{id: m.id, role: m.role, org: org}]
+    Repo.all(membership_query)
+  end
+
+  @doc """
+  Get user and organizations
   """
   def user_with_organizations(user) do
     user = Repo.get(User, user.id)

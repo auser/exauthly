@@ -2,6 +2,9 @@ import React, {Component} from 'react'
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag'
 
+import {
+  Redirect
+} from 'react-router-dom'
 import T from 'prop-types'
 import {connect} from 'react-redux'
 import { Form, TextField, SubmitField } from 'react-components-form';
@@ -24,6 +27,9 @@ class Login extends Component {
 
   render () {
     const { auth } = this.props
+    if (auth.loggedIn) {
+      return <Redirect to="/dashboard" />
+    }
     return (
       <div className='form-page__wrapper'>
         <div className='form-page__form-wrapper'>

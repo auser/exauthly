@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom'
 
 const LOGIN_ROOT = '/login'
-const PRIVATE_ROOT = '/'
+const PRIVATE_ROOT = '/dashboard'
 
 export const AuthRoute = ({ component, loggedIn, ...props }) => {
   const { isPrivate } = component

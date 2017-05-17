@@ -1,7 +1,7 @@
 defmodule Newline.UserServiceTest do
   use Newline.ModelCase
   import Newline.Factory
-  alias Newline.{UserService, User, Repo}
+  alias Newline.{UserService, OrganizationService, User, Repo}
 
   test "user_signup creates a new user" do
     valid_attrs = params_for(:user)
@@ -63,5 +63,42 @@ defmodule Newline.UserServiceTest do
       assert UserService.user_with_organizations(user).organizations === []
     end
   end
+
+  describe "user_memberships" do
+    setup [:create_user, :create_organization]
+
+    setup %{user: user} = context do
+      owner = build(:user) |> Repo.insert!
+      {:ok, org} = OrganizationService.create_org(owner, %{name: "Bob's burgers'"})
+      OrganizationService.insert_orgmember(user, org)
+      Map.put(context, :owner, owner)
+    end
+    
+    test "Finds all memberships for a user", %{user: user} do
+      memberships = UserService.user_memberships(user)
+
+      assert length(memberships) == 2
+    end
+
+    test "has a user with role of 'user'", %{user: user} do
+      memberships = UserService.user_memberships(user)
+      IO.inspect memberships
+    end
+  end
+
+  defp create_user(context) do
+    user = build(:user) |> Repo.insert!
+    Map.put(context, :user, user)
+  end
+
+  defp create_organization(%{user: user} = context) do
+    {:ok, org} = OrganizationService.create_org(user, %{name: "Fullstack.io"})
+    Map.put(context, :org, org)
+  end
+
+  # defp create_membership(%{user: user, org: org} = context) do
+  #   {:ok, membership} = OrganizationService.insert_orgmember(user, org)
+  #   Map.put(context, :membership, membership)
+  # end
 
 end

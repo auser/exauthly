@@ -62,7 +62,8 @@ defmodule Newline.OrganizationService do
   end
   def get_members(_), do: []
 
-  def insert_orgmember(user_id, org, role \\ "member") do
+  def insert_orgmember(user_id, org, role \\ "member")
+  def insert_orgmember(user_id, org, role) when is_integer(user_id) do
     OrganizationMembership.create_changeset(
       %OrganizationMembership{}, %{
         organization_id: org.id,
@@ -73,6 +74,7 @@ defmodule Newline.OrganizationService do
     |> Repo.insert
     {:ok, org}
   end
+  def insert_orgmember(user, org, role), do: insert_orgmember(user.id, org, role)
 
   defp update_user_current_org(user_id, org) do
     user = Repo.get!(User, user_id)

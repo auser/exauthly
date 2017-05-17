@@ -2,16 +2,20 @@ import React from 'react'
 import Routes from 'routes'
 import './App.css'
 
-function App() {
+import { connect } from 'react-redux'
+
+function App(props) {
   return (
     <div id="app">
       <main>
-        <h1>Hi</h1>
-        <Routes />
-        <h2>Howdy</h2>
+        <Routes {...props} />
       </main>
     </div>
   )
 }
 
-export default App
+export default connect(
+  state => ({
+    isLoggedIn: !!state.auth.token
+  })
+)(App)

@@ -6,17 +6,19 @@ import {
 } from 'react-router-dom'
 import Route from './components/AuthRoute'
 
-import Landing from 'views/Public/Landing/Landing'
-import Login from 'views/Public/Auth/Login'
-
+import PublicRoutes from 'views/Public/routes'
+import PrivateRoutes from 'views/Private/routes'
 // import Home from './views/Home/Home'
 
 export default props => (
   <Router>
-    <Switch>
-      <Route exact path="/" component={Landing} />
-      <Route path="/login" component={Login} />
+    <div>
+      <pre>{JSON.stringify(props, null, 2)}</pre>
+      <Switch>
+        {props.isLoggedIn && <PrivateRoutes {...props} />}
+        <PublicRoutes {...props} />
+      </Switch>
       <Route path="*" component={() => <Redirect to="/" />} />
-    </Switch>
+    </div>
   </Router>
 )

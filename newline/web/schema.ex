@@ -4,10 +4,12 @@ defmodule Newline.Schema do
   import_types Newline.Schema.Types.Auth
   import_types Newline.Schema.Types.User
   import_types Newline.Schema.Types.Org
+  import_types Newline.Schema.Types.Membership
 
   query do
     import_fields :user_fields
     import_fields :org_fields
+    import_fields :membership_fields
 
     # field :organizations, list_of(:organization) do
     #   resolve &Newline.OrganizationResolver.all/2

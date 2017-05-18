@@ -8,7 +8,7 @@ defmodule Newline.Schema.Types.Auth do
   object :auth_mutations do
     
     field :login, type: :session do
-      arg :email, non_null(:string)
+      arg :email, non_null(:email)
       arg :password, non_null(:string)
       
       resolve &Newline.UserResolver.login/2

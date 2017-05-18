@@ -14,7 +14,7 @@ defmodule Newline.Schema.Types.User do
 
   object :user_mutations do
     field :signup_with_email_and_password, type: :user do
-      arg :email, non_null(:string)
+      arg :email, non_null(:email)
       arg :password, non_null(:string)
 
       arg :first_name, :string

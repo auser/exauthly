@@ -6,7 +6,7 @@ defmodule Newline.Schema.Types do
     field :id, :id
     field :first_name, :string
     field :last_name, :string
-    field :email, :string
+    field :email, :email
 
     field :token, :string
     field :current_organization, :organization
@@ -25,6 +25,13 @@ defmodule Newline.Schema.Types do
     field :role, :string
   end
 
+  scalar :email do
+    name "Email"
+    description "User's Email"
+    serialize fn(x) -> x end
+    parse &Newline.Validators.EmailValidator.parse_and_validate_is_email(&1.value)
+  end
+
   # object :session do
   #   field :token, :string
   # end
@@ -32,7 +39,7 @@ defmodule Newline.Schema.Types do
   input_object :update_user_params do
     field :first_name, :string
     field :last_name, :string
-    field :email, :string
+    field :email, :email
     field :password, :string
   end
 

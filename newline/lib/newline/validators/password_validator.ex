@@ -1,12 +1,8 @@
 defmodule Newline.Validators.PasswordValidator do
 
-  # import Newline.Validators.StringValidator, only: [min: 2, max: 2]
+  import Newline.Validators.StringValidator
 
-  def parse(password) do
-    case String.length(password) > 4 do
-      true -> {:ok, password}
-      _ -> :error
-    end
-  end
+  def parse(password) when byte_size(password) > 4, do: {:ok, password}
+  def parse(password), do: :error
 
 end

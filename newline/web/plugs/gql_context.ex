@@ -26,8 +26,8 @@ defmodule Newline.Plug.Context do
       nil -> 
         {:error, "No authorization token"}
       current_token ->
-        with {:ok, claims} <- Guardian.decode_and_verify(current_token),
-            {:ok, user} <- GuardianSerializer.from_token(claims["sub"]) do
+        with  {:ok, claims} <- Guardian.decode_and_verify(current_token),
+              {:ok, user} <- GuardianSerializer.from_token(claims["sub"]) do
               {:ok, %{current_user: user, admin: user.admin}}
         else
           {:error, _reason} -> {:error, "Invalid authorization token"}

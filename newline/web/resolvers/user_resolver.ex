@@ -5,11 +5,14 @@ defmodule Newline.UserResolver do
 
   alias Newline.{User, Repo, UserService}
   
+  @doc """
+  Get all the users for a particular query
+  """
   def all(_args, %{context: %{current_user: user}}) do
-    case can?(user, read User) do
-      true -> {:ok, Repo.all(User)}
-      false -> {:ok, user}
-    end
+    can?(user, read User) and {:ok, user}
+  end
+  def all(_args, %{context: %{current_user: user, admin: true}}) do
+    {:ok, Repo.all(User)}
   end
   def all(_, _), do: Newline.BaseResolver.unauthorized_error
 

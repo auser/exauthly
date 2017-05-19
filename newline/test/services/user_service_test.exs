@@ -79,14 +79,6 @@ defmodule Newline.UserServiceTest do
 
       assert length(memberships) == 2
     end
-
-    test "has a user with role of 'member'", %{user: user} do
-      memberships = UserService.user_memberships(user)
-      membership = memberships |> Enum.find(fn (mbm) -> mbm.role == "member" end)
-
-      assert membership != nil
-      assert membership.member.id == user.id
-    end
   end
 
   defp create_user(context) do

@@ -5,10 +5,9 @@ defmodule Newline.User do
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
   import Newline.Helpers.Validation
 
-  @derive {Poison.Encoder, only: [:email, :first_name, :last_name, :admin]}
+  @derive {Poison.Encoder, only: [:email, :name, :admin]}
   schema "users" do
-    field :first_name, :string
-    field :last_name, :string
+    field :name, :string
     field :email, :string
 
     field :password, :string, virtual: true
@@ -39,7 +38,7 @@ defmodule Newline.User do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:first_name, :last_name, :email])
+    |> cast(params, [:name, :email])
     |> validate_required([:email])
     |> validate_email_format(:email)
   end
@@ -90,7 +89,7 @@ defmodule Newline.User do
   # When a user is getting updated
   def update_changeset(user, params \\ %{}) do
     user
-    |> cast(params, [:first_name, :last_name, :email, :admin, :current_organization_id])
+    |> cast(params, [:name, :email, :admin, :current_organization_id])
     |> update_change(:email, &String.downcase/1)
     |> validate_email_format(:email)
     |> unique_constraint(:email, message: "Email already taken")

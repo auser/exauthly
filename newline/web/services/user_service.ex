@@ -6,7 +6,7 @@ defmodule Newline.UserService do
   for handling anything to do with users.
   """
   use Newline.Web, :service
-  alias Newline.{Email, Mailer, Repo, User, OrganizationMembership}
+  alias Newline.{Email, Mailer, Repo, User, OrganizationMembership, OrganizationService}
 
   @doc """
   Handle user signup
@@ -60,6 +60,7 @@ defmodule Newline.UserService do
   def insert(changeset, params \\ %{}) do
     Multi.new
     |> Multi.insert(:user, changeset)
+    |> Multi.run(:create_default_group, &(create_default_group(params, &1[:user])))
     |> Multi.run(:send_welcome_email, &(send_welcome_email(params, &1[:user])))
   end
 
@@ -120,6 +121,14 @@ defmodule Newline.UserService do
   """
   def user_profile(user) do
     {:ok, user}
+  end
+
+  @doc """
+  Create a group for the user
+  """
+  def create_default_group(_params, user) do
+    org = OrganizationService.create_org(user, %{name: user.name})
+    {:ok, org}
   end
 
   @doc """

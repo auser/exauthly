@@ -3,8 +3,7 @@ defmodule Newline.Schema.Types.UserTypes do
 
   object :user do
     field :id, :id
-    field :first_name, :string
-    field :last_name, :string
+    field :name, :string
     field :email, :email
 
     field :token, :string

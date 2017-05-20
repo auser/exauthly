@@ -10,8 +10,7 @@ defmodule Newline.UserView do
   def render("user.json", %{user: user}) do
     %{
       id: user.id,
-      first_name: user.first_name,
-      last_name: user.last_name,
+      name: user.name,
       email: user.email
     }
   end

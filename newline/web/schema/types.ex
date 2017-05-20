@@ -23,8 +23,7 @@ defmodule Newline.Schema.Types do
   # end
 
   input_object :update_user_params do
-    field :first_name, :string
-    field :last_name, :string
+    field :name, :string
     field :email, :email
     field :password, :string
   end

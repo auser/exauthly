@@ -7,8 +7,7 @@ defmodule Newline.Factory do
 
   def user_factory do
     %Newline.User{
-      first_name: "Ari",
-      last_name: "Lerner",
+      name: "Ari Lerner",
       email: sequence(:email, &"email-#{&1}@fullstack.io"),
       password: @pass,
       encrypted_password: @encrypted_password

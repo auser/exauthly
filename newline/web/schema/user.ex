@@ -17,8 +17,7 @@ defmodule Newline.Schema.Types.User do
       arg :email, non_null(:email)
       arg :password, non_null(:string)
 
-      arg :first_name, :string
-      arg :last_name, :string
+      arg :name, :string
 
       resolve &Newline.UserResolver.create/2
     end

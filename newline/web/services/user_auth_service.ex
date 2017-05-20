@@ -39,8 +39,7 @@ defmodule Newline.UserAuthService do
   defp create_user_from_auth(auth) do
     params = scrub(%{
       email: auth.info.email,
-      first_name: auth.info.first_name,
-      last_name: auth.info.last_name
+      name: auth.info.name,
     })
     Multi.new
     |> Multi.insert(:user, User.changeset(%User{}, params))

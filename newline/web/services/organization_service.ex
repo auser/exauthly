@@ -2,6 +2,7 @@ defmodule Newline.OrganizationService do
   use Newline.Web, :service
 
   alias Newline.{Repo, Organization, OrganizationMembership, User}
+  import Newline.BasePolicy, only: [get_membership: 2]
 
   @doc """
   Create an organization
@@ -48,6 +49,15 @@ defmodule Newline.OrganizationService do
   end
   def get_owner(_), do: nil
 
+  # @doc """
+  # Get the membership for a user
+  # """
+  # def get_membership(%User{id: user_id}, %Organization{id: org_id}) do
+  #   from m in OrganizationMembership
+  #     where: m.organization_id == ^organization_id and m.member_id == ^user_id,
+  #   |> Repo.all
+  # end
+
   @doc """
   Get members of a group
   """
@@ -76,6 +86,21 @@ defmodule Newline.OrganizationService do
     {:ok, org}
   end
   def insert_orgmember(user, org, role), do: insert_orgmember(user.id, org, role)
+
+  @doc """
+  Update the user's role'
+  """
+  def update_orgrole(user_id, org, role \\ "member") do
+    membership = get_membership(org, user_id)
+
+    org = OrganizationMembership.update_changeset(
+      membership, %{
+        role: role
+      }
+    ) |> Repo.update
+
+    {:ok, org}
+  end
 
   defp update_user_current_org(user_id, org) do
     user = Repo.get!(User, user_id)

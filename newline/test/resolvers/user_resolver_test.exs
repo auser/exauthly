@@ -3,6 +3,7 @@ defmodule Newline.UserResolverTest do
   use Newline.GqlCase
   import Newline.AssertResult
   import Newline.Factory
+  # import Newline.BasePolicy, only: [get_membership: 2]
   alias Newline.{UserResolver, OrganizationService, User}
 
   setup [:create_admin_user]
@@ -132,11 +133,30 @@ defmodule Newline.UserResolverTest do
     test "a user who is an admin of an organization can list all org members", %{org: org} do
       user1 = build(:user, %{current_organization: org}) |> Repo.insert!
       {:ok, _} = OrganizationService.insert_orgmember(user1, org, "admin")
-
       {:ok, %{data: %{"users" => users}}} = 
         @query |> run(Newline.Schema, context: %{current_user: user1, current_org: org, admin: false})
       
       assert length(users) == 2
+    end
+
+    test "the owner of an organization can list all org members", %{user: user, org: org} do
+      {:ok, _} = OrganizationService.update_orgrole(user, org, "owner")
+      {:ok, %{data: %{"users" => [u|_] = users}}} = @query |> run(Newline.Schema, context: %{current_user: user, current_org: org})
+      assert length(users) == 1
+      assert u["email"] == user.email
+    end
+
+    test "a manager of an organization can list all org members", %{user: user, org: org} do
+      {:ok, _} = OrganizationService.update_orgrole(user, org, "manager")
+      {:ok, %{data: %{"users" => [u|_] = users}}} = @query |> run(Newline.Schema, context: %{current_user: user, current_org: org})
+      assert length(users) == 1
+      assert u["email"] == user.email
+    end
+
+    test "a member of an organization cannot list users", %{user: user, org: org} do
+      {:ok, _} = OrganizationService.update_orgrole(user, org, "member")
+      {:ok, %{data: %{"users" => nil}, errors: [errors|_]}} = @query |> run(Newline.Schema, context: %{current_user: user, current_org: org})
+      assert errors[:message] == "In field \"users\": Unauthorized"
     end
   end
 

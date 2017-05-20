@@ -40,6 +40,16 @@ defmodule Newline.OrganizationServiceTest do
     end
   end
 
+  describe "update a user role" do
+    setup [:create_user, :create_organization]
+
+    test "can update the user role", %{org: org, user: user} do
+      refute get_membership(org, user).role == "admin"
+      OrganizationService.update_orgrole(user, org, "admin")
+      assert get_membership(org, user).role == "admin"
+    end
+  end
+
   describe "get_members" do
     setup [:create_user, :create_organization]
 

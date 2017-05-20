@@ -12,6 +12,12 @@ defmodule Newline.Schema.Types.Org do
 
   end
   
-  # object :org_mutations do
-  # end
+  object :org_mutations do
+    field :create_organization, type: :organization do
+      arg :name, non_null(:string)
+
+      resolve &Newline.OrganizationResolver.create_organization/2
+    end
+
+  end
 end

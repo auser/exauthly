@@ -72,6 +72,9 @@ defmodule Newline.BasePolicy do
   def member?(%User{} = user, %Organization{} = org) do
     member?(get_role(org, user))
   end
+  def member?(%Changeset{changes: %{current_organization_id: _}} = cs, %User{} = user) do
+    member?(get_role(cs, user))
+  end
   def member?(_, _), do: false
 
   @doc """

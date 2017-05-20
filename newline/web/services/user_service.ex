@@ -192,7 +192,7 @@ defmodule Newline.UserService do
   Reset a user's password'
   """
   def reset_password(token, password), do: do_reset_password(token, password)
-  
+
   defp do_reset_password(token, password) do
     case user_by_password_token(token) do
       nil -> {:error, :not_found}
@@ -295,11 +295,12 @@ defmodule Newline.UserService do
   @doc """
   Get user memberships
   """
-  def user_memberships(user) do
+  def user_memberships(%User{id: user_id}), do: user_memberships(user_id)
+  def user_memberships(user_id) do
     # organization_query = from org in "organizations",
                             # preload:
     membership_query = from m in OrganizationMembership,
-                        where: m.member_id == ^user.id,
+                        where: m.member_id == ^user_id,
                         left_join: org in assoc(m, :organization),
                         left_join: member in assoc(m, :member),
                         preload: [organization: org, member: member]

@@ -1,5 +1,7 @@
 defmodule Newline.Helpers.Validation do
   alias Ecto.Changeset
+  # import Newline.BasePolicy, only: [member?: 2]
+
 
   @doc """
   Validate a field as an email
@@ -18,4 +20,18 @@ defmodule Newline.Helpers.Validation do
     changeset
     |> Changeset.validate_format(field_name, valid_slug_pattern)
   end
+
+  # @doc """
+  # Validates a user is a member of an organization
+  # """
+  # def validate_member_of(%Changeset{} = cs, user) do
+  #   Changeset.validate_change(cs, :current_organization_id, fn _, org_id ->
+  #     case Newline.BasePolicy.member?(cs, user) do
+  #       true -> []
+  #       false ->
+  #         [current_organization: "user must belong to this organization to switch to it"]
+  #     end
+  #   end)
+  # end
+  # def validate_member_of(cs, field, options \\ []), do: cs
 end

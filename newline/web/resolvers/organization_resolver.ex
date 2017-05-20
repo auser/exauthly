@@ -43,7 +43,11 @@ defmodule Newline.OrganizationResolver do
   def create_organization(_, _), do: Newline.BaseResolver.unauthorized_error
 
   @doc """
-  Set the user's current organization'
+  Set the user's current organization
+
+  If we set the current_organization to nil, the user _must_ be a site_admin
+  or this will fail. Additionally, a user can only change their current_organization to
+  an organization they currently belong to (`OrganizationMembership`).
   """
 
 end

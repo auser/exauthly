@@ -3,6 +3,7 @@ defmodule Newline.User do
 
   alias Newline.Repo
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
+  # import Newline.BasePolicy, only: [member?: 2]
   import Newline.Helpers.Validation
 
   @derive {Poison.Encoder, only: [:email, :name, :admin]}
@@ -108,6 +109,32 @@ defmodule Newline.User do
     |> validate_inclusion(:role, @valid_roles)
     |> foreign_key_constraint(:current_organization_id)
     |> assoc_constraint(:current_organization)
+    |> validate_can_switch_to_organization
+  end
+
+  defp validate_can_switch_to_organization(changeset) do
+    # Only run our validation if there are changes and no previous errors
+    user_id = get_field(changeset, :id)
+    if changeset.valid? && changeset.changes != %{} && user_id != nil do
+      current_org_id = get_field(changeset, :current_organization_id)
+
+      memberships = user_group_ids(user_id)
+      case Enum.member?(memberships, current_org_id) do
+        true -> changeset
+        false -> Ecto.Changeset.add_error(changeset, :current_organization_id, "must be a member to switch to this organization")
+      end
+      changeset
+    else
+      changeset
+    end
+  end
+
+  defp user_group_ids(user_id) do
+    membership_query = from m in Newline.OrganizationMembership,
+                        where: m.member_id == ^user_id,
+                        left_join: org in assoc(m, :organization),
+                        select: org.id
+    Repo.all(membership_query)
   end
 
   def authenticate_by_email_and_pass(%{email: email, password: password} = _params) do

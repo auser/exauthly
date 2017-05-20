@@ -1,4 +1,10 @@
 defmodule Newline.Schema do
+  @moduledoc """
+  Provides a top-level, global configuration of the Absinthe/GraphQL
+  schema. Look in the submodules for the definitions of these graphql
+  types and mutations. 
+  """
+
   use Absinthe.Schema
   import_types Newline.Schema.Types
   import_types Newline.Schema.Types.Auth
@@ -10,23 +16,13 @@ defmodule Newline.Schema do
     import_fields :user_fields
     import_fields :org_fields
     import_fields :membership_fields
-
-    # field :organizations, list_of(:organization) do
-    #   resolve &Newline.OrganizationResolver.all/2
-    # end
   end
 
   mutation do
 
     import_fields :auth_mutations
     import_fields :user_mutations
-    # import_fields :org_mutations
-
-    field :create_organization, type: :organization do
-      arg :name, non_null(:string)
-
-      resolve &Newline.OrganizationResolver.create_organization/2
-    end
+    import_fields :org_mutations
 
   end
 

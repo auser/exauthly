@@ -18,6 +18,10 @@ defmodule Newline.Schema.Types do
     field :role, :string
   end
 
+  object :success_type do
+    field :success, :boolean
+  end
+
   # object :session do
   #   field :token, :string
   # end

@@ -35,8 +35,8 @@ defmodule Newline.UserResolver do
     UserService.user_login(params) |> response
   end
 
-  def verify_user(%{verify_token: token}, info) do
-    UserService.verify_user(token)
+  def verify_user(%{verify_token: token}, _info) do
+    UserService.verify_user(token) |> response
   end
 
   def me(_args, %{context: %{current_user: user}}) do

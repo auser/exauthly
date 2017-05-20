@@ -19,7 +19,6 @@ defmodule Newline.UserService do
         {:ok, jwt, _claims} = do_user_login(user)
         {:ok, Map.put(user, :token, jwt)}
       {:error, _failed_op, failed_changeset, _changes} ->
-        IO.inspect failed_changeset
         {:error, failed_changeset}
     end
   end
@@ -45,7 +44,7 @@ defmodule Newline.UserService do
   end
 
   # Assign user claims with admin
-  defp user_claims(user, login_claims \\ %{}) do
+  defp user_claims(user, login_claims) do
     perms = case site_admin?(user) do
       true -> Map.merge(%{ default: [:read, :write], admin: Guardian.Permissions.max }, login_claims)
       false -> Map.merge(%{ default: [:read, :write] }, login_claims)
@@ -124,11 +123,12 @@ defmodule Newline.UserService do
     case user_by_verify_token(token) do
       nil -> {:error, :not_found}
       user = %User{} ->
-        user
+        user = user
         |> User.verifying_changeset(%{verify_token: token})
-        |> Repo.update
-        {:ok, jwt, claims} = do_user_login(user)
-        {:ok, user, jwt, claims}
+        |> Repo.update!
+        {:ok, jwt, _claims} = do_user_login(user)
+        user = Map.put(user, :token, jwt)
+        {:ok, user}
     end
   end
 

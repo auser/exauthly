@@ -1,5 +1,7 @@
 defmodule Newline.UserResolverTest do
   use Newline.ModelCase
+  use Newline.GqlCase
+  import Newline.AssertResult
   import Newline.Factory
   alias Newline.{UserResolver, OrganizationService, User}
 
@@ -38,15 +40,47 @@ defmodule Newline.UserResolverTest do
     assert resp.token != nil
   end
 
+  describe "verify_user" do
+    setup [:create_admin_user, :save_user_with_token]
+
+    test "successfully verifies a new user", %{saved_user: user} do
+      query = """
+        mutation verify($verifyToken:String!){
+          verifyUser(verifyToken:$verifyToken){id verified}
+        }
+        """
+      assert_result {:ok, %{data: %{"verifyUser" => %{"id" => "#{user.id}", "verified" => true}}}}, 
+        query |> run(Newline.Schema, variables: %{"verifyToken" => user.verify_token})
+    end
+
+    test "does not verify a user without a valid token" do
+      query = """
+      mutation verify($verifyToken:String!){
+        verifyUser(verifyToken:$verifyToken){id}
+      }
+      """
+      assert_result {:ok, %{errors:
+        [%{message: "In field \"verifyUser\": not_found"}], data: %{"verifyUser" => nil} }},
+        query |> run(Newline.Schema, variables: %{"verifyToken" => "blah"})
+    end
+  end
+
   defp create_admin_user(context) do
     user = build(:user, %{admin: true}) |> Repo.insert!
-    {:ok, org} = OrganizationService.create_org(user, %{name: "Fullstack.io"})
+    {:ok, org} = OrganizationService.create_org(user, params_for(:organization))
     user = Repo.get!(User, user.id) ## Reload
     context
       |> Map.put(:admin, false)
       |> Map.put(:current_user, user)
       |> Map.put(:current_org, org)
       |> Map.put(:role, "owner")
+  end
+
+  defp save_user_with_token(context) do
+    user = build(:user, %{verify_token: "12345"}) |> Repo.insert!
+    context
+    |> Map.put(:verify_token, "12345")
+    |> Map.put(:saved_user, user)
   end
 
 end

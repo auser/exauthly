@@ -52,7 +52,12 @@ defmodule Newline.UserResolverTest do
 
     test "creates a new user with the email" do
       {:ok, %{data: res}} = @query |> run(Newline.Schema, variables: %{"email" => "bob@bob.com", "password" => "something", "name" => "Ari Lerner"})
-      %{"signupWithEmailAndPassword" => %{"email" => "bob@bob.com", "verified" => false}} = res
+        %{"signupWithEmailAndPassword" => %{"email" => "bob@bob.com", "verified" => false}} = res
+    end
+
+    test "cannot create a user with bad email" do
+      {:ok, %{errors: [m]}} = @query |> run(Newline.Schema, variables: %{"email" => "bobcom", "password" => "something", "name" => "Ari Lerner"})
+      assert Map.fetch(m, :message) == {:ok, "Argument \"email\" has invalid value $email."}
     end
   end
 
@@ -68,10 +73,8 @@ defmodule Newline.UserResolverTest do
     """
 
     test "logs a user in with email and password", %{user: user, password: password} do
-      {:ok, result} = @query |> run(Newline.Schema, variables: %{"email" => user.email, "password" => password})
-      {:ok, data} = Map.fetch(result, :data)
-      {:ok, login} = Map.fetch(data, "login")
-      {:ok, token} = Map.fetch(login, "token")
+      {:ok, %{data: %{"login" => %{"token" => token}}}} = @query |> run(Newline.Schema, variables: %{"email" => user.email, "password" => password})
+      # {:ok, login} = Map.fetch(data, "login")
       assert token != nil
     end
 

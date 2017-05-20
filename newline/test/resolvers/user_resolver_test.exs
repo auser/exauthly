@@ -1,32 +1,26 @@
 defmodule Newline.UserResolverTest do
   use Newline.ModelCase
   import Newline.Factory
-  alias Newline.{UserResolver}
+  alias Newline.{UserResolver, OrganizationService, User}
 
-  setup do
-    user = insert(:user)
-    {
-      :ok, 
-      current_user: user,
-      context: %{context: %{ current_user: user }},
-      valid_org: insert(:organization)
-    }
-  end
+  setup [:create_admin_user]
 
   test "all/2 returns undefined without user" do
     assert UserResolver.all(:something, %{}) == {:error, "Unauthorized"}
   end
 
-  test "all/2 returns all the users if the user is an admin" do
-    insert(:user)
-    context = %{context: %{current_user: insert(:user, admin: true), admin: true}}
+  test "all/2 returns all the users if the user is an admin of group", %{current_org: current_org} = context do
+    context = %{context: %{context | admin: false, role: "owner"}}
+    another_user = build(:user, %{admin: false}) |> Repo.insert!
+    {:ok, _} = OrganizationService.insert_orgmember(another_user, current_org)
+
     {:ok, users} = UserResolver.all(:type, context)
-    assert length(users) == 4
+    assert length(users) == 2
   end
 
-  test "all/2 returns only the current user", %{context: context, current_user: current_user} do
-    {:ok, user} = UserResolver.all(:type, context)
-    assert user.id == current_user.id
+  test "all/2 returns only the current user", context do
+    context = %{context: %{ context | role: nil }}
+    assert {:error, _} = UserResolver.all(:type, context)
   end
 
   test "login/2 returns false with bad credentials" do
@@ -42,6 +36,17 @@ defmodule Newline.UserResolverTest do
     u = params_for(:user)
     {:ok, resp} = UserResolver.create(u, :info)
     assert resp.token != nil
+  end
+
+  defp create_admin_user(context) do
+    user = build(:user, %{admin: true}) |> Repo.insert!
+    {:ok, org} = OrganizationService.create_org(user, %{name: "Fullstack.io"})
+    user = Repo.get!(User, user.id) ## Reload
+    context
+      |> Map.put(:admin, false)
+      |> Map.put(:current_user, user)
+      |> Map.put(:current_org, org)
+      |> Map.put(:role, "owner")
   end
 
 end

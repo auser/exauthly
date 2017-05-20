@@ -1,17 +1,23 @@
 defmodule Newline.UserPolicy do
-  import Newline.BasePolicy, only: [member?: 2, member?: 1, get_role: 1, get_membership: 2]
+  import Newline.BasePolicy, only: [member?: 2, member?: 1, get_role: 1, get_membership: 2, at_least_admin?: 2, at_least_manager?: 2]
 
   alias Newline.{User, Organization}
   alias Ecto.Changeset
 
   defimpl Canada.Can, for: User do
+    @admin_actions  [:admin]
+    @list_actions   [:list]
+    @read_actions   [:read]
+    @write_actions  [:update, :create, :destroy]
+
     # User can do all the actions they want on themselves
-    def can?(%User{id: user_id}, action, %User{id: user_id})
-      when action in [:update, :read, :show, :edit], do: true
+    def can?(%User{id: user_id}, _action, %User{id: user_id}), do: true
     # User can read their own organizations
-    def can?(%User{} = user, :read, %Organization{} = org), do: member?(org, user)
+    def can?(%User{} = user, action, %Organization{} = org) when action in @read_actions, do: at_least_manager?(user, org)
+    # An admin user can read all of their members
+    def can?(%User{} = user, action, %Organization{} = org) when action in @write_actions, do: at_least_admin?(user, org)
     # An admin can do anything
-    def can?(%User{admin: admin} = user, _, _), do: admin
+    def can?(%User{admin: admin, current_organization_id: nil} = user, _, _), do: admin
 
     # Anything else, reject
     def can?(_, _, _), do: false

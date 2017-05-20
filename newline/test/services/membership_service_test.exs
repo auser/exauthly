@@ -4,7 +4,7 @@ defmodule Newline.MembershipServiceTest do
   use Newline.ModelCase
   import Newline.Factory
   # import Newline.BasePolicy, only: [get_membership: 2]
-  alias Newline.{MembershipService, OrganizationService, User, Repo}
+  alias Newline.{MembershipService, OrganizationService, Repo}
 
   describe "Membership" do
     setup [:create_user, :create_organization]

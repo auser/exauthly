@@ -69,7 +69,7 @@ defmodule Newline.BasePolicy do
   @doc """
   Is user a member of the organization
   """
-  def member?(%Organization{} = org, %User{} = user) do
+  def member?(%User{} = user, %Organization{} = org) do
     member?(get_role(org, user))
   end
   def member?(_, _), do: false
@@ -81,9 +81,16 @@ defmodule Newline.BasePolicy do
   def at_least_admin?(_), do: false
 
   @doc """
+  Is the user at least a manager
+  """
+  def at_least_manager?(%User{} = user, %Organization{} = org), do: at_least_manager?(get_role(org, user))
+  def at_least_manager?(role) when role in ["admin", "owner", "manager"], do: true
+  def at_least_manager?(_), do: false
+
+  @doc """
   Is the user at least an admin in organization
   """
-  def at_least_admin?(%Organization{} = org, %User{} = user) do
+  def at_least_admin?(%User{} = user, %Organization{} = org) do
     at_least_admin?(get_role(org, user))
   end
   def at_least_admin?(_, _), do: false

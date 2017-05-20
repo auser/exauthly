@@ -100,9 +100,9 @@ defmodule Newline.BasePolicyTest do
 
   test "member?/2 returns true if any role in organization", %{valid_org: org, valid_user: user} do
     member = insert(:organization_membership, role: "member", member: user, organization: org)
-    assert BasePolicy.member?(org, user)
+    assert BasePolicy.member?(user, org)
     OrganizationMembership.update_changeset(member, %{role: "admin"}) |> Repo.update!
-    assert BasePolicy.member?(org, user)
+    assert BasePolicy.member?(user, org)
   end
 
   test "member?/2 returns false if not a role in organization", %{valid_org: org, valid_user: user} do
@@ -126,21 +126,21 @@ defmodule Newline.BasePolicyTest do
 
   test "at_least_admin?/2 returns true if the user is an admin", %{valid_user: user, valid_org: org} do
     insert(:organization_membership, role: "admin", member: user, organization: org)
-    assert BasePolicy.at_least_admin?(org, user)
+    assert BasePolicy.at_least_admin?(user, org)
   end
 
   test "at_least_admin?/2 returns true if the user is an owner", %{valid_user: user, valid_org: org} do
     insert(:organization_membership, role: "owner", member: user, organization: org)
-    assert BasePolicy.at_least_admin?(org, user)
+    assert BasePolicy.at_least_admin?(user, org)
   end
 
   test "at_least_admin?/2 returns false if the user is not a member", %{valid_user: user, valid_org: org} do
-    refute BasePolicy.at_least_admin?(org, user)
+    refute BasePolicy.at_least_admin?(user, org)
   end
 
   test "at_least_admin?/2 returns false if the user is just a member", %{valid_user: user, valid_org: org} do
     insert(:organization_membership, role: "member", member: user, organization: org)
-    refute BasePolicy.at_least_admin?(org, user)
+    refute BasePolicy.at_least_admin?(user, org)
   end
 
   test "get_current_organization returns new current_organization when user is changing it", %{valid_user: user, valid_org: org} do

@@ -5,7 +5,7 @@ defmodule Newline.Plug.Context do
   @behaviour Plug
 
   import Plug.Conn
-  alias Newline.{GuardianSerializer}
+  alias Newline.{GuardianSerializer, MembershipService}
 
   def init(opts), do: opts
 
@@ -28,7 +28,10 @@ defmodule Newline.Plug.Context do
       current_token ->
         with  {:ok, claims} <- Guardian.decode_and_verify(current_token),
               {:ok, user} <- GuardianSerializer.from_token(claims["sub"]) do
-              {:ok, %{current_user: user, admin: user.admin}}
+              
+              current_org = user.current_organization
+              role = MembershipService.user_membership_for(user, current_org)
+              {:ok, %{current_user: user, admin: user.admin, role: role, current_org: current_org}}
         else
           {:error, _reason} -> {:error, "Invalid authorization token"}
         end

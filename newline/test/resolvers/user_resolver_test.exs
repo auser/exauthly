@@ -110,12 +110,48 @@ defmodule Newline.UserResolverTest do
     end
   end
 
+  describe "all" do
+    setup [:create_user, :create_org]
+    
+    @query """
+    {
+      users {
+        email
+      }
+    }
+    """
+
+    test "an admin user without a current user gets all the users" do
+      user1 = build(:user, %{admin: true, current_organization_id: nil}) |> Repo.insert!
+      # build(:user) |> Repo.insert!
+
+      {:ok, %{data: %{"users" => users}}} = @query |> run(Newline.Schema, context: %{current_user: user1, current_org: nil, admin: true})
+      assert length(users) == 4
+    end
+
+    test "a user who is an admin of an organization can list all org members", %{org: org} do
+      user1 = build(:user, %{current_organization: org}) |> Repo.insert!
+      {:ok, _} = OrganizationService.insert_orgmember(user1, org, "admin")
+
+      {:ok, %{data: %{"users" => users}}} = 
+        @query |> run(Newline.Schema, context: %{current_user: user1, current_org: org, admin: false})
+      
+      assert length(users) == 2
+    end
+  end
+
   defp create_user(context) do
     password = "testing"
     user = build(:user) |> Repo.insert!
     context
       |> Map.put(:user, user)
       |> Map.put(:password, password)
+  end
+
+  defp create_org(%{user: user} = context) do
+    {:ok, org} = OrganizationService.create_org(user, params_for(:organization))
+    context
+      |> Map.put(:org, org)
   end
 
   defp create_admin_user(context) do

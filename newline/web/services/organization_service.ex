@@ -55,8 +55,9 @@ defmodule Newline.OrganizationService do
     query = from m in OrganizationMembership,
       where: m.organization_id == ^organization_id,
       order_by: [m.inserted_at],
-      join: u in User, where: u.id == m.member_id,
-      select: %{user: u, role: m.role}
+      preload: [:member],
+      join: u in User, where: u.id == m.member_id
+      # select: %{user: u, role: m.role}
     
     Repo.all(query)
   end

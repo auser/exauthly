@@ -52,9 +52,9 @@ defmodule Newline.OrganizationServiceTest do
       {:ok, member1} = Enum.fetch(members, 0)
       {:ok, member2} = Enum.fetch(members, 1)
       assert member1.role == "owner"
-      assert member1.user.id == user.id
+      assert member1.member.id == user.id
       assert member2.role == "member"
-      assert member2.user.id == user1.id
+      assert member2.member.id == user1.id
     end
   end
 

@@ -19,9 +19,11 @@ defmodule Newline.UserResolver do
     {:ok, Repo.all(User)}
   end
   def all(_, %{context: %{role: nil}}), do: Newline.BaseResolver.unauthorized_error
-  def all(_args, %{context: %{current_user: user, current_org: org, role: role, admin: false}}) do
-    cond do
-      can?(user, read org) -> {:ok, OrganizationService.get_members(org)}
+  def all(_args, %{context: %{current_user: user, current_org: org, admin: false}}) do
+    case can?(user, read org) do
+      true -> 
+        members = OrganizationService.get_members(org) |> Enum.reduce([], fn(m, acc) -> [m.member|acc] end)
+        {:ok, members}
       false -> Newline.BaseResolver.unauthorized_error
     end
   end

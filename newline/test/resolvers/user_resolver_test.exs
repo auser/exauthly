@@ -30,7 +30,7 @@ defmodule Newline.UserResolverTest do
   end
 
   test "login/2 returns okay with valid credentials", %{current_user: user} do
-    {:ok, resp} = UserResolver.login(%{email: user.email, password: "Something"}, :info)
+    {:ok, resp} = UserResolver.login(%{email: user.email, password: "testing"}, :info)
     assert resp.token != nil
   end
 
@@ -38,6 +38,32 @@ defmodule Newline.UserResolverTest do
     u = params_for(:user)
     {:ok, resp} = UserResolver.create(u, :info)
     assert resp.token != nil
+  end
+
+  describe "login_user" do
+    setup [:create_user]
+
+    @query """
+    mutation login($email:Email!,$password:String!) {
+      login(email:$email, password: $password) {
+        token
+      }
+    }
+    """
+
+    test "logs a user in with email and password", %{user: user, password: password} do
+      {:ok, result} = @query |> run(Newline.Schema, variables: %{"email" => user.email, "password" => password})
+      {:ok, data} = Map.fetch(result, :data)
+      {:ok, login} = Map.fetch(data, "login")
+      {:ok, token} = Map.fetch(login, "token")
+      assert token != nil
+    end
+
+    test "errors with bad email/password combo", %{user: user} do
+      {:ok, result} = @query |> run(Newline.Schema, variables: %{"email" => user.email, "password" => "not_it"})
+      {:ok, res} = Map.fetch(result, :errors)
+      assert Map.fetch(List.first(res), :message) == {:ok, "In field \"login\": Your password does not match with the password we have on record"}
+    end
   end
 
   describe "verify_user" do
@@ -63,6 +89,14 @@ defmodule Newline.UserResolverTest do
         [%{message: "In field \"verifyUser\": not_found"}], data: %{"verifyUser" => nil} }},
         query |> run(Newline.Schema, variables: %{"verifyToken" => "blah"})
     end
+  end
+
+  defp create_user(context) do
+    password = "testing"
+    user = build(:user) |> Repo.insert!
+    context
+      |> Map.put(:user, user)
+      |> Map.put(:password, password)
   end
 
   defp create_admin_user(context) do

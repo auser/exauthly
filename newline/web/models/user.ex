@@ -19,7 +19,7 @@ defmodule Newline.User do
     field :password_reset_token, :string
     field :password_reset_timestamp, Timex.Ecto.DateTime
 
-    field :verified, :boolean
+    field :verified, :boolean, default: false
     field :verify_token, :string
 
     has_many :organization_memberships, Newline.OrganizationMembership, foreign_key: :member_id

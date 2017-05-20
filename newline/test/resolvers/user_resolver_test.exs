@@ -40,6 +40,22 @@ defmodule Newline.UserResolverTest do
     assert resp.token != nil
   end
 
+  describe "create user" do
+    @query """
+    mutation createUser($email:Email!,$name:String!,$password:String!) {
+      signupWithEmailAndPassword(email:$email, name:$name, password:$password) {
+        email
+        verified
+      }
+    }
+    """
+
+    test "creates a new user with the email" do
+      {:ok, %{data: res}} = @query |> run(Newline.Schema, variables: %{"email" => "bob@bob.com", "password" => "something", "name" => "Ari Lerner"})
+      %{"signupWithEmailAndPassword" => %{"email" => "bob@bob.com", "verified" => false}} = res
+    end
+  end
+
   describe "login_user" do
     setup [:create_user]
 

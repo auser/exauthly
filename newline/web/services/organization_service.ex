@@ -90,24 +90,20 @@ defmodule Newline.OrganizationService do
   @doc """
   Update the user's role'
   """
-  def update_orgrole(user_id, org, role \\ "member") do
-    membership = get_membership(org, user_id)
-
-    org = OrganizationMembership.update_changeset(
-      membership, %{
-        role: role
-      }
-    ) |> Repo.update
-
-    {:ok, org}
+  def update_orgrole(%User{} = user, %Organization{} = org, role \\ "member") do
+    case get_membership(org, user) do
+      nil -> {:error, :not_found}
+      membership ->
+        org = OrganizationMembership.update_changeset(membership, %{role: role}) |> Repo.update
+        {:ok, org}
+    end
   end
 
-  defp update_user_current_org(user_id, org) do
-    user = Repo.get!(User, user_id)
+  def update_user_current_org(user, nil), do: nil
+  def update_user_current_org(user_id, org) when is_number(user_id), do: update_user_current_org(Repo.get(User, user_id), org)
+  def update_user_current_org(%User{} = user, org) do
     User.update_changeset(user, %{
       current_organization_id: org.id
-    })
-    |> Repo.update
-    {:ok, org}
+    }) |> Repo.update
   end
 end

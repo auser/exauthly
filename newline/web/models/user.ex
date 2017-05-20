@@ -101,10 +101,11 @@ defmodule Newline.User do
   # When a user is getting updated
   def update_changeset(user, params \\ %{}) do
     user
-    |> cast(params, [:name, :email, :admin, :current_organization_id])
+    |> cast(params, [:name, :email, :admin, :role, :current_organization_id])
     |> update_change(:email, &String.downcase/1)
     |> validate_email_format(:email)
     |> unique_constraint(:email, message: "Email already taken")
+    |> validate_inclusion(:role, @valid_roles)
     |> foreign_key_constraint(:current_organization_id)
     |> assoc_constraint(:current_organization)
   end

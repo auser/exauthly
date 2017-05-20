@@ -4,13 +4,7 @@ defmodule Newline.Schema.Types do
 
   import_types Newline.Schema.Types.Global
   import_types Newline.Schema.Types.UserTypes
-
-  object :organization do
-    field :id, :id
-    field :name, :string
-    field :members, list_of(:user)
-    field :all, list_of(:user)
-  end
+  import_types Newline.Schema.Types.OrgTypes
 
   object :membership do
     field :id, :id

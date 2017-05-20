@@ -42,7 +42,7 @@ defmodule Newline.UserResolverTest do
   end
 
   describe "all users" do
-    setup [:create_user]
+    setup [:create_user, :create_org]
 
     @query """
     {
@@ -58,6 +58,16 @@ defmodule Newline.UserResolverTest do
       {:ok, %{data: %{"users" => users}}} = @query |> run(Newline.Schema, context: %{current_user: user, admin: true, current_org: nil})
       assert length(users) == 3
       assert length(Enum.filter(users, fn (x) -> x["admin"] end)) == 2
+    end
+
+    test "finds all the users for a particular organization when user is an admin of the group", %{current_user: user, current_org: org} do
+      # user1 = build(:user) |> Repo.insert!
+      # OrganizationService.insert_orgmember(user1, org)
+      # OrganizationService.update_orgrole(user1, org, "admin")
+      {:ok, _} = OrganizationService.update_user_current_org(user, org)
+
+      {:ok, %{data: %{"users" => users}}} = @query |> run(Newline.Schema, context: %{current_user: user, current_org: org})
+      assert length(users) == 1
     end
 
   end
@@ -213,7 +223,7 @@ defmodule Newline.UserResolverTest do
   end
 
   defp create_admin_user(context) do
-    user = build(:user, %{admin: true}) |> Repo.insert!
+    user = build(:user, %{admin: true, role: "admin"}) |> Repo.insert!
     {:ok, org} = OrganizationService.create_org(user, params_for(:organization))
     user = Repo.get!(User, user.id) ## Reload
     context

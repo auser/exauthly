@@ -70,7 +70,7 @@ defmodule Newline.Mixfile do
   defp deps(:dev) do
     deps(:all) ++ [
       {:remix, "~> 0.0", only: :dev},
-      {:mix_test_watch, "~> 0.3", only: :dev, runtime: false}
+      {:mix_test_watch, "~> 0.4", only: :dev, runtime: false}
     ]
   end
   defp deps(_) do

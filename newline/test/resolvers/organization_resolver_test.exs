@@ -1,7 +1,9 @@
 defmodule Newline.OrganizationResolverTest do
   use Newline.ModelCase
+  use Newline.GqlCase
+  # import Newline.AssertResult
   import Newline.Factory
-  alias Newline.{OrganizationResolver}
+  alias Newline.{OrganizationResolver, Schema}
 
   setup do
     user = insert(:user)
@@ -34,5 +36,38 @@ defmodule Newline.OrganizationResolverTest do
     assert length(organizations) == 1
     assert Enum.at(organizations, 0).name == org.name
   end
+
+  describe "create_organization" do
+    setup [:create_user]
+    @query """
+    mutation create_org($name:String!) {
+      create_organization(name:$name) {
+        name
+        slug
+      }
+    }
+    """
+
+    test "it creates an organization", %{user: user} do
+      {:ok, %{data: %{"create_organization" => %{"name" => "bob's burgers", "slug" => "bob's-burgers"}}}} = 
+        @query |> run(Schema, variables: %{"name" => "bob's burgers"}, context: %{current_user: user})
+    end
+
+    test "it fails without a current user" do
+      {:ok, %{data: %{"create_organization" => nil}, errors: [h|_]}} = 
+        @query |> run(Schema, variables: %{"name" => "something"}, context: %{current_user: nil})
+      
+      assert h.message == "In field \"create_organization\": Unauthorized"
+    end
+  end
+
+  defp create_user(context) do
+    password = "testing"
+    user = build(:user) |> Repo.insert!
+    context
+      |> Map.put(:user, user)
+      |> Map.put(:password, password)
+  end
+
 
 end

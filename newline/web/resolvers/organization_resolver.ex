@@ -27,8 +27,8 @@ defmodule Newline.OrganizationResolver do
   # def all(_, _), do: {:error, "Unauthorized"}
 
   def create_organization(params, %{context: %{current_user: user}}) when not is_nil(user) do
-    OrganizationService.create_org(user, params) |> response
+    OrganizationService.create_org(user, params)
   end
-  def create_organization(_, _), do: {:error, "Unauthorized"}
+  def create_organization(_, _), do: Newline.BaseResolver.unauthorized_error
 
 end

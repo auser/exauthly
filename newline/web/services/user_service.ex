@@ -70,7 +70,7 @@ defmodule Newline.UserService do
   def get_all(_args, %{context: %{current_user: user, current_org: org}}) do
     case can?(user, read org) do
       true -> 
-        members = OrganizationService.get_members(org) |> Enum.reduce([], fn(m, acc) -> [m.member|acc] end)
+        members = OrganizationService.get_members(org) |> Enum.reduce([], fn(m, acc) -> [Map.put(m.member, :membership_role, m.role)|acc] end)
         {:ok, members}
       false -> Newline.BaseResolver.unauthorized_error
     end

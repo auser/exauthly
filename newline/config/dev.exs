@@ -13,6 +13,11 @@ config :newline, Newline.Endpoint,
   check_origin: false,
   watchers: []
 
+if Mix.env == :dev do
+  config :mix_test_watch,
+    clear: true
+end
+
 
 # Watch static and templates for browser reloading.
 config :newline, Newline.Endpoint,

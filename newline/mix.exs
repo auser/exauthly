@@ -2,15 +2,21 @@ defmodule Newline.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :newline,
-     version: "0.0.1",
-     elixir: "~> 1.2",
-     elixirc_paths: elixirc_paths(Mix.env),
-     compilers: [:phoenix, :gettext] ++ Mix.compilers,
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     aliases: aliases(),
-     deps: deps(Mix.env)]
+    [
+      app: :newline,
+      version: "0.0.1",
+      elixir: "~> 1.2",
+      elixirc_paths: elixirc_paths(Mix.env),
+      compilers: [:phoenix, :gettext] ++ Mix.compilers,
+      build_embedded: Mix.env == :prod,
+      start_permanent: Mix.env == :prod,
+      aliases: aliases(),
+      deps: deps(Mix.env),
+
+      # Docs
+      name: "Exauthly",
+      source_url: "https://github.com/auser/exauthly"
+    ]
   end
 
   # Configuration for the OTP application.
@@ -70,6 +76,7 @@ defmodule Newline.Mixfile do
   defp deps(:dev) do
     deps(:all) ++ [
       {:remix, "~> 0.0", only: :dev},
+      {:ex_doc, "~> 0.14", only: :dev, runtime: false},
       {:mix_test_watch, "~> 0.4", only: :dev, runtime: false}
     ]
   end

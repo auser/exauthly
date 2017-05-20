@@ -1,4 +1,6 @@
 defmodule Newline.Plug.CurrentUser do
+  @moduledoc false
+  
   alias Newline.GuardianSerializer
 
   def init(opts), do: opts

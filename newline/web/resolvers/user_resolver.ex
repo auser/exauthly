@@ -1,9 +1,8 @@
 defmodule Newline.UserResolver do
   import Newline.BaseResolver
   import Newline.BasePolicy
-  import Canada, only: [can?: 2]
 
-  alias Newline.{User, Repo, UserService, OrganizationService}
+  alias Newline.{UserService}
   
   def all(params, info) do
     UserService.get_all(params, info)

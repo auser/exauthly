@@ -1,4 +1,7 @@
 defmodule Newline.Schema.Types.Auth do
+  @moduledoc """
+  Provides graphQL types or authentication
+  """
   use Absinthe.Schema.Notation
 
   object :session do
@@ -13,7 +16,7 @@ defmodule Newline.Schema.Types.Auth do
       resolve &Newline.UserResolver.login/2
     end
 
-    field :reset_password_request, type: :success_type do
+    field :reset_password_request, type: :boolean do
       arg :email, non_null(:string)
 
       resolve &Newline.AuthResolver.request_reset_password/2

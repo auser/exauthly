@@ -1,4 +1,5 @@
 defmodule Newline.Schema.Types.Org do
+  @moduledoc false
   use Absinthe.Schema.Notation
 
   alias Newline.{OrganizationResolver}

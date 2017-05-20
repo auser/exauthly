@@ -1,4 +1,5 @@
 defmodule Newline.PageController do
+  @moduledoc false
   use Newline.Web, :controller
 
   def index(conn, _params) do

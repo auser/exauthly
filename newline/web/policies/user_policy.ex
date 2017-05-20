@@ -8,8 +8,17 @@ defmodule Newline.UserPolicy do
     @admin_actions  [:admin]
     @list_actions   [:list]
     @read_actions   [:read]
-    @write_actions  [:update, :create, :destroy]
+    @write_actions  [:update, :create]
+    @destroy_actions [:destroy]
 
+    @doc """
+    User permissions
+
+    A user can run _any_ action on themselves. (TODO: decide if they can destroy things on themselves)
+    A user can read their own organizations
+    An organization owner/admin user can write anything on the organization
+    A user can read their own organizations
+    """
     # User can do all the actions they want on themselves
     def can?(%User{id: user_id}, _action, %User{id: user_id}), do: true
     # User can read their own organizations
@@ -18,6 +27,8 @@ defmodule Newline.UserPolicy do
     def can?(%User{} = user, action, %Organization{} = org) when action in @write_actions, do: at_least_admin?(user, org)
     # A user can read a list of their own organizations
     def can?(%User{} = user, action, Organization) when action in @list_actions or action in @read_actions, do: true
+    # A user can create any number of organizations (TODO: Is this true? Verified users?)
+    def can?(%User{} = user, action, Organization) when action in @write_actions, do: true
     # An admin can do anything
     def can?(%User{admin: admin, current_organization_id: nil} = user, _, _), do: admin
 

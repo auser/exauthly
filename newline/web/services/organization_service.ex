@@ -25,6 +25,13 @@ defmodule Newline.OrganizationService do
   Create an organization
   """
   def create_org(current_user, params \\ %{}) do
+    case site_admin?(current_user) or can?(current_user, create Organization) do
+      true -> do_create_org(current_user, params)
+      false -> Newline.BaseService.unauthorized_error
+    end
+  end
+
+  defp do_create_org(current_user, params \\ %{}) do
     params = params |> Map.put(:user_id, current_user.id)
     changeset = Organization.create_changeset(%Organization{}, params)
 

@@ -174,22 +174,26 @@ defmodule Newline.UserService do
   @doc """
   Request a new password
   """
-  def request_password_reset(email) do
+  def request_password_reset(email), do: do_request_password_reset(email)
+
+  defp do_request_password_reset(email) do
     case Repo.get_by(User, email: String.downcase(email)) do
-      nil -> {:error, :not_found}
+      nil -> {:error, false}
       user ->
         user
         |> User.reset_password_request_changeset
         |> Repo.update!
         |> send_password_reset_request_email
-        {:ok, user}
+        {:ok, true}
     end
   end
 
   @doc """
   Reset a user's password'
   """
-  def reset_password(token, password) do
+  def reset_password(token, password), do: do_reset_password(token, password)
+  
+  defp do_reset_password(token, password) do
     case user_by_password_token(token) do
       nil -> {:error, :not_found}
       user = %User{} ->

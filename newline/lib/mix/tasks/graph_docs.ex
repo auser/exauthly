@@ -1,4 +1,5 @@
-defmodule Mix.Tasks.Docs do
+defmodule Mix.Tasks.GraphDocs do
+  @moduledoc false
   use Mix.Task
 
   @shortdoc "Generates documentation for the local site"

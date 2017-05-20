@@ -57,8 +57,8 @@ defmodule Newline.UserServiceTest do
 
   test "request_password_reset sets password_reset_token" do
     user = build(:user) |> Repo.insert!
-    {:ok, user1} = UserService.request_password_reset(user.email)
-    foundUser = Repo.get(User, user1.id)
+    {:ok, true} = UserService.request_password_reset(user.email)
+    foundUser = Repo.get(User, user.id)
     assert foundUser.password_reset_token != nil
   end
 

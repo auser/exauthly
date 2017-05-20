@@ -74,16 +74,28 @@ defmodule Newline.UserServiceTest do
 
   test "password change succeeds with old password" do
     user = build(:user) |> Repo.insert!
-    params = %{"old_password" => "Something", "new_password" => "aNews0mthing"}
+    params = %{"old_password" => "testing", "new_password" => "aNews0mthing"}
     {:ok, newUser} = UserService.change_password(user, params)
     assert User.check_user_password(newUser, "aNews0mthing")
   end
 
   test "password fails with bad password" do
     user = build(:user) |> Repo.insert!
-    params = %{"old_password" => "Something", "new_password" => "no"}
+    params = %{"old_password" => "testing", "new_password" => "no"}
     {:error, cs} = UserService.change_password(user, params)
     refute cs.valid?
+  end
+
+  describe "verify user" do
+    test "verify belongs to a user" do
+     user = build(:user, %{verify_token: "12345"}) |> Repo.insert!
+     UserService.verify_user("12345")
+     assert Repo.get(User, user.id).verified
+    end
+
+    test "verify token not found" do
+      { :error, _ } = UserService.verify_user("12345")
+    end
   end
 
   describe "user_with_organizations" do

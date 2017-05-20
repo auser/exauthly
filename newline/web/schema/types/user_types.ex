@@ -5,6 +5,7 @@ defmodule Newline.Schema.Types.UserTypes do
     field :id, :id
     field :name, :string
     field :email, :email
+    field :verified, :boolean
 
     field :token, :string
     field :current_organization, :organization

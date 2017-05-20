@@ -13,8 +13,8 @@ defmodule Newline.UserPolicy do
     # User can do all the actions they want on themselves
     def can?(%User{id: user_id}, _action, %User{id: user_id}), do: true
     # User can read their own organizations
-    def can?(%User{} = user, action, %Organization{} = org) when action in @read_actions, do: at_least_manager?(user, org)
-    # An admin user can read all of their members
+    def can?(%User{} = user, action, %Organization{} = org) when action in @read_actions or action in @list_actions, do: at_least_manager?(user, org)
+    # An admin user can write all of their memberships
     def can?(%User{} = user, action, %Organization{} = org) when action in @write_actions, do: at_least_admin?(user, org)
     # An admin can do anything
     def can?(%User{admin: admin, current_organization_id: nil} = user, _, _), do: admin

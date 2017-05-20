@@ -40,6 +40,16 @@ defmodule Newline.OrganizationServiceTest do
     end
   end
 
+  describe "update a user role" do
+    setup [:create_user, :create_organization]
+
+    test "can update the user role", %{org: org, user: user} do
+      refute get_membership(org, user).role == "admin"
+      OrganizationService.update_orgrole(user, org, "admin")
+      assert get_membership(org, user).role == "admin"
+    end
+  end
+
   describe "get_members" do
     setup [:create_user, :create_organization]
 
@@ -52,9 +62,9 @@ defmodule Newline.OrganizationServiceTest do
       {:ok, member1} = Enum.fetch(members, 0)
       {:ok, member2} = Enum.fetch(members, 1)
       assert member1.role == "owner"
-      assert member1.user.id == user.id
+      assert member1.member.id == user.id
       assert member2.role == "member"
-      assert member2.user.id == user1.id
+      assert member2.member.id == user1.id
     end
   end
 

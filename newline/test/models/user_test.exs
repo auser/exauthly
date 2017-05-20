@@ -20,6 +20,17 @@ defmodule Newline.UserTest do
     refute changeset.valid?
   end
 
+  test "a user becomes verified after commmiting verifying changeset", %{ valid_user: user1 } do
+    user = user1 |> Repo.insert!
+    refute user.verified
+    changeset = User.verifying_changeset(user, %{verify_token: "12345"}) 
+    assert changeset.valid?
+    changeset |> Repo.update!
+
+    assert Repo.get(User, user.id).verified
+    assert Repo.get(User, user.id).verify_token == nil
+  end
+
   test "signup with invalid email" do
     invalid_email = params_for(:user, email: "blah")
     # invalid_email = Map.put(@valid_attrs, :email, "blah")
@@ -93,5 +104,4 @@ defmodule Newline.UserTest do
     refute changeset.valid?
     assert length(changeset.errors) == 1
   end
-
 end

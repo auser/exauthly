@@ -51,7 +51,7 @@ defmodule Newline.UserService do
   end
 
   # Assign user claims with admin
-  defp user_claims(user, login_claims \\ %{}) do
+  defp user_claims(user, login_claims) do
     perms = case site_admin?(user) do
       true -> Map.merge(%{ default: [:read, :write], admin: Guardian.Permissions.max }, login_claims)
       false -> Map.merge(%{ default: [:read, :write] }, login_claims)
@@ -183,6 +183,29 @@ defmodule Newline.UserService do
             where: u.password_reset_token == ^token
             and u.password_reset_timestamp > fragment("now() - interval '48hours'"),
             preload: [:organizations],
+            select: u
+    Repo.one(query)
+  end
+
+  @doc """
+  Verify a user
+  """
+  def verify_user(token) do
+    case user_by_verify_token(token) do
+      nil -> {:error, :not_found}
+      user = %User{} ->
+        user = user
+        |> User.verifying_changeset(%{verify_token: token})
+        |> Repo.update!
+        {:ok, jwt, _claims} = do_user_login(user)
+        user = Map.put(user, :token, jwt)
+        {:ok, user}
+    end
+  end
+
+  defp user_by_verify_token(token) do
+    query = from u in User,
+            where: u.verify_token == ^token,
             select: u
     Repo.one(query)
   end

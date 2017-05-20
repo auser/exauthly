@@ -2,7 +2,7 @@ defmodule Newline.Factory do
   use ExMachina.Ecto, repo: Newline.Repo
   import Comeonin.Bcrypt, only: [hashpwsalt: 1]
 
-  @pass "Something"
+  @pass "testing"
   @encrypted_password hashpwsalt(@pass)
 
   def user_factory do

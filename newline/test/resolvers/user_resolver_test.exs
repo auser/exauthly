@@ -41,6 +41,27 @@ defmodule Newline.UserResolverTest do
     assert resp.token != nil
   end
 
+  describe "all users" do
+    setup [:create_user]
+
+    @query """
+    {
+      users {
+        email
+        admin
+        role
+      }
+    }
+    """
+
+    test "finds all the users for the platform with an admin user", %{current_user: user} do
+      {:ok, %{data: %{"users" => users}}} = @query |> run(Newline.Schema, context: %{current_user: user, admin: true, current_org: nil})
+      assert length(users) == 3
+      assert length(Enum.filter(users, fn (x) -> x["admin"] end)) == 2
+    end
+
+  end
+
   describe "create user" do
     @query """
     mutation createUser($email:Email!,$name:String!,$password:String!) {
@@ -87,7 +108,7 @@ defmodule Newline.UserResolverTest do
   end
 
   describe "verify_user" do
-    setup [:create_admin_user, :save_user_with_token]
+    setup [:save_user_with_token]
 
     test "successfully verifies a new user", %{saved_user: user} do
       query = """

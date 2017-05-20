@@ -5,29 +5,9 @@ defmodule Newline.UserResolver do
 
   alias Newline.{User, Repo, UserService, OrganizationService}
   
-  @doc """
-  Get all the users for a particular query
-
-  A user can see _all_ the users of an organization if they are 
-  the owner or the administrator of the group. They can also see all the
-  members for _every_ group when there is no current organization _and_ they
-  are marked as a global administrator.
-
-  A user without a role cannot list anything
-  """
-  def all(_args, %{context: %{current_user: _, current_org: nil, admin: true}}) do
-    {:ok, Repo.all(User)}
+  def all(params, info) do
+    UserService.get_all(params, info)
   end
-  def all(_, %{context: %{role: nil}}), do: Newline.BaseResolver.unauthorized_error
-  def all(_args, %{context: %{current_user: user, current_org: org}}) do
-    case can?(user, read org) do
-      true -> 
-        members = OrganizationService.get_members(org) |> Enum.reduce([], fn(m, acc) -> [m.member|acc] end)
-        {:ok, members}
-      false -> Newline.BaseResolver.unauthorized_error
-    end
-  end
-  def all(_, _), do: Newline.BaseResolver.unauthorized_error
 
   def email_available(%{email: email}, _info) do
     {:ok, UserService.check_email_availability(email)}
@@ -45,11 +25,7 @@ defmodule Newline.UserResolver do
     UserService.verify_user(token) |> response
   end
 
-  def me(_args, %{context: %{current_user: user}}) do
-    case can?(user, read user) do
-      true -> UserService.user_profile(user) |> response
-      false -> Newline.BaseResolver.unauthorized_error
-    end
+  def me(_params, %{context: %{current_user: user}}) do
+    UserService.get_me(user)
   end
-  def me(_, _), do: Newline.BaseResolver.unauthorized_error
 end

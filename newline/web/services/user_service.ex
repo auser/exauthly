@@ -1,5 +1,6 @@
 defmodule Newline.UserService do
   import Newline.BasePolicy, only: [site_admin?: 1]
+  import Canada, only: [can?: 2]
 
   @moduledoc """
   A module to provide handlingn underlying business logic
@@ -41,6 +42,40 @@ defmodule Newline.UserService do
   def check_email_availability(email) do
     check_valid_email(email) and check_taken(:email, email)
   end
+
+  @doc """
+  Get the details about the current user
+  """
+  def get_me(user) do
+    case can?(user, read user) do
+      true -> UserService.user_profile(user)
+      false -> Newline.BaseResolver.unauthorized_error
+    end
+  end
+
+  @doc """
+  Get all the users for a particular query
+
+  A user can see _all_ the users of an organization if they are 
+  the owner or the administrator of the group. They can also see all the
+  members for _every_ group when there is no current organization _and_ they
+  are marked as a global administrator.
+
+  A user without a role cannot list anything
+  """
+  def get_all(_args, %{context: %{current_user: _, current_org: nil, admin: true}}) do
+    {:ok, Repo.all(User)}
+  end
+  def get_all(_, %{context: %{role: nil}}), do: Newline.BaseResolver.unauthorized_error
+  def get_all(_args, %{context: %{current_user: user, current_org: org}}) do
+    case can?(user, read org) do
+      true -> 
+        members = OrganizationService.get_members(org) |> Enum.reduce([], fn(m, acc) -> [m.member|acc] end)
+        {:ok, members}
+      false -> Newline.BaseResolver.unauthorized_error
+    end
+  end
+  def get_all(_, _), do: Newline.BaseResolver.unauthorized_error
 
   @doc """
   Authenticate user

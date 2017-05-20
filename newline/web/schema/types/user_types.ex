@@ -9,4 +9,9 @@ defmodule Newline.Schema.Types.UserTypes do
     field :token, :string
     field :current_organization, :organization
   end
+
+  object :availability_status do
+    field :available, :boolean
+    field :valid, :boolean
+  end
 end

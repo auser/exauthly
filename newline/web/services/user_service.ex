@@ -6,7 +6,7 @@ defmodule Newline.UserService do
   for handling anything to do with users.
   """
   use Newline.Web, :service
-  alias Newline.{Email, Mailer, Repo, User, OrganizationMembership, OrganizationService}
+  alias Newline.{Email, Mailer, Repo, User, OrganizationMembership, OrganizationService, StripePlatformCustomer}
 
   @doc """
   Handle user signup
@@ -36,6 +36,13 @@ defmodule Newline.UserService do
   end
 
   @doc """
+  Check if the email has been taken
+  """
+  def check_email_availability(email) do
+    check_valid_email(email) and check_taken(:email, email)
+  end
+
+  @doc """
   Authenticate user
   """
   def do_user_login(user, login_claims \\ %{}) do
@@ -62,6 +69,59 @@ defmodule Newline.UserService do
     |> Multi.insert(:user, changeset)
     |> Multi.run(:create_default_group, &(create_default_group(params, &1[:user])))
     |> Multi.run(:send_welcome_email, &(send_welcome_email(params, &1[:user])))
+  end
+
+  @doc """
+  Update a User record and any associated `StripePlatformCustomers` records.
+
+  These related records inherit the email field from the user,
+  so they need to be kept in sync, both locally, and on the Stripe platform.
+  """
+  def update(%User{} = user, params) do
+    changeset = user |> User.update_changeset(params)
+    do_update(changeset)
+  end
+
+  # handle updates
+  defp do_update(%Changeset{changes: %{email: _email}} = changeset) do
+    multi = Multi.new
+        |> Multi.update(:update_user, changeset)
+        |> Multi.run(:update_platform_customer, &update_platform_customer/1)
+    
+    case Repo.transaction(multi) do
+      {:ok, %{
+        update_user: user,
+        update_platform_customer: update_platform_customer_result }} ->
+          {:ok, 
+            user, 
+            update_platform_customer_result }
+        {:error, :update_user, %Ecto.Changeset{} = changeset, %{}} -> 
+          {:error, changeset}
+        {:error, _op, _val, _changes} -> 
+          {:error, :unhandled}
+    end
+  end
+
+  defp do_update(%Changeset{} = changeset) do
+    with {:ok, user} <- Repo.update(changeset) do
+      {:ok, user, nil, nil}
+    else
+      {:error, changeset} -> {:error, changeset}
+      _ -> {:error, :unhandled}
+    end
+  end
+
+  defp update_platform_customer(%{update_user: %User{id: user_id, email: email}}) do
+    StripePlatformCustomer
+    |> Repo.get_by(user_id: user_id)
+    |> do_update_platform_customer(%{email: email})
+  end
+  defp do_update_platform_customer(nil, _), do: {:ok, nil}
+  defp do_update_platform_customer(%StripePlatformCustomer{} = stripe_platform_customer, attributes) do
+    {:ok, %StripePlatformCustomer{} = platform_customer, _} =
+      StripePlatformCustomerService.update(stripe_platform_customer, attributes)
+
+    {:ok, platform_customer}
   end
 
   @doc """
@@ -105,6 +165,17 @@ defmodule Newline.UserService do
         {:ok, jwt, claims} = do_user_login(user)
         {:ok, user, jwt, claims}
     end
+  end
+
+  defp check_valid_email(email) do
+    String.match?(email, ~r/@/)
+  end
+
+  defp check_taken(column, val) do
+    User
+    |> where([u], field(u, ^column) == ^val)
+    |> Repo.all
+    |> Enum.empty?
   end
 
   defp user_by_password_token(token) do

@@ -21,5 +21,11 @@ defmodule Newline.Schema.Types.User do
 
       resolve &Newline.UserResolver.create/2
     end
+
+    field :check_email_availability, type: :boolean do
+      arg :email, non_null(:email)
+
+      resolve &Newline.UserResolver.email_available/2
+    end
   end
 end

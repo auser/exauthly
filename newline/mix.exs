@@ -50,7 +50,8 @@ defmodule Newline.Mixfile do
       :guardian_db,
       :corsica,
       :timex,
-      :timex_ecto
+      :timex_ecto,
+      :stripity_stripe
     ]
   end
 
@@ -104,6 +105,7 @@ defmodule Newline.Mixfile do
       {:mix_docker, "~> 0.4.2"},
       {:segment, "~> 0.1"},
       {:canary, "~> 1.1"},
+      {:stripity_stripe, git: "https://github.com/code-corps/stripity_stripe.git", branch: "2.0"}, # Stripe
       {:distillery, "~> 1.3"}
     ]
   end

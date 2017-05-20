@@ -27,12 +27,16 @@ defmodule Newline.UserResolver do
   end
   def all(_, _), do: Newline.BaseResolver.unauthorized_error
 
+  def email_available(%{email: email}, _info) do
+    {:ok, UserService.check_email_availability(email)}
+  end
+
   def create(params, _info) do
-    UserService.user_signup(params) |> response
+    UserService.user_signup(params)
   end
 
   def login(params, _info) do
-    UserService.user_login(params) |> response
+    UserService.user_login(params)
   end
 
   def me(_args, %{context: %{current_user: user}}) do

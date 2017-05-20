@@ -19,6 +19,29 @@ defmodule Newline.UserServiceTest do
     end
   end
 
+  describe "check_email_availability" do
+    setup do
+      user = build(:user) |> Repo.insert!
+      %{email: email} = params_for(:user)
+      {:ok, %{user: user, email: email}}
+    end
+    test "returns true when email is valid", %{email: email} do
+      assert UserService.check_email_availability(email)
+    end
+
+    test "returns true when email is available", %{email: email} do
+      assert UserService.check_email_availability(email)
+    end
+
+    test "returns false when email has been taken", %{user: user} do
+      refute UserService.check_email_availability(user.email)
+    end
+
+    test "returns invalid when email has been taken", %{} do
+      refute UserService.check_email_availability("not_email")
+    end
+  end
+
   test "user_login() with correct creds returns token" do
     user = build(:user) |> Repo.insert!
     {:ok, foundUser} = UserService.user_login(%{email: user.email, password: user.password})

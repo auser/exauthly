@@ -55,6 +55,10 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+config :stripity_stripe,
+  api_key: System.get_env("STRIPE_SECRET_KEY"),
+  connect_client_id: System.get_env("STRIPE_PLATFORM_CLIENT_ID")
+
 # config :mix_docker, image: "auser/newline"
 
 config :newline, Newline.Repo,

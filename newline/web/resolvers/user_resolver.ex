@@ -35,6 +35,10 @@ defmodule Newline.UserResolver do
     UserService.user_login(params) |> response
   end
 
+  def verify_user(%{verify_token: token}, info) do
+    UserService.verify_user(token)
+  end
+
   def me(_args, %{context: %{current_user: user}}) do
     case can?(user, read user) do
       true -> UserService.user_profile(user) |> response

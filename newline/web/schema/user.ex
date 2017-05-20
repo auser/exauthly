@@ -21,5 +21,11 @@ defmodule Newline.Schema.Types.User do
 
       resolve &Newline.UserResolver.create/2
     end
+
+    field :verify_user, type: :user do
+      arg :verify_token, non_null(:string)
+
+      resolve &Newline.UserResolver.verify_user/2      
+    end
   end
 end

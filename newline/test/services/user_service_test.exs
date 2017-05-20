@@ -63,6 +63,18 @@ defmodule Newline.UserServiceTest do
     refute cs.valid?
   end
 
+  describe "verify user" do
+    test "verify belongs to a user" do
+     user = build(:user, %{verify_token: "12345"}) |> Repo.insert!
+     UserService.verify_user("12345")
+     assert Repo.get(User, user.id).verified
+    end
+
+    test "verify token not found" do
+      { :error, _ } = UserService.verify_user("12345")
+    end
+  end
+
   describe "user_with_organizations" do
     setup do
       user = build(:user) |> Repo.insert!

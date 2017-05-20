@@ -19,6 +19,9 @@ defmodule Newline.User do
     field :password_reset_token, :string
     field :password_reset_timestamp, Timex.Ecto.DateTime
 
+    field :verified, :boolean
+    field :verify_token, :string
+
     has_many :organization_memberships, Newline.OrganizationMembership, foreign_key: :member_id
     has_many :organizations, through: [:organization_memberships, :organization]
     belongs_to :current_organization, Newline.Organization
@@ -53,6 +56,7 @@ defmodule Newline.User do
     |> unique_constraint(:email, message: "Email already taken")
     |> validate_length(:password, @valid_password_length)
     |> generate_encrypted_password
+    |> put_token(:verify_token)
   end
 
   # When a user requests a password reset
@@ -84,6 +88,14 @@ defmodule Newline.User do
     |> validate_required([:password])
     |> validate_length(:password, min: 5, max: 128)
     |> generate_encrypted_password
+  end
+
+  def verifying_changeset(struct, params \\ %{}) do
+    struct
+    |> cast(params, [:verify_token])
+    |> validate_required([:verify_token])
+    |> put_change(:verified, true)
+    |> put_change(:verify_token, nil)
   end
 
   # When a user is getting updated
@@ -145,4 +157,5 @@ defmodule Newline.User do
     |> Base.url_encode64
     |> binary_part(0, 50)
   end
+
 end

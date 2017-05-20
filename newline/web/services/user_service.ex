@@ -19,6 +19,7 @@ defmodule Newline.UserService do
         {:ok, jwt, _claims} = do_user_login(user)
         {:ok, Map.put(user, :token, jwt)}
       {:error, _failed_op, failed_changeset, _changes} ->
+        IO.inspect failed_changeset
         {:error, failed_changeset}
     end
   end
@@ -112,6 +113,28 @@ defmodule Newline.UserService do
             where: u.password_reset_token == ^token
             and u.password_reset_timestamp > fragment("now() - interval '48hours'"),
             preload: [:organizations],
+            select: u
+    Repo.one(query)
+  end
+
+  @doc """
+  Verify a user
+  """
+  def verify_user(token) do
+    case user_by_verify_token(token) do
+      nil -> {:error, :not_found}
+      user = %User{} ->
+        user
+        |> User.verifying_changeset(%{verify_token: token})
+        |> Repo.update
+        {:ok, jwt, claims} = do_user_login(user)
+        {:ok, user, jwt, claims}
+    end
+  end
+
+  defp user_by_verify_token(token) do
+    query = from u in User,
+            where: u.verify_token == ^token,
             select: u
     Repo.one(query)
   end

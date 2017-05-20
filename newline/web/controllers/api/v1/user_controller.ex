@@ -41,7 +41,7 @@ defmodule Newline.V1.UserController do
   Reset the user's password based on token""'
   """
   def password_reset(conn, %{"token" => token, "password" => password}) do
-    case UserService.password_reset(token, password) do
+    case UserService.reset_password(token, password) do
       {:ok, user, jwt, _claims} ->
         conn
         |> put_status(:ok)

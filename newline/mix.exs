@@ -93,6 +93,7 @@ defmodule Newline.Mixfile do
       {:ueberauth_identity, "~> 0.2.3"},
       {:timex, "~> 3.1"},
       {:timex_ecto, "~> 3.1"},
+      {:inflex, "~> 1.8"},
       {:ecto, "~> 2.1"},
       {:postgrex, "~> 0.13"},
       {:comeonin, "~> 3.0"},

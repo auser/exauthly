@@ -3,11 +3,20 @@ defmodule Newline.UserServiceTest do
   import Newline.Factory
   alias Newline.{UserService, OrganizationService, User, Repo}
 
-  test "user_signup creates a new user" do
-    valid_attrs = params_for(:user)
-    UserService.user_signup(valid_attrs)
-    user = Repo.get_by(User, %{email: valid_attrs.email})
-    assert user != nil
+  describe "user_signup" do
+    test "user_signup creates a new user" do
+      valid_attrs = params_for(:user)
+      UserService.user_signup(valid_attrs)
+      user = Repo.get_by(User, %{email: valid_attrs.email})
+      assert user != nil
+    end
+
+    test "creates a default group for the user" do
+      valid_attrs = params_for(:user)
+      UserService.user_signup(valid_attrs)
+      user = Repo.get_by(User, %{email: valid_attrs.email})
+      assert user.current_organization_id != nil
+    end
   end
 
   test "user_login() with correct creds returns token" do
@@ -78,11 +87,6 @@ defmodule Newline.UserServiceTest do
       memberships = UserService.user_memberships(user)
 
       assert length(memberships) == 2
-    end
-
-    test "has a user with role of 'user'", %{user: user} do
-      memberships = UserService.user_memberships(user)
-      IO.inspect memberships
     end
   end
 

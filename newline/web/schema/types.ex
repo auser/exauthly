@@ -2,15 +2,8 @@ defmodule Newline.Schema.Types do
   use Absinthe.Schema.Notation
   use Absinthe.Ecto, repo: Newline.Repo
 
-  object :user do
-    field :id, :id
-    field :first_name, :string
-    field :last_name, :string
-    field :email, :string
-
-    field :token, :string
-    field :current_organization, :organization
-  end
+  import_types Newline.Schema.Types.Global
+  import_types Newline.Schema.Types.UserTypes
 
   object :organization do
     field :id, :id
@@ -34,9 +27,8 @@ defmodule Newline.Schema.Types do
   # end
 
   input_object :update_user_params do
-    field :first_name, :string
-    field :last_name, :string
-    field :email, :string
+    field :name, :string
+    field :email, :email
     field :password, :string
   end
 

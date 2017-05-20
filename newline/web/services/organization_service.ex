@@ -6,7 +6,7 @@ defmodule Newline.OrganizationService do
   @doc """
   Create an organization
   """
-  def create_org(current_user, params) do
+  def create_org(current_user, params \\ %{}) do
     params = params |> Map.put(:user_id, current_user.id)
     changeset = Organization.create_changeset(%Organization{}, params)
 

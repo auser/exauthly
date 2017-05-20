@@ -4,16 +4,7 @@ defmodule Newline.OrganizationResolver do
 
   alias Newline.{Organization, Repo, UserService, OrganizationService}
   
-  def all(_args, %{context: %{current_user: user}}) do
-    case can?(user, read Organization) do
-      true -> 
-        all_orgs = Repo.all(Organization) |> Repo.preload([:members])
-        {:ok, all_orgs}
-      false ->
-        orgs = UserService.user_with_organizations(user)
-        {:ok, orgs}
-    end
-  end
+  def all(_args, %{context: %{current_user: user}}), do: OrganizationService.get_all(user)
   def all(_, _), do: Newline.BaseResolver.unauthorized_error
   
   # def all(_args, %{context: %{current_user: user, admin: true}}) do

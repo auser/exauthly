@@ -3,7 +3,7 @@ defmodule Newline.OrganizationResolverTest do
   use Newline.GqlCase
   # import Newline.AssertResult
   import Newline.Factory
-  alias Newline.{OrganizationResolver, Schema}
+  alias Newline.{OrganizationResolver, Schema, OrganizationService}
 
   setup do
     user = insert(:user)
@@ -30,11 +30,35 @@ defmodule Newline.OrganizationResolverTest do
     assert Enum.at(orgs, 0).id == org.id
   end
 
-  test "all/2 returns only the organizations a user belongs to", %{context: context, valid_org: org} do
-    {:ok, orgs} = OrganizationResolver.all(:type, context)
-    %{current_organization: _current_organization, organizations: organizations} = orgs
-    assert length(organizations) == 1
-    assert Enum.at(organizations, 0).name == org.name
+  describe "all" do
+    setup [:create_user, :create_admin]
+    @query """
+    {
+      organizations {
+        name
+      }
+    }
+    """
+
+    test "it lists all the organizations for site admins", %{admin: user} do
+      insert(:organization, %{name: "jake's shake shack"})
+      {:ok, %{data: %{"organizations" => organizations}}} =
+        @query |> run(Schema, context: %{current_user: user})
+
+      assert length(organizations) == 2
+    end
+
+    test "it lists a user's organization list", %{user: user} do
+      org = build(:organization, %{name: "jake's shake shack"}) |> Repo.insert!
+      {:ok, _} = OrganizationService.insert_orgmember(user, org)
+      {:ok, _} = OrganizationService.update_user_current_org(user, org)
+
+      {:ok, %{data: %{"organizations" => organizations}}} =
+        @query |> run(Schema, context: %{current_user: user})
+
+      assert length(organizations) == 1
+      assert List.first(organizations)["name"] == "jake's shake shack"
+    end
   end
 
   describe "create_organization" do
@@ -69,5 +93,9 @@ defmodule Newline.OrganizationResolverTest do
       |> Map.put(:password, password)
   end
 
+  defp create_admin(context) do
+    user = build(:user, %{admin: true, role: "admin", current_organization_id: nil}) |> Repo.insert!
+    Map.put(context, :admin, user)
+  end
 
 end

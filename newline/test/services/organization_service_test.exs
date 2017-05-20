@@ -50,6 +50,42 @@ defmodule Newline.OrganizationServiceTest do
     end
   end
 
+  describe "all_users_organization" do
+    setup [:create_user, :create_organization]
+
+    test "all_users_organization retrieves all the orgs the user belongs to", %{user: user} do
+      other_org = build(:organization) |> Repo.insert!
+      {:ok, orgs} = OrganizationService.all_users_organization(user)
+      assert length(orgs) == 1
+      OrganizationService.insert_orgmember(user, other_org)
+      {:ok, orgs} = OrganizationService.all_users_organization(user)
+      assert length(orgs) == 2
+    end
+  end
+
+  describe "get_all" do
+    setup [:create_admin, :create_user, :create_organization]
+
+    test "get_all returns the user's organizations", %{user: user} do
+      {:ok, orgs} = OrganizationService.get_all(user)
+      assert length(orgs) == 1
+      assert List.first(orgs).name == "Fullstack.io"
+
+      org = build(:organization, %{name: "Frank"}) |> Repo.insert!
+      OrganizationService.insert_orgmember(user, org)
+
+      {:ok, orgs} = OrganizationService.get_all(user)
+      assert length(orgs) == 2
+    end
+
+    test "get_all returns all organizations when the user is a site admin", %{admin: admin} do
+      insert(:organization)
+      insert(:organization)
+      {:ok, orgs} = OrganizationService.get_all(admin)
+      assert length(orgs) == 3
+    end
+  end
+
   describe "get_members" do
     setup [:create_user, :create_organization]
 
@@ -71,6 +107,11 @@ defmodule Newline.OrganizationServiceTest do
   defp create_user(context) do
     user = build(:user) |> Repo.insert!
     Map.put(context, :user, user)
+  end
+
+  defp create_admin(context) do
+    user = build(:user, %{admin: true, role: "admin", current_organization_id: nil}) |> Repo.insert!
+    Map.put(context, :admin, user)
   end
 
   defp create_organization(%{user: user} = context) do

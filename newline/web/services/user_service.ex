@@ -48,7 +48,7 @@ defmodule Newline.UserService do
   """
   def get_me(user) do
     case can?(user, read user) do
-      true -> UserService.user_profile(user)
+      true -> user_profile(user)
       false -> Newline.BaseResolver.unauthorized_error
     end
   end
@@ -66,16 +66,16 @@ defmodule Newline.UserService do
   def get_all(_args, %{context: %{current_user: _, current_org: nil, admin: true}}) do
     {:ok, Repo.all(User)}
   end
-  def get_all(_, %{context: %{role: nil}}), do: Newline.BaseResolver.unauthorized_error
+  def get_all(_, %{context: %{role: nil}}), do: Newline.BaseService.unauthorized_error
   def get_all(_args, %{context: %{current_user: user, current_org: org}}) do
     case can?(user, read org) do
       true -> 
         members = OrganizationService.get_members(org) |> Enum.reduce([], fn(m, acc) -> [Map.put(m.member, :membership_role, m.role)|acc] end)
         {:ok, members}
-      false -> Newline.BaseResolver.unauthorized_error
+      false -> Newline.BaseService.unauthorized_error
     end
   end
-  def get_all(_, _), do: Newline.BaseResolver.unauthorized_error
+  def get_all(_, _), do: Newline.BaseService.unauthorized_error
 
   @doc """
   Authenticate user

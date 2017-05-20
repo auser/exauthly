@@ -5,7 +5,7 @@ defmodule Newline.Schema.Types.Org do
 
   object :org_fields do
     
-    field :organizations, list_of(:organization) do
+    field :organizations, type: list_of(:organization) do
       resolve &OrganizationResolver.all/2
     end
 

@@ -43,7 +43,7 @@ defmodule Newline.BasePolicy do
   @doc """
   Is the user an admin
   """
-  def site_admin?(%User{admin: true}), do: true
+  def site_admin?(%User{admin: true, current_organization_id: nil}), do: true
   def site_admin?(_), do: false
 
   @doc """

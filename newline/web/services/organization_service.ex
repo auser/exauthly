@@ -2,7 +2,24 @@ defmodule Newline.OrganizationService do
   use Newline.Web, :service
 
   alias Newline.{Repo, Organization, OrganizationMembership, User}
-  import Newline.BasePolicy, only: [get_membership: 2]
+  import Newline.BasePolicy, only: [get_membership: 2, site_admin?: 1]
+  import Canada, only: [can?: 2]
+
+  @doc """
+  Get All the available organizations for a user
+
+  User permissions are as follows.
+
+  A admin user without a current org can see _all_ organizations
+  A user with a current organization can list all their organizations)
+  """
+  def get_all(user) do
+    cond do
+      site_admin?(user) -> {:ok, Repo.all(Organization)}
+      can?(user, list Organization) -> all_users_organization(user)
+      false -> Newline.BaseService.unauthorized_error
+    end
+  end
 
   @doc """
   Create an organization
@@ -88,6 +105,19 @@ defmodule Newline.OrganizationService do
   def insert_orgmember(user, org, role), do: insert_orgmember(user.id, org, role)
 
   @doc """
+  Get all the organizations a user belongs to
+  """
+  def all_users_organization(%User{id: user_id}) do
+    query = from m in OrganizationMembership,
+      where: m.member_id == ^user_id,
+      # preload: [:organization, :member],
+      join: org in Organization, where: org.id == m.organization_id,
+      select: org
+    
+    {:ok, Repo.all(query)}
+  end
+
+  @doc """
   Update the user's role'
   """
   def update_orgrole(%User{} = user, %Organization{} = org, role \\ "member") do
@@ -99,6 +129,13 @@ defmodule Newline.OrganizationService do
     end
   end
 
+  @doc """
+  Update a user's current organization
+  
+  Example
+
+      iex> OrganizationService.update_user_current_org(user, org)
+  """
   def update_user_current_org(user, nil), do: nil
   def update_user_current_org(user_id, org) when is_number(user_id), do: update_user_current_org(Repo.get(User, user_id), org)
   def update_user_current_org(%User{} = user, org) do

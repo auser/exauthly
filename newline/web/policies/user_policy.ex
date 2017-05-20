@@ -16,6 +16,8 @@ defmodule Newline.UserPolicy do
     def can?(%User{} = user, action, %Organization{} = org) when action in @read_actions or action in @list_actions, do: at_least_manager?(user, org)
     # An admin user can write all of their memberships
     def can?(%User{} = user, action, %Organization{} = org) when action in @write_actions, do: at_least_admin?(user, org)
+    # A user can read a list of their own organizations
+    def can?(%User{} = user, action, Organization) when action in @list_actions or action in @read_actions, do: true
     # An admin can do anything
     def can?(%User{admin: admin, current_organization_id: nil} = user, _, _), do: admin
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import { render } from 'react-dom'
+import ReactDOM from 'react-dom'
 
 import 'font-awesome/css/font-awesome.min.css'
 import 'animate.css/animate.min.css'
@@ -9,7 +9,13 @@ import './utils/polyfills'
 
 import Root from './components/Root'
 
-render(
-  <Root />,
-  document.getElementById('root')
-)
+const MOUNT = document.getElementById('root')
+const render = NextApp => ReactDOM.render(<NextApp />, MOUNT)
+
+if (module.hot) {
+  module.hot.accept('./components/Root', () => {
+    render(require('./components/Root').default)
+  })
+}
+
+render(Root)

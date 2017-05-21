@@ -6,7 +6,7 @@ defmodule Newline.Schema.Types.Membership do
   object :membership_fields do
     
     field :memberships, list_of(:membership) do
-      resolve &MembershipResolver.all/2
+      resolve &MembershipResolver.user_memberships/2
     end
 
   end

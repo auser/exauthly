@@ -1,4 +1,5 @@
 defmodule Newline.V1.AuthController do
+  @moduledoc false
   use Newline.Web, :controller
   plug Ueberauth
 

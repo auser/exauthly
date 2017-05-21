@@ -1,4 +1,9 @@
 defmodule Newline.Email do
+  @moduledoc """
+  Handles sending emails
+
+  TODO: i18n
+  """
   use Bamboo.Phoenix, view: Newline.EmailView
   # alias Newline.{User}
 

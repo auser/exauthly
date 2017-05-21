@@ -1,4 +1,6 @@
 defmodule Newline.Authorization do
+  @moduledoc false
+  
   use Newline.Web, :model
 
   schema "authorizations" do

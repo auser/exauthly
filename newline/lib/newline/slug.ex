@@ -1,4 +1,5 @@
 defmodule Newline.Helpers.Slug do
+  @moduledoc false
   alias Ecto.Changeset
 
   # From code-corps

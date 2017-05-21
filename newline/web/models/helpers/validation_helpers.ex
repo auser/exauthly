@@ -1,4 +1,7 @@
 defmodule Newline.Helpers.Validation do
+  @moduledoc """
+  Provides helpers for ecto validations
+  """
   alias Ecto.Changeset
   # import Newline.BasePolicy, only: [member?: 2]
 

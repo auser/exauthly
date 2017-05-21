@@ -1,4 +1,5 @@
 defmodule Newline.V1.SessionController do
+  @moduledoc false
   use Newline.Web, :controller
 
   alias Newline.SessionView

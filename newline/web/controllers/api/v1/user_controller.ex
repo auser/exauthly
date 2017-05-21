@@ -1,4 +1,5 @@
 defmodule Newline.V1.UserController do
+  @moduledoc false
   use Newline.Web, :controller
   alias Newline.{UserService}
 

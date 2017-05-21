@@ -1,4 +1,5 @@
 defmodule Newline.GuardianSerializer do
+  @moduledoc false
   @behaviour Guardian.Serializer
 
   alias Newline.{Repo, User}

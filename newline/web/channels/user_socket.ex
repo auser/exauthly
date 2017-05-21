@@ -1,4 +1,5 @@
 defmodule Newline.UserSocket do
+  @moduledoc false
   use Phoenix.Socket
 
   ## Channels

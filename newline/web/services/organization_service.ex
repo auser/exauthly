@@ -143,11 +143,20 @@ defmodule Newline.OrganizationService do
 
       iex> OrganizationService.update_user_current_org(user, org)
   """
-  def update_user_current_org(user, nil), do: nil
+  # def update_user_current_org(user, nil), do: nil
   def update_user_current_org(user_id, org) when is_number(user_id), do: update_user_current_org(Repo.get(User, user_id), org)
-  def update_user_current_org(%User{} = user, org) do
-    User.update_changeset(user, %{
-      current_organization_id: org.id
-    }) |> Repo.update
+  def update_user_current_org(user, %Organization{} = org), do: update_user_current_org(user, org.id)
+  def update_user_current_org(%User{} = user, org_id) when is_integer(org_id) do
+    {:ok, _newUser} = update_current_organization_changeset(user, org_id) |> Repo.update
+    newOrg = Repo.get!(Organization, to_string(org_id))
+    {:ok, newOrg}
+  end
+
+  defp update_current_organization_changeset(user, org_id) do
+    case site_admin?(user) and org_id == nil do
+      true -> User.update_changeset(user, %{current_organization_id: nil})
+      _ -> User.update_changeset(user, %{current_organization_id: org_id})
+    end
+    
   end
 end

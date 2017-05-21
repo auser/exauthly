@@ -48,6 +48,18 @@ defmodule Newline.OrganizationResolver do
   If we set the current_organization to nil, the user _must_ be a site_admin
   or this will fail. Additionally, a user can only change their current_organization to
   an organization they currently belong to (`OrganizationMembership`).
+
+  Example mutation
+
+      mutation set_current_organization($org_id:Int) {
+        setCurrentOrganization(org_id:$org_id) {
+          id
+        }
+      }
   """
+  def set_current_organization(%{org_id: org_id} = params, %{context: %{current_user: user}}) do
+    OrganizationService.update_user_current_org(user, org_id)
+  end
+  def set_current_organization(_, %{context: %{current_user: user}}), do: OrganizationService.update_user_current_org(user, nil)
 
 end

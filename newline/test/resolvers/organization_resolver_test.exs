@@ -85,6 +85,29 @@ defmodule Newline.OrganizationResolverTest do
     end
   end
 
+  describe "switch current organization" do
+    setup [:create_user, :create_org]
+
+    @query """
+    mutation set_current_organization($org_id:Int) {
+      setCurrentOrganization(org_id:$org_id) {
+        id
+      }
+    }
+    """
+
+    test "returns the user's current organization", %{user: user} do
+      org = build(:organization, %{name: "jake's shake shack"}) |> Repo.insert!
+      {:ok, _} = OrganizationService.insert_orgmember(user, org)
+      {:ok, _} = OrganizationService.update_user_current_org(user, org)
+
+      {:ok, %{data: %{"setCurrentOrganization" => %{"id" => id}}}} =
+        @query |> run(Schema, variables: %{"org_id" => org.id}, context: %{current_user: user})
+
+      assert id == to_string(org.id)
+    end
+  end
+
   defp create_user(context) do
     password = "testing"
     user = build(:user) |> Repo.insert!
@@ -96,6 +119,11 @@ defmodule Newline.OrganizationResolverTest do
   defp create_admin(context) do
     user = build(:user, %{admin: true, role: "admin", current_organization_id: nil}) |> Repo.insert!
     Map.put(context, :admin, user)
+  end
+
+  defp create_org(context) do
+    org = build(:organization) |> Repo.insert!
+    Map.put(context, :org, org)
   end
 
 end

@@ -19,5 +19,11 @@ defmodule Newline.Schema.Types.Org do
       resolve &Newline.OrganizationResolver.create_organization/2
     end
 
+    field :set_current_organization, type: :organization do
+      arg :org_id, :integer
+
+      resolve &Newline.OrganizationResolver.set_current_organization/2
+    end
+
   end
 end

@@ -92,6 +92,7 @@ defmodule Newline.OrganizationResolverTest do
     mutation set_current_organization($org_id:Int) {
       setCurrentOrganization(org_id:$org_id) {
         id
+        name
       }
     }
     """
@@ -101,7 +102,7 @@ defmodule Newline.OrganizationResolverTest do
       {:ok, _} = OrganizationService.insert_orgmember(user, org)
       {:ok, _} = OrganizationService.update_user_current_org(user, org)
 
-      {:ok, %{data: %{"setCurrentOrganization" => %{"id" => id}}}} =
+      {:ok, %{data: %{"setCurrentOrganization" => %{"id" => id, "name" => _name}}}} =
         @query |> run(Schema, variables: %{"org_id" => org.id}, context: %{current_user: user})
 
       assert id == to_string(org.id)

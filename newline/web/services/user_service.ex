@@ -103,7 +103,21 @@ defmodule Newline.UserService do
     Multi.new
     |> Multi.insert(:user, changeset)
     |> Multi.run(:create_default_group, &(create_default_group(params, &1[:user])))
+    |> Multi.run(:join_default_group, &(join_default_group(params, &1)))
     |> Multi.run(:send_welcome_email, &(send_welcome_email(params, &1[:user])))
+  end
+
+  @doc """
+  Create a group for the user
+  """
+  def create_default_group(params, user) do
+    org = OrganizationService.create_org(user, %{name: user.name || params["email"]})
+    {:ok, org}
+  end
+
+  def join_default_group(params, changes) do
+    %{create_default_group: {:ok, %Newline.Organization{id: group_id}}, user: %User{id: user_id}} = changes
+    OrganizationService.update_user_current_org(user_id, group_id)
   end
 
   @doc """
@@ -254,14 +268,6 @@ defmodule Newline.UserService do
   """
   def user_profile(user) do
     {:ok, user}
-  end
-
-  @doc """
-  Create a group for the user
-  """
-  def create_default_group(_params, user) do
-    org = OrganizationService.create_org(user, %{name: user.name})
-    {:ok, org}
   end
 
   @doc """

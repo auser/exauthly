@@ -32,7 +32,9 @@ defmodule Newline.OrganizationService do
   end
 
   defp do_create_org(current_user, params \\ %{}) do
-    params = params |> Map.put(:user_id, current_user.id)
+    params = params 
+              |> Map.put(:user_id, current_user.id)
+              |> Map.put(:name, params.name || current_user.name)
     changeset = Organization.create_changeset(%Organization{}, params)
 
     result = 
@@ -45,6 +47,14 @@ defmodule Newline.OrganizationService do
         {:ok, org}
       {:error, _failed_op, changeset, _changes} ->  {:error, changeset}
     end
+  end
+
+  defp check_available(_, nil), do: false
+  defp check_available(column, val) do
+    all = Organization
+    |> where([u], field(u, ^column) == ^val)
+    |> Repo.all
+    all == nil || Enum.empty?(all)
   end
 
   @doc """

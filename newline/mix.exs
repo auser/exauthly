@@ -112,6 +112,7 @@ defmodule Newline.Mixfile do
       {:mix_docker, "~> 0.4.2"},
       {:segment, "~> 0.1"},
       {:canary, "~> 1.1"},
+      {:haikunator, "~> 1.1"},
       {:stripity_stripe, git: "https://github.com/code-corps/stripity_stripe.git", branch: "2.0"}, # Stripe
       {:distillery, "~> 1.3"}
     ]
@@ -126,6 +127,8 @@ defmodule Newline.Mixfile do
   defp aliases do
     ["ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
      "ecto.reset": ["ecto.drop", "ecto.setup"],
+     "db.migrate": ["ecto.migrate", "ecto.dump"],
+     "db.rollback": ["ecto.rollback", "ecto.dump"],
      "test": ["ecto.create --quiet", "ecto.migrate", "test"]]
   end
 end

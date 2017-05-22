@@ -1,0 +1,12 @@
+@import "../../styles/variables.css";
+
+header {
+  justify-content: space-between;
+  padding: 10px 0;
+  background: $primaryColor;
+  color: $white;
+  @media (min-width: $large-screen) {
+    height: $header-height;
+    max-height: $header-height;
+  }
+}

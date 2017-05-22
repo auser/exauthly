@@ -1,0 +1,6 @@
+footer {
+  height: $footer-height;
+
+  @media (min-width: $large-screen) {
+  }
+}

@@ -1,6 +1,6 @@
-export const AUTH_TOKEN_KEY = 'AUTH_TOKEN_KEY'
-
 import store from 'store'
+
+export const AUTH_TOKEN_KEY = 'AUTH_TOKEN_KEY'
 
 // Import plugins here
 // see

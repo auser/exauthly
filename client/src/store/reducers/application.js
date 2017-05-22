@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { appTypes } from 'store/constants'
+import appTypes from 'store/constants'
 
 function initializingApp(state = false, action) {
   switch (action.type) {

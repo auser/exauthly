@@ -1,0 +1,50 @@
+@import "./variables.css";
+
+.container {
+  padding: 0;
+  flex: 1;
+
+  .content {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
+
+@media (min-width: $large-screen) {
+  .container {
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+
+    > * {
+      flex: 0 0 auto;
+      overflow: scroll;
+    }
+
+    header {
+      display: flex;
+      flex: 1;
+    }
+
+    .sidebar {
+      display: flex;
+      // flex-direction: column;
+      // justify-content: space-between;
+      // width: $sidebar-width-expanded;
+
+      &.minimized {
+        width: $sidebar-width-min;
+      }
+
+      section {
+        h3 {
+          font-size: 0.9em;
+        }
+      }
+    }
+
+    .content {
+      flex: 1;
+    }
+  }
+}

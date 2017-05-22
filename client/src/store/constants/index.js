@@ -1,7 +1,9 @@
-import appTypes from './application'
-import authTypes from './auth'
+import * as hello from './hello'
+import * as appTypes from './application'
 
-export {
-  appTypes,
-  authTypes,
+export const types = {
+  hello,
+  appTypes
 }
+
+export default types

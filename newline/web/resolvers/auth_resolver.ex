@@ -4,6 +4,19 @@ defmodule Newline.AuthResolver do
   alias Newline.{UserService, User}
 
   @doc """
+  Login with a user via email and password
+
+  Example mutation
+
+      mutation login($email:Email!,$password:String!) {
+        login(email:$email, password: $password) {
+          token
+        }
+      }
+  """
+  def login(params, _info), do: UserService.user_login(params)
+
+  @doc """
   Request a password reset for the user
 
   Example mutation

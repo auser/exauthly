@@ -1,0 +1,14 @@
+$primaryColor: #0069b0;
+$secondaryColor: #003f6a;
+$darkColor: #072cc4;
+$lightColor: #e6f5ff;
+$highlightColor: #ff7e00;
+$white: rgba(250, 250, 250, 1);
+
+$header-height: 65px;
+$footer-height: 50px;
+$sidebar-width-expanded: 150px;
+$sidebar-width-min: 45px;
+
+$tablet: 600px;
+$large-screen: 320px;

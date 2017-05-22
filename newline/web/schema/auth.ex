@@ -13,7 +13,7 @@ defmodule Newline.Schema.Types.Auth do
     field :login, type: :session do
       arg :email, non_null(:email)
       arg :password, non_null(:password)
-      resolve &Newline.UserResolver.login/2
+      resolve &Newline.AuthResolver.login/2
     end
 
     field :reset_password_request, type: :boolean do

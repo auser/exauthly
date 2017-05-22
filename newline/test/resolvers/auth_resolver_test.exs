@@ -5,6 +5,29 @@ defmodule Newline.AuthResolverTest do
   import Newline.Factory
   alias Newline.{Schema, UserService, User}
 
+  describe "login_user" do
+    setup [:create_user]
+
+    @query """
+    mutation login($email:Email!,$password:String!) {
+      login(email:$email, password: $password) {
+        token
+      }
+    }
+    """
+
+    test "logs a user in with email and password", %{user: user, password: password} do
+      {:ok, %{data: %{"login" => %{"token" => token}}}} = @query |> run(Newline.Schema, variables: %{"email" => user.email, "password" => password})
+      # {:ok, login} = Map.fetch(data, "login")
+      assert token != nil
+    end
+
+    test "errors with bad email/password combo", %{user: user} do
+      {:ok, result} = @query |> run(Newline.Schema, variables: %{"email" => user.email, "password" => "not_it"})
+      {:ok, res} = Map.fetch(result, :errors)
+      assert Map.fetch(List.first(res), :message) == {:ok, "In field \"login\": Your password does not match with the password we have on record"}
+    end
+  end
   describe "request_reset_password" do
     setup [:create_user]
 
@@ -50,9 +73,11 @@ defmodule Newline.AuthResolverTest do
   end
 
   defp create_user(context) do
+    password = "testing"
     user = build(:user) |> Repo.insert!
     context
       |> Map.put(:user, user)
+      |> Map.put(:password, password)
   end
 
   defp request_password_reset(%{user: user} = context) do

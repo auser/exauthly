@@ -1,10 +1,12 @@
 // import { combineReducers } from 'redux'
 import application from './application'
-import auth from './auth'
+// import auth from './auth'
+import hello from './hello'
 
 const rootReducer = {
   application,
-  auth,
+  // auth,
+  hello
 }
 
 export default rootReducer

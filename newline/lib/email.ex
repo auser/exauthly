@@ -12,6 +12,12 @@ defmodule Newline.Email do
     |> subject("Welcome to Fullstack.io")
     |> render("welcome_email_en.text")
   end
+  
+  def invitation_email(invitee) do
+    from_postmaster(invitee)
+    |> subject("You've been invited")
+    |> render("invitation_email_en.text")
+  end
 
   def password_reset_request_email(user) do
     from_postmaster(user)

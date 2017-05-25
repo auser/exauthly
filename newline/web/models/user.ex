@@ -45,19 +45,19 @@ defmodule Newline.User do
     |> cast(params, [:name, :email])
     |> validate_required([:email])
     |> validate_email_format(:email)
+    |> update_change(:email, &String.downcase/1)
+    |> unique_constraint(:email, message: "Email already taken")
+    |> generate_encrypted_password
+    |> put_token(:verify_token)
   end
 
   # When a user signs up
   def signup_changeset(user, params \\ %{}) do
     user
     |> __MODULE__.changeset(params)
-    |> cast(params, [:email, :password])
-    |> validate_required([:email, :password])
-    |> update_change(:email, &String.downcase/1)
-    |> unique_constraint(:email, message: "Email already taken")
+    |> cast(params, [:password])
+    |> validate_required([:password])
     |> validate_length(:password, @valid_password_length)
-    |> generate_encrypted_password
-    |> put_token(:verify_token)
   end
 
   # When a user requests a password reset

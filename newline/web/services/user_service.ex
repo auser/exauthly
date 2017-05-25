@@ -7,7 +7,7 @@ defmodule Newline.UserService do
   for handling anything to do with users.
   """
   use Newline.Web, :service
-  alias Newline.{Email, Mailer, Repo, User, OrganizationMembership, OrganizationService, StripePlatformCustomer}
+  alias Newline.{Email, Mailer, Repo, User, OrganizationMembership, OrganizationService, StripePlatformCustomer, Organization}
 
   @doc """
   Handle user signup
@@ -261,6 +261,13 @@ defmodule Newline.UserService do
             where: u.verify_token == ^token,
             select: u
     Repo.one(query)
+  end
+
+  @doc """
+  Set the user's current organization
+  """
+  def set_current_organization(%User{} = user, %Organization{} = org) do
+    OrganizationService.update_user_current_org(user, org)
   end
 
   @doc """

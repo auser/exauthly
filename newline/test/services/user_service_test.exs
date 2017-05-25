@@ -1,21 +1,26 @@
 defmodule Newline.UserServiceTest do
   use Newline.ModelCase
   import Newline.Factory
-  alias Newline.{UserService, OrganizationService, User, Repo}
+  alias Newline.{UserService, OrganizationService, User, Repo, MembershipService}
 
   describe "user_signup" do
-    test "user_signup creates a new user" do
+    setup do
       valid_attrs = params_for(:user)
       UserService.user_signup(valid_attrs)
       user = Repo.get_by(User, %{email: valid_attrs.email})
+      {:ok, %{user: user}}
+    end
+    test "user_signup creates a new user", %{user: user} do
       assert user != nil
     end
 
-    test "creates a default group for the user" do
-      valid_attrs = params_for(:user)
-      UserService.user_signup(valid_attrs)
-      user = Repo.get_by(User, %{email: valid_attrs.email})
+    test "creates a default group for the user", %{user: user}  do
       assert user.current_organization_id != nil
+    end
+
+    test "joins the user in the new group", %{user: user}  do
+      memberships = MembershipService.user_memberships(user)
+      assert length(memberships) == 1
     end
   end
 
@@ -125,8 +130,26 @@ defmodule Newline.UserServiceTest do
     end
   end
 
+  describe "set_current_organization" do
+    setup [:create_user, :create_organization, :set_current_organization]
+
+    test "sets the user current_org", %{user: user, org: org} do
+      new_org = build(:organization) |> Repo.insert!
+      assert user.current_organization_id == org.id
+      UserService.set_current_organization(user, new_org)
+      user = Repo.get!(User, user.id)
+      assert user.current_organization_id == new_org.id
+      refute user.current_organization_id == org.id
+    end
+  end
+
   defp create_user(context) do
     user = build(:user) |> Repo.insert!
+    Map.put(context, :user, user)
+  end
+
+  defp set_current_organization(%{org: org} = context) do
+    user = build(:user, %{current_organization_id: org.id}) |> Repo.insert!
     Map.put(context, :user, user)
   end
 

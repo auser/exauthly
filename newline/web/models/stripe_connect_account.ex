@@ -22,7 +22,7 @@ defmodule Newline.StripeConnectAccount do
     field :support_phone, :string
 
     belongs_to :organization, Newline.Organization
-    has_one :stripe_external_account, Newline.StripeExternalAccount
+    # has_one :stripe_external_account, Newline.StripeExternalAccount
 
     timestamps()
   end

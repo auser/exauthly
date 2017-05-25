@@ -5,7 +5,7 @@ defmodule Newline.UserResolver do
   alias Newline.{UserService}
   
   def all(params, info) do
-    UserService.get_all(params, info)
+    UserService.get_all(params, info) |> response
   end
 
   def email_available(%{email: email}, _info) do
@@ -23,4 +23,9 @@ defmodule Newline.UserResolver do
   def me(_params, %{context: %{current_user: user}}) do
     UserService.get_me(user)
   end
+  def me(_params, _), do: Newline.BaseResolver.unauthenticated_error
+
+  @doc """
+  Change the user's current organization
+  """
 end

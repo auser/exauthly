@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "form-schema-validation": "^1.6.0",
+    "glamor": "^2.20.25",
     "graphql-tag": "^2.1.0",
     "isomorphic-fetch": "^2.2.1",
     "node-sass-chokidar": "^0.0.1",

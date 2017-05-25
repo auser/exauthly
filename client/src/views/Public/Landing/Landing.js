@@ -4,20 +4,16 @@ import {
   Link
 } from 'react-router-dom'
 
-import './Landing.css'
+import Header from 'components/Header/Header'
 
-import withMainInterface from 'containers/withMainInterface'
+import { css } from 'glamor'
+
 
 const Home = props => (
   <div id="home" className="home">
-    <div className="page-top">
-      <div className="header">
-        <div className="">
-        </div>
-      </div>
-    </div>
-    <Link to="/login">Login</Link>
+    <Header />
+    <Link to="/login">Login here</Link>
   </div>
 )
 
-export default withMainInterface(Home)
+export default Home

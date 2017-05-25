@@ -1,7 +1,7 @@
 import React from 'react'
 
 import withHeader from 'containers/withHeader'
-import LoginForm from 'components/forms/loginForm'
+import LoginForm from 'components/Forms/LoginForm'
 
 import styles from './Login.css'
 
@@ -11,11 +11,9 @@ export class LoginView extends React.Component {
   render () {
     return (
       <div>
-        <div className="column">
-          <h2 className="ui teal header">
-            <div className="content">Login</div>
-          </h2>
-        </div>
+        <h2 className="">
+          <div className="content">Login</div>
+        </h2>
         <LoginForm />
       </div>
     )

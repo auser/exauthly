@@ -17,7 +17,7 @@ export default props => (
     <Switch>
       <Route path="/login" component={Login} />
       <Route exact path="/" component={Landing} />
-      <Route path="*" component={() => <Redirect to="/" />} />
+      {/*<Route path="*" component={() => <Redirect to="/" />} />*/}
     </Switch>
   </Router>
 )

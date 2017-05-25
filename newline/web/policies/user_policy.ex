@@ -1,5 +1,8 @@
 defmodule Newline.UserPolicy do
-  import Newline.BasePolicy, only: [member?: 2, member?: 1, get_role: 1, get_membership: 2, at_least_admin?: 2, at_least_manager?: 2]
+  import Newline.BasePolicy, only: [
+    member?: 2, member?: 1, get_role: 1, get_membership: 2, at_least_admin?: 2, at_least_manager?: 2,
+    site_admin?: 1
+  ]
 
   alias Newline.{User, Organization}
   alias Ecto.Changeset
@@ -20,7 +23,9 @@ defmodule Newline.UserPolicy do
     A user can read their own organizations
     """
     # User can do all the actions they want on themselves
-    def can?(%User{id: user_id}, _action, %User{id: user_id}), do: true
+    def can?(%User{id: user_id}, action, %User{id: user_id}) when action in @read_actions or action in @write_actions , do: true
+    # User can do all the admin actions if they are an admin
+    def can?(%User{id: user_id} = user, action, _) when action in @admin_actions, do: site_admin?(user)
     # User can read their own organizations
     def can?(%User{} = user, action, %Organization{} = org) when action in @read_actions or action in @list_actions, do: at_least_manager?(user, org)
     # An admin user can write all of their memberships

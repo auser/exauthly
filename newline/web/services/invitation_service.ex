@@ -31,7 +31,7 @@ defmodule Newline.InvitationService do
   end
 
   def create_invitation_changeset(invitee, user, org) do
-    Invitation.create_changeset(%Invitation{}, %{org: org, user: user, invitee: invitee})
+    Invitation.create_changeset(%Invitation{}, %{organization: org, user: user, invitee: invitee})
     |> Repo.insert
   end
 

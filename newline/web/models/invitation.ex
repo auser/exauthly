@@ -21,6 +21,9 @@ defmodule Newline.Invitation do
   def create_changeset(struct, params \\ %{}) do
     struct 
     |> cast(params, [])
+    |> put_assoc(:user, params.user)
+    |> put_assoc(:organization, params.organization)
+    |> put_assoc(:invitee, params.invitee)
     |> assoc_constraint(:user)
     |> assoc_constraint(:organization)
     |> assoc_constraint(:invitee)

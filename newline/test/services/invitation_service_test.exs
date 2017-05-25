@@ -11,12 +11,10 @@ defmodule InvitationServiceTest do
       email = "some@email.com"
       {:ok, invite} = InvitationService.invite_user_by_email_to_organization(email, user, org)
 
+      assert invite.id != nil
       assert invite.organization != nil
       assert invite.user != nil
       assert invite.token != nil
-
-      IO.inspect invite
-      IO.inspect Repo.get(Invitation, invite.id)
     end
   end
 

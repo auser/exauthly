@@ -10,8 +10,16 @@ defmodule Newline.InvitationService do
     Create the invitation
     Send an email
   """
+  def invite_user_by_email_to_organization(email, %User{} = user, org_id) when is_number(org_id) do
+    org = Repo.get(Organization, org_id)
+    invite_user_by_email_to_organization(email, user, org)
+  end
   def invite_user_by_email_to_organization(email, %User{} = user, %Organization{} = org) do
-    case Repo.transaction(insert_invitation(email, user, org)) do
+    multi = case Repo.get_by(User, %{email: email}) do
+      nil -> create_invitation_with_new_user(email, user, org)
+      %User{} = invitee -> create_invitation_with_existing_user(invitee, user, org)
+    end
+    case Repo.transaction(multi) do
       {:ok, %{invitation: invitation}} ->
         {:ok, invitation}
       {:error, _failed_op, changeset, _changes} ->
@@ -19,9 +27,20 @@ defmodule Newline.InvitationService do
     end
   end
 
-  defp insert_invitation(email, user, org) do
+  defp create_invitation_with_existing_user(invitee, user, org) do
+    Multi.new
+    |> Multi.run(:create_invitee, fn (_) -> {:ok, invitee} end)
+    |> insert_invitation(user, org)
+  end
+
+  defp create_invitation_with_new_user(email, user, org) do
     Multi.new
     |> Multi.insert(:create_invitee, invitee_changeset(email))
+    |> insert_invitation(user, org)
+  end
+
+  defp insert_invitation(multi, user, org) do
+    multi
     |> Multi.run(:invitation, &(create_invitation_changeset(&1[:create_invitee], user, org)))
     |> Multi.run(:send_invite_email, &(send_invite_email(%{}, &1[:create_invitee])))
   end

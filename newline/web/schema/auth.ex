@@ -1,4 +1,4 @@
-defmodule Newline.Schema.Types.Auth do
+defmodule Newline.Schema.Auth do
   @moduledoc """
   Provides graphQL types or authentication
   """

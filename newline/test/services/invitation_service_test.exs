@@ -16,6 +16,21 @@ defmodule InvitationServiceTest do
       assert invite.user != nil
       assert invite.token != nil
     end
+
+    test "is invalid with invalid email", %{user: user, org: org} do
+      email = "not_valid"
+      {:error, cs} = InvitationService.invite_user_by_email_to_organization(email, user, org)
+
+      refute cs.valid?
+      assert [email: {"has invalid format", _}] = cs.errors
+    end
+
+    test "with a user already registered", %{user: user, org: org} do
+      invitee = build(:user) |> Repo.insert!
+      {:ok, inv} = InvitationService.invite_user_by_email_to_organization(invitee.email, user, org)
+      assert inv.id != nil
+      assert inv.user != nil
+    end
   end
 
   defp create_invitation_things(context) do

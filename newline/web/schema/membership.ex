@@ -1,4 +1,4 @@
-defmodule Newline.Schema.Types.Membership do
+defmodule Newline.Schema.Membership do
   use Absinthe.Schema.Notation
 
   alias Newline.{MembershipResolver}

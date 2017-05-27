@@ -1,4 +1,4 @@
-defmodule Newline.Schema.Types.User do
+defmodule Newline.Schema.User do
   use Absinthe.Schema.Notation
 
   object :user_fields do

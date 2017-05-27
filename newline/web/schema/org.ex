@@ -1,4 +1,4 @@
-defmodule Newline.Schema.Types.Org do
+defmodule Newline.Schema.Org do
   @moduledoc false
   use Absinthe.Schema.Notation
 

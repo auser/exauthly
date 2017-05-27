@@ -7,10 +7,11 @@ defmodule Newline.Schema do
 
   use Absinthe.Schema
   import_types Newline.Schema.Types
-  import_types Newline.Schema.Types.Auth
-  import_types Newline.Schema.Types.User
-  import_types Newline.Schema.Types.Org
-  import_types Newline.Schema.Types.Membership
+  import_types Newline.Schema.Auth
+  import_types Newline.Schema.User
+  import_types Newline.Schema.Org
+  import_types Newline.Schema.Membership
+  import_types Newline.Schema.Invitation
 
   query do
     import_fields :user_fields
@@ -23,6 +24,7 @@ defmodule Newline.Schema do
     import_fields :auth_mutations
     import_fields :user_mutations
     import_fields :org_mutations
+    import_fields :invitation_mutations
 
   end
 

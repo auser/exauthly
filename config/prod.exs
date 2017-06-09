@@ -15,6 +15,8 @@ use Mix.Config
 # which you typically run after static files are built.
 config :newline, Newline.Web.Endpoint,
   on_init: {Newline.Web.Endpoint, :load_from_system_env, []},
+  # http: [port: 8080],
+  # url: [host: "example.com", port: 80],
   http: [port: {:system, "PORT"}],
   url: [scheme: "https", host: "newline.herokuapp.com", port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
@@ -23,7 +25,11 @@ config :newline, Newline.Web.Endpoint,
 
 config :newline, Newline.Repo,
   adapter: Ecto.Adapters.Postgres,
-  url: System.get_env("DATABASE_URL"),
+  # url: System.get_env("DATABASE_URL"),
+  username: System.get_env("DATA_DB_USER"),
+  password: System.get_env("DATA_DB_PASS"),
+  hostname: System.get_env("DATA_DB_HOST"),
+  database: "newline_prod",
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
   ssl: true
 

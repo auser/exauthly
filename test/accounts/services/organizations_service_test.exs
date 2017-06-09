@@ -39,7 +39,7 @@ defmodule Newline.Accounts.OrganizationServiceTest do
 
     # TODO
     # test "adds a membership to the organization", %{org: org, user: user} do
-      {:ok, _} = OrganizationService.join_org(org, user)
+    #   {:ok, _} = OrganizationService.join_org(org, user)
     # end
   end
 

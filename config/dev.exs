@@ -55,11 +55,17 @@ config :phoenix, :stacktrace_depth, 20
 # Configure your database
 config :newline, Newline.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
+  # username: "postgres",
+  # password: "postgres",
+  # database: "newline_dev",
+  # hostname: "localhost",
+  # pool_size: 10
+  username: System.get_env("DATA_DB_USER"),
+  password: System.get_env("DATA_DB_PASS"),
+  hostname: System.get_env("DATA_DB_HOST"),
   database: "newline_dev",
-  hostname: "localhost",
   pool_size: 10
+
 
 # Configure Guardian secret_key
 # Configure Guardian

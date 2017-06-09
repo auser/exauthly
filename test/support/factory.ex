@@ -33,6 +33,14 @@ defmodule Newline.Factory do
     }
   end
 
+  def organization_membership_factory do
+    %Newline.Accounts.OrganizationMembership{
+      member_id: build(:user),
+      organization_id: build(:organization),
+      role: "member"
+    }
+  end
+
 
   def set_password(user, password) do
     hashed_password = hashpwsalt(password)

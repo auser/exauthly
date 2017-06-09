@@ -20,6 +20,6 @@ defmodule Newline.Repo.Migrations.AddOrganizationsAndMemberships do
       timestamps()
     end
 
-    create index :organization_memberships, [:member_id, :organization_id], unique: true
+    create index :organization_memberships, [:member_id, :organization_id], unique: true, name: :organization_membership_unique_constraint_on_membership
   end
 end

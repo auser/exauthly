@@ -23,9 +23,11 @@ defmodule Newline.Accounts.OrganizationMembership do
   def create_changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:member_id, :organization_id, :role])
-    |> validate_required([:member_id, :organization_id, :role])
+    |> validate_required([:member_id, :organization_id])
     |> assoc_constraint(:member)
     |> assoc_constraint(:organization)
+    |> unique_constraint(:unique_membership, name: :organization_membership_unique_constraint_on_membership)
+    |> set_role_if_necessary(:role)
     |> validate_inclusion(:role, roles())
   end
 
@@ -42,5 +44,18 @@ defmodule Newline.Accounts.OrganizationMembership do
   # Possible roles
   def roles do
     ~w{ owner admin manager member }
+  end
+
+  defp set_role_if_necessary(changeset, role_key) do
+    case changeset do
+      %Ecto.Changeset{valid?: true, changes: changes} ->
+        case Map.fetch(changes, role_key) do
+          {:ok, _} ->
+            changeset
+          _ ->
+            Ecto.Changeset.put_change(changeset, role_key, "member")
+        end
+      _ -> changeset
+    end
   end
 end

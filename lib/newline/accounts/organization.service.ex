@@ -5,7 +5,7 @@ defmodule Newline.Accounts.OrganizationService do
   alias Newline.Repo
   import Ecto.{Query, Changeset}, warn: false
 
-  alias Newline.Accounts.{User, Organization}
+  alias Newline.Accounts.{User, Organization, OrganizationMembership}
 
   @doc """
   Gets the organization from the slug
@@ -22,9 +22,27 @@ defmodule Newline.Accounts.OrganizationService do
     end
   end
 
+  @doc """
+  Create an organization with slug and name
+  """
   def create_organization(%{name: _, slug: _} = params) do
     Organization.create_changeset(%Organization{}, params)
     |> Repo.insert
   end
   def create_organization(_), do: {:error, :bad_request}
+
+  @doc """
+  Add member to organization
+  """
+  def join_org(%Organization{} = org, %User{} = user, opts \\ %{}) do
+    params = %{
+      organization_id: org.id,
+      member_id: user.id,
+      role: opts[:role]
+    }
+    %OrganizationMembership{}
+    |> OrganizationMembership.create_changeset(params)
+    |> Repo.insert
+  end
+
 end

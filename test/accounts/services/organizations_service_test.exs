@@ -32,8 +32,25 @@ defmodule Newline.Accounts.OrganizationServiceTest do
       refute cs.valid?
       assert cs.errors[:name]
     end
+  end
 
+  describe "join_org/2" do
+    setup [:create_organization, :create_user]
 
+    # TODO
+    # test "adds a membership to the organization", %{org: org, user: user} do
+      # {:ok, _} = OrganizationService.join_org(org, user)
+    # end
+  end
+
+  def create_organization(context) do
+    context
+    |> Map.put(:org, build(:organization))
+  end
+
+  def create_user(context) do
+    context
+    |> Map.put(:user, build(:user))
   end
 
 end

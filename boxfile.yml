@@ -7,6 +7,8 @@ run.config:
   dev_packages:
     - nodejs
     - inotify-tools
+  extra_packages:
+    - git
 
   # cache node_modules
   cache_dirs:
@@ -22,7 +24,8 @@ run.config:
 deploy.config:
   # generate the static assets digest
   extra_steps:
-    - mix phoenix.digest
+    - mix phx.digest
+
   before_live:
     web.main:
       - mix ecto.create --quiet

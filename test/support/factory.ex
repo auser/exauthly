@@ -26,6 +26,14 @@ defmodule Newline.Factory do
     }
   end
 
+  def organization_factory do
+    %Newline.Accounts.Organization{
+      name: "some name",
+      slug: "some-name"
+    }
+  end
+
+
   def set_password(user, password) do
     hashed_password = hashpwsalt(password)
     %{user | encrypted_password: hashed_password}

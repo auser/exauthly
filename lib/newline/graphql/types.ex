@@ -4,7 +4,7 @@ defmodule Newline.Schema.Types do
 
   import_types Newline.Schema.Types.Global
   import_types Newline.Schema.Types.UserTypes
-  # import_types Newline.Schema.Types.OrgTypes
+  import_types Newline.Schema.Types.OrganizationTypes
   # import_types Newline.Schema.Types.InvitationTypes
 
   # object :membership do

@@ -7,7 +7,10 @@ import { browserHistory } from 'react-router';
 
 import configureStore, { sagaMiddleware } from 'store';
 import Root from 'config/Root';
+import ComingSoon from 'config/ComingSoon'
 import Sagas from 'sagas';
+
+console.log('hello')
 
 const store = configureStore(browserHistory);
 
@@ -18,19 +21,17 @@ const history = createHistory();
 const render = (Component) => {
   ReactDOM.render(
     <AppContainer>
-      <Provider store={store}>
-        <Component history={history} />
-      </Provider>
+      <Component />
     </AppContainer>,
     document.getElementById('root'),
   );
 };
 
-render(Root);
+render(ComingSoon);
 
 if (module.hot) {
-  module.hot.accept('./config/Root', () => {
-    const newApp = require('./config/Root').default;
+  module.hot.accept('./config/ComingSoon', () => {
+    const newApp = require('./config/ComingSoon').default;
     render(newApp);
   });
 }

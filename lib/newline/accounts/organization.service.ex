@@ -21,4 +21,10 @@ defmodule Newline.Accounts.OrganizationService do
         {:ok, org}
     end
   end
+
+  def create_organization(%{name: _, slug: _} = params) do
+    Organization.create_changeset(%Organization{}, params)
+    |> Repo.insert
+  end
+  def create_organization(_), do: {:error, :bad_request}
 end

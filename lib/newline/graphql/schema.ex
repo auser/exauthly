@@ -23,7 +23,7 @@ defmodule Newline.Schema do
 
     import_fields :auth_mutations
     import_fields :user_mutations
-    # import_fields :org_mutations
+    import_fields :organization_mutations
     # import_fields :invitation_mutations
 
   end

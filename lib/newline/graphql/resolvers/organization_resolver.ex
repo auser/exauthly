@@ -13,4 +13,14 @@ defmodule Newline.Resolvers.OrganizationResolver do
 
   def get_org_by_slug(_, _), do: unauthorized_error()
 
+  @doc """
+  Creates an Organization
+
+  ## Examples
+
+      iex> create_organization(%{slug: "name-thing", name: "Name thing"})
+  """
+  def create_organization(params, %{context: %{current_user: _}}) do
+    OrganizationService.create_organization(params)
+  end
 end

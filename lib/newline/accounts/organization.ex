@@ -3,12 +3,14 @@ defmodule Newline.Accounts.Organization do
   import Ecto.{Query, Changeset}, warn: false
   alias Newline.Repo
 
+  alias Newline.Accounts.OrganizationMembership
+
   schema "organizations" do
     field :name, :string
     field :slug, :string
 
-    # has_many :organization_memberships, OrganizationMembership
-    # has_many :members, through: [:organization_memberships, :member]
+    has_many :organization_memberships, OrganizationMembership
+    has_many :members, through: [:organization_memberships, :member]
 
     timestamps()
   end

@@ -3,7 +3,6 @@ defmodule Newline.Accounts.OrganizationServiceTest do
 
   import Newline.Factory
   alias Newline.Accounts.OrganizationService
-  alias Newline.Accounts.User
 
   describe "get_org_by_slug/1" do
     test "it gets the organization if it exists" do

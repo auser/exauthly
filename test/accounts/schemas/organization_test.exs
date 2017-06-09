@@ -29,7 +29,7 @@ defmodule Newline.OrganizationTest do
       build(:organization, %{name: "ElixirBridge"}) |> Repo.insert!
       org = params_for(:organization, %{name: "ElixirBridge"})
       cs = Organization.changeset(%Organization{}, org)
-      {:error, cs} = cs |> Repo.insert
+      {:error, _} = cs |> Repo.insert
     end
   end
 end

@@ -1,8 +1,10 @@
 defmodule Newline.Accounts.OrganizationServiceTest do
   use Newline.DataCase
 
+  alias Newline.Repo
   import Newline.Factory
   alias Newline.Accounts.OrganizationService
+  alias Newline.Accounts.OrganizationMembership
 
   describe "get_org_by_slug/1" do
     test "it gets the organization if it exists" do
@@ -38,19 +40,48 @@ defmodule Newline.Accounts.OrganizationServiceTest do
     setup [:create_organization, :create_user]
 
     # TODO
-    # test "adds a membership to the organization", %{org: org, user: user} do
-      # {:ok, _} = OrganizationService.join_org(org, user)
-    # end
+    test "adds a membership to the organization", %{org: org, user: user} do
+      {:ok, _} = OrganizationService.join_org(org, user)
+
+      found = OrganizationMembership
+              |> where([m], m.member_id == ^user.id
+                      and m.organization_id == ^org.id)
+              |> preload(:member)
+              |> Repo.one
+
+      assert found
+      assert found.member.id == user.id
+      assert found.role == "member"
+    end
+
+    test "adds a membership with an org_id", %{org: org, user: user} do
+      {:ok, membership} = OrganizationService.join_org(org.id, user)
+      assert membership
+    end
+
+    test "adds membership with org slug", %{org: org, user: user} do
+      {:ok, membership} = OrganizationService.join_org(org.slug, user)
+      assert membership
+    end
+
+    test "fails without org", %{user: user} do
+      {:error, :bad_request} = OrganizationService.join_org(nil, user)
+    end
+
+    test "fails without user", %{org: org} do
+      {:error, :bad_request} = OrganizationService.join_org(org, nil)
+    end
+
   end
 
   def create_organization(context) do
     context
-    |> Map.put(:org, build(:organization))
+    |> Map.put(:org, insert(:organization))
   end
 
   def create_user(context) do
     context
-    |> Map.put(:user, build(:user))
+    |> Map.put(:user, insert(:user))
   end
 
 end

@@ -41,7 +41,9 @@ defmodule Newline.Accounts.OrganizationMembership do
     |> validate_inclusion(:role, roles())
   end
 
-  # Possible roles
+  @doc """
+  Possible roles available
+  """
   def roles do
     ~w{ owner admin manager member }
   end

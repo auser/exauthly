@@ -23,4 +23,5 @@ defmodule Newline.Resolvers.OrganizationResolver do
   def create_organization(params, %{context: %{current_user: _}}) do
     OrganizationService.create_organization(params)
   end
+
 end

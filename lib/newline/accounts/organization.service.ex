@@ -34,7 +34,19 @@ defmodule Newline.Accounts.OrganizationService do
   @doc """
   Add member to organization
   """
-  def join_org(%Organization{} = org, %User{} = user, opts \\ %{}) do
+  def join_org(org, user, opts \\ %{})
+  def join_org(org_id, %User{} = user, opts) when is_number(org_id) do
+    org = Repo.get(Organization, org_id)
+    join_org(org, user, opts)
+  end
+  def join_org(org_slug, %User{} = user, opts) when is_binary(org_slug) do
+    case get_org_by_slug(org_slug) do
+      nil -> {:error, :not_found}
+      {:ok, org} ->
+        join_org(org, user, opts)
+    end
+  end
+  def join_org(%Organization{} = org, %User{} = user, opts) do
     params = %{
       organization_id: org.id,
       member_id: user.id,
@@ -44,5 +56,6 @@ defmodule Newline.Accounts.OrganizationService do
     |> OrganizationMembership.create_changeset(params)
     |> Repo.insert
   end
+  def join_org(_, _, _), do: {:error, :bad_request}
 
 end

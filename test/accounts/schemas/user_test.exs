@@ -153,6 +153,12 @@ defmodule Newline.UserTest do
       {:error, _errs} = cs |> Repo.insert
     end
 
+    test "fails when the email is invalid format", %{user: user} do
+      params = %{email: "bob@bob"}
+      cs = User.update_changeset(user, params)
+      refute cs.valid?
+    end
+
   end
 
   describe "current_organization_changeset/2" do
@@ -162,15 +168,17 @@ defmodule Newline.UserTest do
       org = org |> Repo.insert!
       user = user |> Repo.insert!
 
-      join_org(user, org)
+      {:ok, _membership} = join_org(user, org)
 
-      params = %{current_organization: org}
+      params = %{current_organization_id: org.id}
       cs = User.current_organization_changeset(user, params)
       assert cs.valid?
     end
 
     test "cannot change current org when not member", %{user: user} do
+      user = user |> Repo.insert!
       org = insert(:organization)
+
       params = %{current_organization_id: org.id}
       cs = User.current_organization_changeset(user, params)
       refute cs.valid?

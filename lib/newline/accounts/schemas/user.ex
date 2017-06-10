@@ -116,20 +116,13 @@ defmodule Newline.Accounts.User do
   def current_organization_changeset(user, params \\ %{}) do
     user
     |> cast(params, [:current_organization_id])
+    |> validate_required([:current_organization_id])
     |> foreign_key_constraint(:current_organization_id)
     |> assoc_constraint(:current_organization)
-    |> validate_member_of(user, :current_organization_id)
+    |> validate_member_of(:current_organization_id)
   end
 
-  # defp user_group_ids(user_id) do
-  #   membership_query = from m in OrganizationMembership,
-  #                       where: m.member_id == ^user_id,
-  #                       left_join: org in assoc(m, :organization),
-  #                       select: org.id
-  #   Repo.all(membership_query)
-  # end
-
-
+  ########################################
 
   defp generate_encrypted_password(current_changeset) do
     case current_changeset do

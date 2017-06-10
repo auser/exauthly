@@ -3,7 +3,7 @@ defmodule Newline.AccountsTest do
 
   import Newline.Factory
   alias Newline.Accounts
-  alias Newline.Accounts.User
+  alias Newline.Accounts.{User, OrganizationService}
 
   setup do
     {:ok, valid_user: build(:user)}
@@ -195,9 +195,29 @@ defmodule Newline.AccountsTest do
     end
   end
 
+  describe "set_current_organization/2" do
+    setup [:create_user, :create_org]
+
+    test "updates the user's current org", %{org: org, user: user} do
+      {:ok, _membership} = OrganizationService.join_org(user, org)
+
+      {:ok, _} = Accounts.set_current_organization(user, org)
+      user = Repo.get(User, user.id)
+      # current_org = Repo.preload(user, :current_organization)
+      # IO.inspect current_org
+      assert user.current_organization_id == org.id
+    end
+  end
+
   defp create_user(context) do
     user = build(:user) |> Repo.insert!
     context
     |> Map.put(:user, user)
+  end
+
+  defp create_org(context) do
+    org = build(:organization) |> Repo.insert!
+    context
+    |> Map.put(:org, org)
   end
 end

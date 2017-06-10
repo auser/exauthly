@@ -171,7 +171,7 @@ defmodule Newline.Accounts do
         {:ok, social_account}
     end
   end
-  def associate_social_account(_, user, params), do: {:error, :unknown}
+  def associate_social_account(_, _user, _params), do: {:error, :unknown}
 
   @doc """
   Disassociate a social account with a user
@@ -192,9 +192,14 @@ defmodule Newline.Accounts do
   end
 
   def set_current_organization(%User{} = user, %Organization{} = org) do
-
+    User.current_organization_changeset(user, %{
+      current_organization_id: org.id
+    })
+    |> Repo.update
   end
+  def set_current_organization(_, _), do: {:error, :bad_request}
 
+  #####################################
 
   defp run_update_password(changeset) do
     Multi.new

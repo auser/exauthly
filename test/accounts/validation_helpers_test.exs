@@ -44,17 +44,17 @@ defmodule Newline.Accounts.ValidationHelpersTest do
     setup [:create_cs, :create_user_and_join_org]
 
     test "is valid when user is a member", %{cs: cs, user: user, org: org} do
-      cs = cs
+      cs = user
       |> Changeset.cast(%{id: user.id, current_organization_id: org.id}, [:id, :current_organization_id])
-      |> validate_member_of(user.id, :current_organization_id)
+      |> validate_member_of(:current_organization_id)
       assert cs.valid?
     end
 
     test "is invalid when not a member", %{cs: cs, user: user} do
-      org = build(:organization) |> Repo.insert!
-      cs = cs
+      org = insert(:organization)
+      cs = user
       |> Changeset.cast(%{id: user.id, current_organization_id: org.id}, [:id, :current_organization_id])
-      |> validate_member_of(user, :current_organization_id)
+      |> validate_member_of(:current_organization_id)
       refute cs.valid?
     end
   end

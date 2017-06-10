@@ -41,7 +41,7 @@ defmodule Newline.Accounts.OrganizationServiceTest do
 
     # TODO
     test "adds a membership to the organization", %{org: org, user: user} do
-      {:ok, _} = OrganizationService.join_org(org, user)
+      {:ok, _} = OrganizationService.join_org(user, org)
 
       found = OrganizationMembership
               |> where([m], m.member_id == ^user.id
@@ -55,21 +55,21 @@ defmodule Newline.Accounts.OrganizationServiceTest do
     end
 
     test "adds a membership with an org_id", %{org: org, user: user} do
-      {:ok, membership} = OrganizationService.join_org(org.id, user)
+      {:ok, membership} = OrganizationService.join_org(user, org.id)
       assert membership
     end
 
     test "adds membership with org slug", %{org: org, user: user} do
-      {:ok, membership} = OrganizationService.join_org(org.slug, user)
+      {:ok, membership} = OrganizationService.join_org(user, org.slug)
       assert membership
     end
 
     test "fails without org", %{user: user} do
-      {:error, :bad_request} = OrganizationService.join_org(nil, user)
+      {:error, :bad_request} = OrganizationService.join_org(user, nil)
     end
 
     test "fails without user", %{org: org} do
-      {:error, :bad_request} = OrganizationService.join_org(org, nil)
+      {:error, :bad_request} = OrganizationService.join_org(nil, org)
     end
 
   end

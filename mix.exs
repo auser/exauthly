@@ -65,6 +65,7 @@ defmodule Newline.Mixfile do
       {:absinthe, "~> 1.3.0-beta.2"},
       {:absinthe_plug, "~> 1.3.0-beta.0"},
       {:absinthe_ecto, git: "https://github.com/absinthe-graphql/absinthe_ecto.git"},
+      {:canary, "~> 1.1"},
     ]
   end
 

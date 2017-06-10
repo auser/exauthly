@@ -25,9 +25,9 @@ defmodule Newline.Accounts.User do
 
     has_many :social_accounts, Newline.Accounts.SocialAccount
 
-    # has_many :organization_memberships, Newline.OrganizationMembership, foreign_key: :member_id
-    # has_many :organizations, through: [:organization_memberships, :organization]
-    # belongs_to :current_organization, Newline.Organization
+    has_many :organization_memberships, Newline.Accounts.OrganizationMembership, foreign_key: :member_id
+    has_many :organizations, through: [:organization_memberships, :organization]
+    belongs_to :current_organization, Newline.Accounts.Organization
 
     timestamps()
   end

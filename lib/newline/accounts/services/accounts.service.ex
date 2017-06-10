@@ -6,7 +6,7 @@ defmodule Newline.Accounts do
   import Ecto.{Query, Changeset}, warn: false
   alias Ecto.Multi
 
-  alias Newline.Accounts.{User,SocialAccount}
+  alias Newline.Accounts.{User,SocialAccount,Organization}
 
   @doc """
   Returns the list of users.
@@ -191,7 +191,9 @@ defmodule Newline.Accounts do
     end
   end
 
+  def set_current_organization(%User{} = user, %Organization{} = org) do
 
+  end
 
 
   defp run_update_password(changeset) do

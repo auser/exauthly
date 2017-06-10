@@ -73,6 +73,12 @@ defmodule Newline.Policies.BasePolicy do
   def member?(%User{} = user, %Organization{} = org) do
     member?(get_role(org, user))
   end
+  def member?(user_id, org_id) when is_number(user_id) and is_number(org_id) do
+    # TODO: Optimize
+    user = Repo.get(User, user_id)
+    org = Repo.get(Organization, org_id)
+    member?(user, org)
+  end
   def member?(%Changeset{changes: %{current_organization_id: _}} = cs, %User{} = user) do
     member?(get_role(cs, user))
   end

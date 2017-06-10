@@ -3,7 +3,7 @@ defmodule Newline.Helpers.Validation do
   Provides helpers for ecto validations
   """
   alias Ecto.Changeset
-  # import Newline.BasePolicy, only: [member?: 2]
+  # import Newline.Policies.BasePolicy, only: [member?: 2]
 
 
   @doc """
@@ -27,14 +27,15 @@ defmodule Newline.Helpers.Validation do
   # @doc """
   # Validates a user is a member of an organization
   # """
-  # def validate_member_of(%Changeset{} = cs, user) do
-  #   Changeset.validate_change(cs, :current_organization_id, fn _, org_id ->
-  #     case Newline.BasePolicy.member?(cs, user) do
-  #       true -> []
-  #       false ->
-  #         [current_organization: "user must belong to this organization to switch to it"]
-  #     end
-  #   end)
-  # end
-  # def validate_member_of(cs, field, options \\ []), do: cs
+  def validate_member_of(%Changeset{} = cs, user, org_key) do
+    Changeset.validate_change(cs, org_key, fn _, org_id ->
+      case Newline.Policies.BasePolicy.member?(user, org_id) do
+        true ->
+          []
+        false ->
+          [current_organization: "user must belong to this organization to switch to it"]
+      end
+    end)
+  end
+  def validate_member_of(cs, _user, _field, _options \\ []), do: cs
 end

@@ -4,7 +4,7 @@ defmodule Newline.Accounts.User do
   import Ecto.{Query, Changeset}, warn: false
   import Comeonin.Bcrypt, only: [hashpwsalt: 1]
 
-  alias Newline.Accounts.SocialAccount
+  alias Newline.Accounts.{SocialAccount, OrganizationMembership}
 
   @derive {Poison.Encoder, only: [:email, :name, :admin]}
   schema "users" do
@@ -99,6 +99,37 @@ defmodule Newline.Accounts.User do
     |> put_change(:verified, true)
     |> put_change(:verify_token, nil)
   end
+
+
+  @doc """
+  Update a user's changeset
+  """
+  def update_changeset(user, params \\ %{}) do
+    user
+    |> cast(params, [:name, :email])
+    |> update_change(:email, &String.downcase/1)
+    |> validate_email_format(:email)
+    |> unique_constraint(:email, message: "Email already taken")
+    # |> validate_inclusion(:role, OrganizationMembership.roles())
+  end
+
+  def current_organization_changeset(user, params \\ %{}) do
+    user
+    |> cast(params, [:current_organization_id])
+    |> foreign_key_constraint(:current_organization_id)
+    |> assoc_constraint(:current_organization)
+    |> validate_member_of(user, :current_organization_id)
+  end
+
+  # defp user_group_ids(user_id) do
+  #   membership_query = from m in OrganizationMembership,
+  #                       where: m.member_id == ^user_id,
+  #                       left_join: org in assoc(m, :organization),
+  #                       select: org.id
+  #   Repo.all(membership_query)
+  # end
+
+
 
   defp generate_encrypted_password(current_changeset) do
     case current_changeset do

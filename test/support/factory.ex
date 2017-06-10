@@ -28,15 +28,15 @@ defmodule Newline.Factory do
 
   def organization_factory do
     %Newline.Accounts.Organization{
-      name: "some name",
-      slug: "some-name"
+      name: sequence(:name, &"organization #{&1}"),
+      slug: sequence(:slug, &"org-#{&1}")
     }
   end
 
   def organization_membership_factory do
     %Newline.Accounts.OrganizationMembership{
-      member_id: build(:user),
-      organization_id: build(:organization),
+      member: build(:user),
+      organization: build(:organization),
       role: "member"
     }
   end

@@ -324,7 +324,8 @@ defmodule Newline.Accounts do
 
     case check_password(user, password) do
       true -> {:ok, user}
-      _ -> {:error, :wrong_credentials}
+      _ ->
+        {:error, "Your password does not match with the password we have on record"}
     end
   end
 

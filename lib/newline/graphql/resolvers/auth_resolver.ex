@@ -44,8 +44,10 @@ defmodule Newline.Resolvers.AuthResolver do
   """
   def reset_password(%{password: password, token: token}, _info) do
     case Accounts.reset_password(token, password) do
-      {:ok, user, token, _ } -> {:ok, Map.put(user, :token, token)}
-      otherwise -> otherwise
+      {:ok, %{user: user, token: token}} ->
+        {:ok, Map.put(user, :token, token)}
+      otherwise ->
+        otherwise
     end
   end
 end

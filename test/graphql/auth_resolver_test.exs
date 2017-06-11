@@ -10,31 +10,38 @@ defmodule Newline.AuthResolverTest do
   describe "login/2" do
     setup [:create_user]
 
+    @query """
+    mutation login($email:Email!,$password:String!) {
+      login(email:$email, password: $password) {
+        token
+      }
+    }
+    """
     test "logs in a user with valid credentials", %{user: user} do
-      {:ok, logged_in} = AuthResolver.login(%{email: user.email, password: "testing"}, %{})
-      assert logged_in.token != nil
-      assert logged_in.email == user.email
+      {:ok, %{data: %{"login" => %{"token" => token}}}} = @query |> run(Newline.Schema, variables: %{"email" => user.email, "password" => "testing"})
+      # {:ok, login} = Map.fetch(data, "login")
+      assert token != nil
     end
 
     test "errors with bad credentials", %{user: user} do
-      {:error, reason} = AuthResolver.login(%{
-        email: user.email,
-        password: "Not it!"
-      }, %{})
-      assert reason == :wrong_credentials
+      {:ok, result} = @query |> run(Newline.Schema, variables: %{"email" => user.email, "password" => "not_it"})
+      {:ok, res} = Map.fetch(result, :errors)
+      assert Map.fetch(List.first(res), :message) == {:ok, "In field \"login\": Your password does not match with the password we have on record"}
     end
   end
 
   describe "request_reset_password/2" do
     setup [:create_user]
 
+    @query """
+    mutation reset_password_request($email:Email!) {
+      reset_password_request(email:$email)
+    }
+    """
+
     test "adds a reset token to the user", %{user: user} do
-      {:ok, _} = AuthResolver.request_reset_password(%{
-        email: user.email
-      }, %{})
-      user = Repo.get(User, user.id)
-      assert user.password_reset_token != nil
-      assert user.password_reset_timestamp != nil
+      {:ok, %{data: %{"reset_password_request" => _user}}} =
+        @query |> run(Newline.Schema, variables: %{"email" => user.email})
     end
 
     test "errors with an email not registered" do
@@ -47,12 +54,29 @@ defmodule Newline.AuthResolverTest do
   describe "reset_password/2" do
     setup [:create_resetting_user]
 
+    @query """
+    mutation reset_user_password($token:String!,$password:String!) {
+      passwordReset(token:$token, password:$password) {
+        email
+        token
+      }
+    }
+    """
+
     test "updates the user's password with correct token", %{user: user, token: token} do
-      {:ok, resp} = AuthResolver.reset_password(%{
-        password: "A new hope",
-        token: token
-      }, %{})
-      assert resp.token != nil
+      user = Repo.get(User, user.id)
+      {:ok, %{data: %{
+        "passwordReset" => %{
+          "email" => email,
+          "token" => token
+        }
+      }}} =
+        @query |> run(Newline.Schema, variables: %{
+          "token" => user.password_reset_token,
+          "password" => "A new hope"
+        })
+      assert email == user.email
+      assert token != nil
 
       {:ok, logged_in} = AuthResolver.login(%{
         email: user.email,
@@ -62,10 +86,12 @@ defmodule Newline.AuthResolverTest do
     end
 
     test "fails to reset password for invalid token" do
-      {:error, :not_found} = AuthResolver.reset_password(%{
-        password: "Definitely Ginger",
-        token: "AnotherCrazyToken"
-      }, %{})
+      {:ok, %{data: %{"passwordReset" => nil}, errors: [h|_]}} =
+        @query |> run(Newline.Schema, variables: %{
+          "token" => "Not the token",
+          "password" => "Definitely ginger"
+        })
+      assert h.message == "In field \"passwordReset\": not_found"
     end
 
     test "fails to reset password for old token" do
@@ -76,10 +102,12 @@ defmodule Newline.AuthResolverTest do
       }
       build(:user, params) |> Repo.insert!
 
-      {:error, :not_found} = AuthResolver.reset_password(%{
-        password: "Definitely Ginger",
-        token: "AnOldToken"
-      }, %{})
+      {:ok, %{data: %{"passwordReset" => nil}, errors: [h|_]}} =
+        @query |> run(Newline.Schema, variables: %{
+          "token" => "AnOldToken",
+          "password" => "Definitely ginger"
+        })
+      assert h.message == "In field \"passwordReset\": not_found"
     end
 
   end

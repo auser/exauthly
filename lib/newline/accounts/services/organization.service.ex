@@ -32,7 +32,7 @@ defmodule Newline.Accounts.OrganizationService do
   def create_organization(_), do: {:error, :bad_request}
 
   @doc """
-  List all organizations a user is a member
+List all organizations a user is a member
 
   ## Examples
 

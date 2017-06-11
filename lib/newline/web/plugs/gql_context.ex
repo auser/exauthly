@@ -13,8 +13,14 @@ defmodule Newline.Plug.Context do
     case build_context(conn) do
       {:ok, context} ->
         put_private(conn, :absinthe, %{context: context})
+      {:error, reason} ->
+        conn
+        |> send_resp(403, reason)
+        |> halt()
       _ ->
         conn
+        |> send_resp(400, "Bad Request")
+        |> halt()
     end
   end
 

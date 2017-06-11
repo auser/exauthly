@@ -119,7 +119,7 @@ defmodule Newline.AccountsTest do
     test "with invalid creds returns error" do
       invalid_creds = %{"email" => "no@me.com", "password" => "abc123"}
       {:error, reason} = Accounts.user_login(invalid_creds)
-      assert reason == :wrong_credentials
+      assert reason == "Your password does not match with the password we have on record"
     end
   end
 

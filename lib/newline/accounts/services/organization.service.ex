@@ -32,6 +32,19 @@ defmodule Newline.Accounts.OrganizationService do
   def create_organization(_), do: {:error, :bad_request}
 
   @doc """
+  List all organizations a user is a member of
+  """
+  def list_user_orgs(user) do
+    query = OrganizationMembership
+            |> where([m], m.member_id == ^user.id)
+
+    case Repo.all(query) do
+      [] -> {:ok, []}
+      other -> {:ok, other}
+    end
+  end
+
+  @doc """
   Add member to organization
   """
   def join_org(user, org, opts \\ %{})

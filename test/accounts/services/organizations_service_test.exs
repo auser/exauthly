@@ -71,7 +71,27 @@ defmodule Newline.Accounts.OrganizationServiceTest do
     test "fails without user", %{org: org} do
       {:error, :bad_request} = OrganizationService.join_org(nil, org)
     end
+  end
 
+  describe "list_user_orgs/2" do
+    setup [:create_user, :create_organization]
+
+    test "lists empty list when not a member", %{user: user} do
+      {:ok, []} = OrganizationService.list_user_orgs(user)
+    end
+
+    test "lists membership orgs", %{user: user, org: org} do
+      OrganizationService.join_org(user, org)
+      {:ok, [member_of]} = OrganizationService.list_user_orgs(user)
+      assert member_of.organization_id == org.id
+    end
+
+    test "list multiple orgs", %{user: user} do
+      OrganizationService.join_org(user, insert(:organization))
+      OrganizationService.join_org(user, insert(:organization))
+      {:ok, memberships} = OrganizationService.list_user_orgs(user)
+      assert length(memberships) == 2
+    end
   end
 
   def create_organization(context) do

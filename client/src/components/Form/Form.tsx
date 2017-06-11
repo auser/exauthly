@@ -14,18 +14,22 @@ export class Form extends React.Component {
   _renderChildren = () => {
     return React.Children.map(this.props.children, c => {
       return React.cloneElement(c, {
-        onChange: this.handleChange.bind(this)
+        onChange: this.handleChange.bind(this),
+        name: 'BOB'
       })
     })
   }
 
-  handleChange = (field:string, value: string) => {
-    console.log('field', field, value)
+  handleChange = (field:string) => (value: string) => {
+    const { fields } = this.state
+    this.setState({
+      fields: { ...fields, [field]: value }
+    })
   }
 
   handleSubmit = evt => {
     evt.preventDefault()
-    console.log('handling submit')
+    this.props.onSubmit && this.props.onSubmit(this.state.fields)
   }
 
   render() {

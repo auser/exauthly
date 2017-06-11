@@ -2,6 +2,10 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 // import { ApolloProvider } from 'react-apollo';
 
+import * as jQuery from 'jquery'
+window.jQuery = jQuery
+import 'bootstrap/dist/js/bootstrap.js'
+
 import './styles/main.scss'
 
 if (process.env.NODE_ENV !== "production") {

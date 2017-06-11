@@ -1,0 +1,29 @@
+{
+  "name": "web-client",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node fuse.js",
+    "dev": "cross-env NODE_ENV=development node fuse.js dev",
+    "build": "cross-env NODE_ENV=production node fuse.js build",
+    "lint": "./node_modules/.bin/eslint ./src",
+    "test": "./node_modules/.bin/jest"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "normalize.css": "^7.0.0",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-router-dom": "^4.1.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-latest": "^6.24.1",
+    "cross-env": "^5.0.1",
+    "dotenv": "^4.0.0",
+    "fuse-box": "^2.0.2",
+    "node-sass": "^4.5.3"
+  }
+}

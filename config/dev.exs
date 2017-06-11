@@ -12,8 +12,8 @@ config :newline, Newline.Web.Endpoint,
   code_reloader: true,
   check_origin: false,
   watchers: [
-    node: ["node_modules/webpack-dev-server/bin/webpack-dev-server.js", "--inline", "--colors", "--hot", "--stdin", "--host", "localhost", "--port", "8080", "--public", "localhost:8080",
-    cd: Path.expand("../assets", __DIR__)
+    npm: ["run", "dev",
+    cd: Path.expand("../client", __DIR__)
   ]]
   # watchers: [npm: ["run", "watch", cd: Path.expand("../assets", __DIR__)]]
   # watchers: [npm: ["run", "start", cd: Path.expand("../assets", __DIR__)]]

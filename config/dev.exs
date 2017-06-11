@@ -12,7 +12,7 @@ config :newline, Newline.Web.Endpoint,
   code_reloader: true,
   check_origin: false,
   watchers: [
-    npm: ["run", "dev",
+    node: ["fuse.js", "dev",
     cd: Path.expand("../client", __DIR__)
   ]]
   # watchers: [npm: ["run", "watch", cd: Path.expand("../assets", __DIR__)]]

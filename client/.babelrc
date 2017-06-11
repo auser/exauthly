@@ -1,6 +1,6 @@
 {
     "sourceMaps": true,
-    "presets": ["latest"],
+    "presets": ["es2015", "react"],
     "plugins": [
         ["transform-react-jsx"]
     ]

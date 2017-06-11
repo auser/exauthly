@@ -3,4 +3,10 @@
 
 body {
   background: #fff;
+  position: relative;
+
+  #root {
+    height: 100vh;
+    width: 100%;
+  }
 }

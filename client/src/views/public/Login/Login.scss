@@ -1,0 +1,24 @@
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .panel-heading {
+    text-align: center;
+
+    h1 {
+      text-transform: uppercase;
+      font-size: 1.8em;
+    }
+  }
+
+  .panel-body {
+    justify-content: flex-start;
+    align-content: flex-start;
+    width: 100%;
+    text-align: left;
+    form {
+      width: 100%;
+    }
+  }
+}

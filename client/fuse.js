@@ -18,8 +18,7 @@ const express = require('express')
 
 const isProduction = process.env.NODE_ENV === 'production'
 const dist = path.resolve(__dirname, './dist')
-
-
+const src = rel => path.resolve(__dirname, 'src', rel)
 
 const env = {
   BACKEND: process.env.BACKEND || 'http://localhost:4000/graphql'
@@ -35,17 +34,22 @@ const fuse = new FuseBox({
   log: isProduction,
   hash: isProduction,
   cache: !isProduction,
+  alias: {
+    'components': src('components'),
+    'hoc': src('hocs'),
+    'layouts': src('layouts'),
+    'styles': src('styles')
+  },
   plugins: [
     WebIndexPlugin({
-      title: 'exauthly',
-      template: 'src/index.html'
+      template: "src/index.html",
+      title: "Fullstack edu",
     }),
     [SassPlugin(), CSSResourcePlugin(), CSSPlugin()],
     CSSPlugin({
       outFile: file => `${dist}/${file}`,
       inject: file => `${file}`
     }),
-    BabelPlugin({}),
     JSONPlugin(),
     ...(isProduction
       ? [UglifyJSPlugin({ comments: false, mangle: true, drop_console: true })]
@@ -67,13 +71,13 @@ Sparky.task(
     })
 )
 
-Sparky.task('favicon', () => Sparky.src('favicon.png').dest('dist/$name'))
+// Sparky.task('favicon', () => Sparky.src('favicon.png').dest('dist/$name'))
 
 Sparky.task('default', ['dev'], () => {})
 
-Sparky.task('dev', [], () => {
+Sparky.task('dev', ['remove-dist'], () => {
   // fuse.dev({ port: 8080 });
-  fuse.dev({ root: false, port: 8080 }, server => {
+  fuse.dev({ port: 8080 }, server => {
     const app = server.httpServer.app
     app.use('/', express.static(dist))
     app.get('*', function (req, res) {
@@ -82,12 +86,14 @@ Sparky.task('dev', [], () => {
     app.set('port', 8081)
     app.listen(8081)
   })
-  fuse.bundle('app').watch().hmr().instructions('> index.jsx')
+  fuse.bundle('public/js/app')
+    .watch().hmr()
+    .instructions('> index.tsx')
   fuse.run()
 })
 
-Sparky.task('build', ['remove-dist', 'favicon'], () => {
-  fuse.bundle('vendor').instructions('~ index.jsx')
-  fuse.bundle('app').instructions('!> [index.jsx]')
+Sparky.task('build', ['remove-dist'], () => {
+  fuse.bundle('public/js/vendor').instructions('~ index.jsx')
+  fuse.bundle('public/js/app').instructions('!> [index.jsx]')
   fuse.run()
 })

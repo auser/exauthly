@@ -26,7 +26,8 @@ The graphql and web contexts are consumers of the functionality.
 ```bash
 mix deps.get
 mix ecto.setup
-iex -S phx.server
+(cd assets && npm install)
+mix phx.server
 ```
 
 ## Tests
@@ -34,6 +35,7 @@ iex -S phx.server
 Exauthly is intended on being 100% tested and written using TDD or TBD. To execute the tests, run:
 
 ```bash
+MIX_ENV=test mix deps.get
 mix tests
 ```
 

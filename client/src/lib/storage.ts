@@ -7,15 +7,15 @@ class Storage {
   }
 
   authToken() {
-    return store.get(AUTH_TOKEN_KEY)
+    return localStorage.getItem(AUTH_TOKEN_KEY)
   }
 
   saveToken(value) {
-    return store.set(AUTH_TOKEN_KEY, value)
+    return localStorage.setItem(AUTH_TOKEN_KEY, value)
   }
 
   removeToken() {
-    return store.remove(AUTH_TOKEN_KEY)
+    return localStorage.removeItem(AUTH_TOKEN_KEY)
   }
 }
 

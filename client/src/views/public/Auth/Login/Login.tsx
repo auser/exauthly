@@ -25,7 +25,7 @@ const LoginView = props =>
         <div className="panel-body">
           <div className="row text-center">
             <div className="col-xs-12">
-              <LoginForm />
+              <LoginForm {...props} />
             </div>
           </div>
         </div>

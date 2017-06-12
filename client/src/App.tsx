@@ -1,12 +1,12 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider } from "react-apollo";
 
-import * as jQuery from 'jquery'
-window.jQuery = jQuery
-import 'bootstrap/dist/js/bootstrap.js'
+import * as jQuery from "jquery";
+window.jQuery = jQuery;
+import "bootstrap/dist/js/bootstrap.js";
 
-import './styles/main.scss'
+import "./styles/main.scss";
 
 if (process.env.NODE_ENV !== "production") {
   // If in development mode make sure the entire page reloads anytime there is a change. In the
@@ -21,10 +21,10 @@ import Routes from "./views/routes";
 import { ThemeProvider } from "styled-components";
 import theme from "./styles/theme";
 
-import client from './lib/apollo'
-import configureStore from './lib/redux_store'
+import client from "./lib/apollo";
+import configureStore from "./lib/redux_store";
 
-const store = configureStore(client, {})
+const store = configureStore(client, {});
 
 /**
  * Render application into a div
@@ -35,9 +35,9 @@ export const render = element => {
   // require("./styles/main.scss");
   ReactDOM.render(
     <ApolloProvider client={client} store={store}>
-    <ThemeProvider theme={theme}>
-      <Routes />
-    </ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <Routes />
+      </ThemeProvider>
     </ApolloProvider>,
     document.querySelector(element)
   );

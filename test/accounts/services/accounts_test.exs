@@ -195,6 +195,17 @@ defmodule Newline.AccountsTest do
     end
   end
 
+  describe "get_social_account/1" do
+    setup [:create_user]
+
+    test "can get a social account by id", %{user: user} do
+      insert(:social_account, %{social_account_name: "gumroad", user: user})
+      {:ok, sa} = Accounts.get_social_account(user, :gumroad)
+      assert sa != nil
+      assert sa.user_id == user.id
+    end
+  end
+
   describe "set_current_organization/2" do
     setup [:create_user, :create_org]
 

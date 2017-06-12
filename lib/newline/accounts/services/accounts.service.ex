@@ -191,6 +191,26 @@ defmodule Newline.Accounts do
     end
   end
 
+  @doc """
+  Get the social account id
+  """
+  def get_social_account(user, name) when is_atom(name), do: get_social_account(user, to_string(name))
+  def get_social_account(user, name) do
+    query = from sa in SocialAccount,
+            where: sa.social_account_name == ^name
+                   and sa.user_id == ^user.id
+
+    case Repo.one(query) do
+      nil ->
+        {:error, :not_found}
+      sa ->
+        {:ok, sa}
+    end
+  end
+
+  @doc """
+  Set the current organization for the user
+  """
   def set_current_organization(%User{} = user, %Organization{} = org) do
     User.current_organization_changeset(user, %{
       current_organization_id: org.id

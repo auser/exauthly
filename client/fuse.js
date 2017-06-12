@@ -4,7 +4,7 @@ const {
   SVGPlugin,
   CSSPlugin,
   CSSResourcePlugin,
-  BabelPlugin,
+  // BabelPlugin,
   JSONPlugin,
   UglifyJSPlugin,
   SassPlugin,

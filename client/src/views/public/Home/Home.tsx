@@ -1,23 +1,27 @@
-import * as React from 'react'
-import * as classnames from 'classnames'
+import * as React from "react";
+import * as classnames from "classnames";
 
-import './Home.scss'
-import CoreLayout from '../../../layouts/CoreLayout'
-import styled from 'styled-components'
+import "./Home.scss";
+import CoreLayout from "../../../layouts/CoreLayout";
+import styled from "styled-components";
 
-const HomeView = props => (
+import Hero from './components/Hero'
+import Features from './components/Features'
+import CTA from './components/CallToAction'
+import Footer from './components/Footer'
+
+const HomeView = props =>
   <div>
-    <div className={classnames("container", "text-center", props.className)}>
-      <div className="container text-center">
-      <div className="App-title col-xs-6">Exauthly</div>
-      <div className="row">
-        <div className="col-xs-6">Another testing</div>
+    <div className={classnames("text-center", props.className)}>
+      <div className="">
+        <Hero />
+        <Features />
+        <CTA />
+        <Footer />
       </div>
     </div>
-    </div>
-  </div>
-)
+  </div>;
 
-export const Home = CoreLayout(HomeView)
+export const Home = CoreLayout(HomeView);
 
-export default Home
+export default Home;

@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-// import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider } from 'react-apollo';
 
 import * as jQuery from 'jquery'
 window.jQuery = jQuery
@@ -21,10 +21,10 @@ import Routes from "./views/routes";
 import { ThemeProvider } from "styled-components";
 import theme from "./styles/theme";
 
-// import client from './lib/apollo'
-// import configureStore from './lib/redux_store'
+import client from './lib/apollo'
+import configureStore from './lib/redux_store'
 
-// const store = configureStore(client, {})
+const store = configureStore(client, {})
 
 /**
  * Render application into a div
@@ -34,9 +34,11 @@ export const render = element => {
   // our app
   // require("./styles/main.scss");
   ReactDOM.render(
+    <ApolloProvider client={client} store={store}>
     <ThemeProvider theme={theme}>
       <Routes />
-    </ThemeProvider>,
+    </ThemeProvider>
+    </ApolloProvider>,
     document.querySelector(element)
   );
 };

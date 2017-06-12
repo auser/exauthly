@@ -20,24 +20,22 @@ export class FormGroup extends React.Component {
     } = this.props;
 
     return (
-      <div className={"row"}>
-        <div className={classnames("form-group", className)}>
-          <Label>{label}</Label>
-          <Input
-            type={type}
-            id="inputEmail"
-            className="login_box"
-            placeholder={placeholder || label}
-            onChange={onChange(field)}
-            {...rest}
-          />
-        </div>
+      <div className={classnames("form-group", className)}>
+        <Label>{label}</Label>
+        <Input
+          type={type}
+          id="inputEmail"
+          className={classnames("form-group", className)}
+          placeholder={placeholder || label}
+          onChange={onChange(field)}
+          {...rest}
+        />
       </div>
     );
   }
 }
 
 export default styled(FormGroup)`
-display: flex;
-flex-direction: column;
+// display: flex;
+// flex-direction: column;
 `;

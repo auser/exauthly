@@ -6,7 +6,9 @@ import {
 } from 'react-router-dom'
 
 import Home from './Home/Home'
-import Login from './Login/Login'
+import Login from './Auth/Login/Login'
+import Signup from './Auth/Signup/Signup'
+import Forgot from './Auth/ForgotPassword/ForgotPassword'
 
 export const Routes = (props:any) => {
   return (
@@ -14,6 +16,12 @@ export const Routes = (props:any) => {
       <Route
         path="/login"
         render={renderProps => <Login {...renderProps} {...props} />} />
+      <Route
+        path="/signup"
+        render={renderProps => <Signup {...renderProps} {...props} />} />
+      <Route
+        path="/forgot_password"
+        render={renderProps => <Forgot {...renderProps} {...props} />} />
       <Route
         path="/" exact
         render={renderProps => <Home {...renderProps} {...props} />} />

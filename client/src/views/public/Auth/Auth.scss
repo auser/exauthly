@@ -1,0 +1,42 @@
+.login, .signup, .forgot_password {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  .panel-heading {
+
+    justify-content: center;
+    h1 {
+      text-transform: uppercase;
+      font-size: 1.8em;
+    }
+  }
+
+  .panel-body {
+    // text-align: left;
+    form {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      .submit {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+      }
+      input[type=submit] {
+        // width: 50%;
+        font-size: 1.4em;
+        color: white;
+        justify-content: center;
+        align-content: flex-start;
+      }
+    }
+  }
+
+  .panel-footer {
+    text-align: left;
+    justify-content: flex-start;
+    padding-left: 35px;
+  }
+}

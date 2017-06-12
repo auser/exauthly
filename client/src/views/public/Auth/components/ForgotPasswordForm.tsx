@@ -16,14 +16,8 @@ export class LoginForm extends React.Component {
             className="col-xs-12"
             label={"Email"}
           />
-        <FormGroup
-          field={"password"}
-          type="password"
-          className="col-xs-12"
-          label={"Password"}
-        />
         <div className="submit">
-          <Submit type="submit" value="Login" className="col-xs-6" />
+          <Submit type="submit" value="Login" className="col-xs-12" />
         </div>
       </Form>
     );

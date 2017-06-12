@@ -25,7 +25,7 @@ config :newline, Newline.Web.Endpoint,
 
 config :newline, Newline.Repo,
   adapter: Ecto.Adapters.Postgres,
-  url: System.get_env("DATABASE_URL"),
+  url: System.get_env("HEROKU_POSTGRESQL_AMBER_URL"),
   # username: System.get_env("DATA_DB_USER"),
   # password: System.get_env("DATA_DB_PASS"),
   # hostname: System.get_env("DATA_DB_HOST"),

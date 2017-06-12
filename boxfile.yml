@@ -27,10 +27,9 @@ deploy.config:
     - mix phx.digest
     - (cd client && npm run build)
 
-  before_live:
-    web.main:
-      - mix ecto.create --quiet
-      - mix ecto.migrate
+  transform:
+    - mix ecto.create --quiet
+    - mix ecto.migrate
 
 web.main:
   start: mix phx.server

@@ -6,7 +6,7 @@ import {
   Redirect,
 } from 'react-router-dom'
 
-import GET_VIEWER_QUERY from '../../graphql/getViewer'
+import GET_VIEWER_QUERY from '../../graphql/me'
 import { graphql } from 'react-apollo'
 
 import Home from './home/home'

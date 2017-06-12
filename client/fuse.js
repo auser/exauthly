@@ -52,7 +52,7 @@ const fuse = new FuseBox({
     }),
     JSONPlugin(),
     ...(isProduction
-      ? [UglifyJSPlugin({ comments: false, mangle: true, drop_console: true })]
+      ? [UglifyJSPlugin({ mangle: true })]
       : []),
     EnvPlugin(env)
   ]

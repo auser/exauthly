@@ -9,6 +9,14 @@ defmodule Newline.Schema.Types.UserTypes do
 
     field :token, :string
     field :admin, :boolean
+    field :gumroad_id, :string do
+      resolve fn (user, _, _) ->
+        case Newline.Accounts.get_social_account(user, :gumroad) do
+          {:error, :not_found} -> {:ok, nil}
+          {:ok, id} -> {:ok, id}
+        end
+      end
+    end
   end
 
   object :availability_status do

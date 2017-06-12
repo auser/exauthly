@@ -31,3 +31,4 @@ erl_crash.dump
 node_modules
 .fusebox
 client/dist
+rel

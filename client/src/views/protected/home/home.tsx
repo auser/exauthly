@@ -4,7 +4,7 @@ import * as classnames from "classnames";
 import CoreLayout from "../../../layouts/CoreLayout";
 import styled from "styled-components";
 
-// import GumroadAccount from "./components/gumroad_account/gumroad_account";
+import GumroadAccount from "./components/gumroad_account/gumroad_account";
 import Products from "./components/products/products";
 
 const HomeView = ({ me, className, ...rest }) =>
@@ -18,9 +18,9 @@ const HomeView = ({ me, className, ...rest }) =>
         </div>
         <div className="row">
           <div className="col-xs-12 col-sm-4">
-            {/*{getViewer && getViewer.gumroadId
-              ? <Products getViewer={getViewer} {...rest} />
-              : <GumroadAccount getViewer={getViewer} {...rest} />}*/}
+            {me && me.gumroadId
+              ? <Products getViewer={me} {...rest} />
+              : <GumroadAccount getViewer={me} {...rest} />}
           </div>
         </div>
       </div>

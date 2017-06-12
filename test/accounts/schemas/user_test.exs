@@ -2,7 +2,7 @@ defmodule Newline.UserTest do
   use Newline.SchemaCase
   import Newline.Factory
   alias Newline.{Repo}
-  alias Newline.Accounts.User
+  alias Newline.Accounts.{User, OrganizationService}
 
   setup do
     {:ok, valid_user: build(:user)}
@@ -133,9 +133,70 @@ defmodule Newline.UserTest do
     assert length(changeset.errors) == 1
   end
 
+  describe "update_changeset/2" do
+    setup [:create_user, :create_org]
+    test "can update name", %{user: user} do
+      params = %{name: "Ari"}
+      cs = User.update_changeset(user, params)
+      assert cs.valid?
+    end
+
+    test "can update email", %{user: user} do
+      params = %{email: "bob@bob.net"}
+      cs = User.update_changeset(user, params)
+      assert cs.valid?
+    end
+
+    test "fails when email has been taken", %{user: user} do
+      other_user = insert(:user)
+      cs = User.update_changeset(user, %{email: other_user.email})
+      {:error, _errs} = cs |> Repo.insert
+    end
+
+    test "fails when the email is invalid format", %{user: user} do
+      params = %{email: "bob@bob"}
+      cs = User.update_changeset(user, params)
+      refute cs.valid?
+    end
+
+  end
+
+  describe "current_organization_changeset/2" do
+    setup [:create_user, :create_org]
+
+    test "can change organization when is member", %{org: org, user: user} do
+      org = org |> Repo.insert!
+      user = user |> Repo.insert!
+
+      {:ok, _membership} = join_org(user, org)
+
+      params = %{current_organization_id: org.id}
+      cs = User.current_organization_changeset(user, params)
+      assert cs.valid?
+    end
+
+    test "cannot change current org when not member", %{user: user} do
+      user = user |> Repo.insert!
+      org = insert(:organization)
+
+      params = %{current_organization_id: org.id}
+      cs = User.current_organization_changeset(user, params)
+      refute cs.valid?
+    end
+  end
+
   defp create_user(ctx) do
     ctx
     |> Map.put(:user, build(:user))
+  end
+
+  defp create_org(ctx) do
+    ctx
+    |> Map.put(:org, build(:organization))
+  end
+
+  defp join_org(user, org) do
+    OrganizationService.join_org(user, org)
   end
 
 end

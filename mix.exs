@@ -25,7 +25,9 @@ defmodule Newline.Mixfile do
       :logger,
       :runtime_tools,
       :comeonin,
-      :timex
+      :ja_serializer,
+      :timex,
+      :corsica
     ]
   end
 
@@ -60,11 +62,14 @@ defmodule Newline.Mixfile do
       {:comeonin, "~> 3.0"},
       {:guardian, "~> 0.14"},
       {:cowboy, "~> 1.0"},
+      {:ja_serializer, "~> 0.12.0"},
       {:timex, "~> 3.1"},
       {:timex_ecto, "~> 3.1"},
       {:absinthe, "~> 1.3.0-beta.2"},
       {:absinthe_plug, "~> 1.3.0-beta.0"},
       {:absinthe_ecto, git: "https://github.com/absinthe-graphql/absinthe_ecto.git"},
+      {:canary, "~> 1.1"},
+      {:corsica, "~> 1.0"},
     ]
   end
 

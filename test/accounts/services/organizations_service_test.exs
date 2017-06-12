@@ -1,8 +1,10 @@
 defmodule Newline.Accounts.OrganizationServiceTest do
   use Newline.DataCase
 
+  alias Newline.Repo
   import Newline.Factory
   alias Newline.Accounts.OrganizationService
+  alias Newline.Accounts.OrganizationMembership
 
   describe "get_org_by_slug/1" do
     test "it gets the organization if it exists" do
@@ -38,19 +40,68 @@ defmodule Newline.Accounts.OrganizationServiceTest do
     setup [:create_organization, :create_user]
 
     # TODO
-    # test "adds a membership to the organization", %{org: org, user: user} do
-    #   {:ok, _} = OrganizationService.join_org(org, user)
-    # end
+    test "adds a membership to the organization", %{org: org, user: user} do
+      {:ok, _} = OrganizationService.join_org(user, org)
+
+      found = OrganizationMembership
+              |> where([m], m.member_id == ^user.id
+                      and m.organization_id == ^org.id)
+              |> preload(:member)
+              |> Repo.one
+
+      assert found
+      assert found.member.id == user.id
+      assert found.role == "member"
+    end
+
+    test "adds a membership with an org_id", %{org: org, user: user} do
+      {:ok, membership} = OrganizationService.join_org(user, org.id)
+      assert membership
+    end
+
+    test "adds membership with org slug", %{org: org, user: user} do
+      {:ok, membership} = OrganizationService.join_org(user, org.slug)
+      assert membership
+    end
+
+    test "fails without org", %{user: user} do
+      {:error, :bad_request} = OrganizationService.join_org(user, nil)
+    end
+
+    test "fails without user", %{org: org} do
+      {:error, :bad_request} = OrganizationService.join_org(nil, org)
+    end
+  end
+
+  describe "list_user_orgs/2" do
+    setup [:create_user, :create_organization]
+
+    test "lists empty list when not a member", %{user: user} do
+      {:ok, []} = OrganizationService.list_user_orgs(user)
+    end
+
+    test "lists membership orgs", %{user: user, org: org} do
+      OrganizationService.join_org(user, org)
+      {:ok, [member_of]} = OrganizationService.list_user_orgs(user)
+      assert member_of.organization_id == org.id
+    end
+
+    test "list multiple orgs", %{user: user} do
+      OrganizationService.join_org(user, insert(:organization))
+      OrganizationService.join_org(user, insert(:organization))
+      {:ok, memberships} = OrganizationService.list_user_orgs(user)
+      assert length(memberships) == 2
+    end
   end
 
   def create_organization(context) do
     context
-    |> Map.put(:org, build(:organization))
+    |> Map.put(:org, insert(:organization))
   end
 
   def create_user(context) do
     context
-    |> Map.put(:user, build(:user))
+    |> Map.put(:user, insert(:user))
   end
 
 end

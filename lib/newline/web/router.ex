@@ -10,7 +10,15 @@ defmodule Newline.Web.Router do
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug JaSerializer.Deserializer
+    plug Plug.Parsers,
+      parsers: [:urlencoded, :multipart, :json, Absinthe.Plug.Parser],
+      json_decoder: Poison
+    plug :accepts, ["json", "json-api"]
+    plug Corsica, origins: "*", allow_headers: ["content-type", "authorization"]
+  end
+
+  pipeline :bearer_auth do
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.LoadResource
   end
@@ -21,14 +29,14 @@ defmodule Newline.Web.Router do
   end
 
   scope "/graphql" do
-    pipe_through [:api, :gql_context]
+    pipe_through [:api, :bearer_auth, :gql_context]
 
     forward "/", Absinthe.Plug, schema: Newline.Schema
   end
 
   # if Mix.env == :dev do
     scope "/graphiql" do
-      pipe_through [:api, :gql_context]
+      pipe_through [:api, :bearer_auth, :gql_context]
       forward "/", Absinthe.Plug.GraphiQL, schema: Newline.Schema
     end
   # end

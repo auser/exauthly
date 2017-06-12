@@ -27,3 +27,7 @@ erl_crash.dump
 # Optional npm cache directory
 /assets/.npm
 /assets/npm-debug.log*
+.vscode
+node_modules
+.fusebox
+client/dist

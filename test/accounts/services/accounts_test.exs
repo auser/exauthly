@@ -3,7 +3,7 @@ defmodule Newline.AccountsTest do
 
   import Newline.Factory
   alias Newline.Accounts
-  alias Newline.Accounts.User
+  alias Newline.Accounts.{User, OrganizationService}
 
   setup do
     {:ok, valid_user: build(:user)}
@@ -119,7 +119,7 @@ defmodule Newline.AccountsTest do
     test "with invalid creds returns error" do
       invalid_creds = %{"email" => "no@me.com", "password" => "abc123"}
       {:error, reason} = Accounts.user_login(invalid_creds)
-      assert reason == :wrong_credentials
+      assert reason == "Your password does not match with the password we have on record"
     end
   end
 
@@ -195,9 +195,40 @@ defmodule Newline.AccountsTest do
     end
   end
 
+  describe "get_social_account/1" do
+    setup [:create_user]
+
+    test "can get a social account by id", %{user: user} do
+      insert(:social_account, %{social_account_name: "gumroad", user: user})
+      {:ok, sa} = Accounts.get_social_account(user, :gumroad)
+      assert sa != nil
+      assert sa.user_id == user.id
+    end
+  end
+
+  describe "set_current_organization/2" do
+    setup [:create_user, :create_org]
+
+    test "updates the user's current org", %{org: org, user: user} do
+      {:ok, _membership} = OrganizationService.join_org(user, org)
+
+      {:ok, _} = Accounts.set_current_organization(user, org)
+      user = Repo.get(User, user.id)
+      # current_org = Repo.preload(user, :current_organization)
+      # IO.inspect current_org
+      assert user.current_organization_id == org.id
+    end
+  end
+
   defp create_user(context) do
     user = build(:user) |> Repo.insert!
     context
     |> Map.put(:user, user)
+  end
+
+  defp create_org(context) do
+    org = build(:organization) |> Repo.insert!
+    context
+    |> Map.put(:org, org)
   end
 end

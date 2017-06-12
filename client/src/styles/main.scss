@@ -1,0 +1,12 @@
+@import '~normalize.css/normalize.css';
+@import '~bootstrap/dist/bootstrap.css';
+
+body {
+  background: #fff;
+  position: relative;
+
+  #root {
+    height: 100vh;
+    width: 100%;
+  }
+}

@@ -14,6 +14,13 @@ defmodule Newline.Resolvers.OrganizationResolver do
   def get_org_by_slug(_, _), do: unauthorized_error()
 
   @doc """
+  List user organizations
+  """
+  def list_user_orgs(_params, %{context: %{current_user: user}}) do
+    OrganizationService.list_user_orgs(user)
+  end
+
+  @doc """
   Creates an Organization
 
   ## Examples
@@ -23,4 +30,5 @@ defmodule Newline.Resolvers.OrganizationResolver do
   def create_organization(params, %{context: %{current_user: _}}) do
     OrganizationService.create_organization(params)
   end
+
 end

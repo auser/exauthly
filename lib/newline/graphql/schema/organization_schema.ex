@@ -12,6 +12,9 @@ defmodule Newline.Schema.Organization do
       resolve &OrganizationResolver.get_org_by_slug/2
     end
 
+    field :list_user_orgs, type: list_of(:organization) do
+      resolve &OrganizationResolver.list_user_orgs/2
+    end
   end
 
   object :organization_mutations do

@@ -1,0 +1,15 @@
+.navbar {
+  background-color: rgba(2, 35, 88, 0.8);
+  margin-bottom: 0;
+
+  border: 0;
+  .navbar-brand, a {
+    color: #fff;
+  }
+
+  .navbar-nav>li {
+    &> a {
+      color: #fff;
+    }
+  }
+}

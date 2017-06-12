@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as classnames from "classnames";
 
-import styled from "../../../styles/styled-components";
+import styled from "styled-components";
 
 export const ConnectAccount = (props:any) => {
   return (

@@ -195,7 +195,7 @@ defmodule Newline.AccountsTest do
     end
   end
 
-  describe "get_social_account/1" do
+  describe "get_social_account/2" do
     setup [:create_user]
 
     test "can get a social account by id", %{user: user} do

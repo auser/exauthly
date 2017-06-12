@@ -46,7 +46,8 @@ defmodule Newline.Mixfile do
   defp deps(:dev) do
     deps(:all) ++ [
       {:remix, "~> 0.0", only: :dev},
-      {:ex_doc, "~> 0.14", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.14", only: :dev, runtime: false},
+      # {:mix_docker, github: "Recruitee/mix_docker"},
     ]
   end
   defp deps(_) do
@@ -70,6 +71,7 @@ defmodule Newline.Mixfile do
       {:absinthe_ecto, git: "https://github.com/absinthe-graphql/absinthe_ecto.git"},
       {:canary, "~> 1.1"},
       {:corsica, "~> 1.0"},
+      {:distillery, "~> 1.4"},
     ]
   end
 

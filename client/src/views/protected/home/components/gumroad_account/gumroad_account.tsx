@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as classnames from "classnames";
 
-import styled from "../../../../../styles/styled-components";
+import styled from "styled-components";
 
 export const GumroadAccount = (props:any) => {
   return (
@@ -12,7 +12,6 @@ export const GumroadAccount = (props:any) => {
 }
 
 export const ConnectAccountView = styled(GumroadAccount)`
-background-color: ${props => props.theme.bg}
 `;
 
 export default ConnectAccountView;

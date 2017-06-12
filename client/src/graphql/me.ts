@@ -7,6 +7,7 @@ query {
     email
     name
     token
+    gumroadId
   }
 }
 `

@@ -1,11 +1,11 @@
 import * as React from "react";
 import * as classnames from "classnames";
 import { connect } from 'react-redux'
-
-import { Form, FormGroup, Submit } from "../../../../components/Form";
 import { graphql } from 'react-apollo'
 
+import { Form, FormGroup, Submit } from "../../../../components/Form";
 import { tryUserLogin } from '../../../../redux/modules/auth/actions'
+
 import LOGIN_MUTATION from '../../../../graphql/login';
 
 export class LoginForm extends React.Component {

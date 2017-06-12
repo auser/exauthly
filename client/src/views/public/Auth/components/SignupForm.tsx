@@ -1,13 +1,34 @@
 import * as React from "react";
 import * as classnames from "classnames";
+import { connect } from 'react-redux'
 import { graphql } from 'react-apollo'
 
 import { Form, FormGroup, Submit } from "../../../../components/Form";
+import { tryUserLogin } from '../../../../redux/modules/auth/actions'
 
 import SIGNUP_MUTATION from '../../../../graphql/signup';
 
 export class SignupForm extends React.Component {
-  loginSubmit = fields => this.props.trySignup(fields)
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      errors: []
+    }
+  }
+  loginSubmit = fields => {
+    this.props.trySignup(fields)
+    .then(({ data }) => {
+      const { login } = data;
+      this.props.tryUserLogin(login)
+    })
+    .then(() => this.props.history.replace('/'))
+    .catch(err => {
+      this.setState({
+        errors: err
+      })
+    })
+  }
 
   render() {
     return (
@@ -50,4 +71,9 @@ const SignupFormWithMutation = graphql(SIGNUP_MUTATION, {
 })(SignupForm)
 
 
-export default SignupFormWithMutation;
+export default connect(
+  null,
+  dispatch => ({
+    tryUserLogin: (creds) => dispatch(tryUserLogin(creds))
+  })
+)(SignupFormWithMutation);

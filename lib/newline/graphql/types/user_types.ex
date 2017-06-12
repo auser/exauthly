@@ -9,9 +9,6 @@ defmodule Newline.Schema.Types.UserTypes do
 
     field :token, :string
     field :admin, :boolean
-    field :gumroadId, :string do
-      complexity 10
-    end
   end
 
   object :availability_status do

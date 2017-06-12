@@ -57,7 +57,7 @@ defmodule Newline.Mixfile do
       {:phoenix_ecto, "~> 3.2"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.6"},
-      {:phoenix_live_reload, "~> 1.0", only: :dev},
+      {:phoenix_live_reload, "~> 1.0", only: [:dev, :dev_stage]},
       {:gettext, "~> 0.11"},
       {:credo, "~> 0.5", only: [:dev, :test]},
       {:comeonin, "~> 3.0"},

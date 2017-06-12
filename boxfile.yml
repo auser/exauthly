@@ -12,11 +12,11 @@ run.config:
 
   # cache node_modules
   cache_dirs:
-    - assets/node_modules
+    - client/node_modules
 
   # add node_module bins to the $PATH
   extra_path_dirs:
-    - assets/node_modules/.bin
+    - client/node_modules/.bin
 
   # enable the filesystem watcher
   fs_watch: true
@@ -25,6 +25,7 @@ deploy.config:
   # generate the static assets digest
   extra_steps:
     - mix phx.digest
+    - (cd client && npm run build)
 
   before_live:
     web.main:

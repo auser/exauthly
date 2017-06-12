@@ -1,6 +1,6 @@
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
 
-// import Storage from './storage'
+import Storage from './storage'
 
 const networkInterface = createNetworkInterface({
   uri: process.env.BACKEND

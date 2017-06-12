@@ -1,15 +1,17 @@
 import * as React from "react";
 import * as classnames from "classnames";
+import { graphql } from 'react-apollo';
 
 import { Link } from "react-router-dom";
 
 import "./Login.scss";
 import CenterLayout from "../../../../layouts/CenterLayout";
 import styled from "styled-components";
+import LOGIN_MUTATION from '../../../../graphql/login';
 
 import LoginForm from "../components/LoginForm";
 
-const HomeView = props =>
+const LoginView = props =>
   <div
     className={classnames("login", "container", "text-center", props.className)}
   >
@@ -36,9 +38,9 @@ const HomeView = props =>
     </div>
   </div>;
 
-export const Home = CenterLayout(HomeView);
+export const Login = CenterLayout(LoginView);
 
-export default styled(Home)`
+export default styled(Login)`
 background-color: ${props => props.theme.blue};
 border-color: rgb(104, 145, 162);
 outline: 0;

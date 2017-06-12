@@ -13,6 +13,10 @@ class Storage {
   saveToken(value) {
     return store.set(AUTH_TOKEN_KEY, value)
   }
+
+  removeToken() {
+    return store.remove(AUTH_TOKEN_KEY)
+  }
 }
 
 export default new Storage()

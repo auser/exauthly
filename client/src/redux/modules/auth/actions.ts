@@ -1,7 +1,8 @@
 import * as constants from './constants'
+import storage from '../../../lib/storage'
 
 export const tryUserLogin = (user) => {
-  localStorage.setItem("token", user.token)
+  storage.saveToken(user.token);
   return {
     type: constants.USER_LOGGED_IN,
     payload: user
@@ -9,7 +10,7 @@ export const tryUserLogin = (user) => {
 }
 
 export const userLogout = () => {
-  localStorage.removeItem("token")
+  storage.removeToken()
   return {
     type: constants.USER_LOGGED_OUT
   }

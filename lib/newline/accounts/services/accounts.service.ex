@@ -163,7 +163,6 @@ defmodule Newline.Accounts do
   Chooses create or update for the user
   """
   def user_link_and_signup(provider, nil, params) do
-    IO.inspect params
     case Repo.transaction(user_link_and_signup_social_changeset(provider, params)) do
       {:error, _failed_op, cs, _changes} ->
         {:error, cs}
@@ -189,10 +188,8 @@ defmodule Newline.Accounts do
     cs = user |> User.social_account_changeset(params)
     case Repo.transaction(run_associate_account(cs)) do
       {:error, _op, failed_cs, _changes} ->
-        IO.inspect failed_cs
         {:error, failed_cs}
       {:ok, %{social_account: social_account}} ->
-        IO.inspect social_account
         {:ok, social_account}
     end
   end

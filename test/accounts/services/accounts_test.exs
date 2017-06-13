@@ -172,8 +172,10 @@ defmodule Newline.AccountsTest do
 
     test "associates github to the social account and user", %{user: user} do
       sa = params_for(:social_account)
+      |> Enum.reduce(%{}, fn ({key, val}, acc) -> Map.put(acc, to_string(key), val) end)
+
       {:ok, sa} = Accounts.associate_social_account("github", user, sa)
-      assert sa.user == user
+      assert sa.user_id == user.id
       user = user |> Repo.preload(:social_accounts)
       connected = Enum.map(user.social_accounts, fn(x) -> x.social_account_name end)
       assert connected == ["github"]
@@ -185,6 +187,7 @@ defmodule Newline.AccountsTest do
 
     test "deletes the social account", %{user: user} do
       sa = params_for(:social_account)
+      |> Enum.reduce(%{}, fn ({key, val}, acc) -> Map.put(acc, to_string(key), val) end)
       {:ok, sa} = Accounts.associate_social_account("github", user, sa)
 
       Accounts.disassociate_social_account("github", user, sa.id)
@@ -198,8 +201,8 @@ defmodule Newline.AccountsTest do
     setup [:create_user]
     test "creates the user and gives the association if there isn't one already" do
       Accounts.user_link_and_signup("gumroad", nil, %{
-        email: "foo@bar.com",
-        social_user_id: "GumroadUserId",
+        "email" => "foo@bar.com",
+        "social_user_id" => "GumroadUserId",
       })
       user = Repo.get_by!(User, email: "foo@bar.com")
       assert user
@@ -208,11 +211,11 @@ defmodule Newline.AccountsTest do
     end
 
     test "adds a social asscociation if there is a a user", %{user: user} do
-      Accounts.user_link_and_signup("gumroad", user, %{
-        email: user.email,
-        social_user_id: "GumroadUserId2"
+      Accounts.user_link_and_signup("gumroad", user.id, %{
+        "email" => user.email,
+        "social_user_id" => "GumroadUserId2"
       })
-      user = Repo.get!(User, user.id)
+      user = Repo.get_by!(User, email: user.email)
       assert user
       user = Repo.preload(user, :social_accounts)
       assert length(user.social_accounts) == 1
@@ -223,7 +226,10 @@ defmodule Newline.AccountsTest do
     setup [:create_user]
 
     test "can get a social account by id", %{user: user} do
-      insert(:social_account, %{social_account_name: "gumroad", user: user})
+      sa = build(:social_account, %{
+        social_account_name: "gumroad",
+      }) |> Repo.insert!
+      user = sa.user
       {:ok, sa} = Accounts.get_social_account(user, :gumroad)
       assert sa != nil
       assert sa.user_id == user.id

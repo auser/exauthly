@@ -163,6 +163,7 @@ defmodule Newline.Accounts do
   Chooses create or update for the user
   """
   def user_link_and_signup(provider, nil, params) do
+    IO.inspect params
     case Repo.transaction(user_link_and_signup_social_changeset(provider, params)) do
       {:error, _failed_op, cs, _changes} ->
         {:error, cs}
@@ -170,33 +171,28 @@ defmodule Newline.Accounts do
         {:ok, user}
     end
   end
-  def user_link_and_signup(provider, user, params) do
-    associate_social_account(provider, user, social_params(provider, params))
-  end
-
-  defp social_params(provider, params) do
-    params
-      |> Map.put(:social_account_name, provider)
-      |> Map.put(:social_account_id, params.social_user_id)
-  end
-
-  # TODO: MOVE ME DOWN BELOW
-  defp user_link_and_signup_social_changeset(provider, params) do
-    Multi.new
-  |> Multi.insert(:user, User.social_registration_changeset(%User{}, params))
-  |> Multi.run(:social_account, &(associate_social_account(provider, &1[:user], social_params(provider, params))))
+  def user_link_and_signup(provider, user_id, params) do
+    case Repo.get(User, user_id) do
+      {:error, reason} ->
+        {:error, "User does not exist"}
+      user ->
+        associate_social_account(provider, user, social_params(provider, params))
+    end
   end
 
   @doc """
   Associate a social account to the user
   """
   def associate_social_account(provider, user, params) do
-    params = %{params | social_account_name: provider}
+    params = params
+      |> Map.put("social_account_name", provider)
     cs = user |> User.social_account_changeset(params)
     case Repo.transaction(run_associate_account(cs)) do
       {:error, _op, failed_cs, _changes} ->
+        IO.inspect failed_cs
         {:error, failed_cs}
       {:ok, %{social_account: social_account}} ->
+        IO.inspect social_account
         {:ok, social_account}
     end
   end
@@ -415,6 +411,19 @@ defmodule Newline.Accounts do
       nil -> Comeonin.Bcrypt.dummy_checkpw()
       _ -> Comeonin.Bcrypt.checkpw(password, user.encrypted_password)
     end
+  end
+
+  defp social_params(provider, params) do
+    params
+      |> Map.put("social_account_name", provider)
+      |> Map.put("social_account_id", params["social_user_id"])
+  end
+
+  # TODO: MOVE ME DOWN BELOW
+  defp user_link_and_signup_social_changeset(provider, params) do
+    Multi.new
+  |> Multi.insert(:user, User.social_registration_changeset(%User{}, params))
+  |> Multi.run(:social_account, &(associate_social_account(provider, &1[:user], social_params(provider, params))))
   end
 
 end

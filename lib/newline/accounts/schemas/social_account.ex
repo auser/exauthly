@@ -26,7 +26,7 @@ defmodule Newline.Accounts.SocialAccount do
     |> Repo.preload(:user)
     |> cast(params, [:social_account_name, :social_account_id, :auth_token,
                     :refresh_token, :first_name, :last_name,
-                    :email, :login_name, :user_id])
+                    :email, :login_name])
     |> validate_required([:social_account_name, :social_account_id])
     |> assoc_constraint(:user)
     |> unique_constraint(:social_account_name, name: :social_account_name_to_user_id_index, message: "has already been associated")

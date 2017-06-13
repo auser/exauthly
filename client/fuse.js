@@ -17,12 +17,13 @@ const path = require('path')
 const express = require('express')
 
 const isProduction = process.env.NODE_ENV === 'production'
-const dist = path.resolve(__dirname, '..', 'priv', 'static', 'client')
+const dist = path.resolve(__dirname, './dist')
 const rel = dir => path.resolve(__dirname, dir)
 const src = dir => rel('src', dir)
 
 const env = {
-  BACKEND: process.env.BACKEND || 'http://localhost:4000/graphql'
+  BACKEND: process.env.BACKEND || 'http://localhost:4000/graphql',
+  GUMROAD_CLIENT_ID: process.env.GUMROAD_CLIENT_ID
 }
 
 /**
@@ -31,7 +32,7 @@ const env = {
 const fuse = new FuseBox({
   homeDir: 'src/',
   sourceMaps: !isProduction,
-  output: '../priv/static/$name.js',
+  output: 'dist/$name.js',
   log: isProduction,
   hash: isProduction,
   cache: !isProduction,
@@ -63,7 +64,7 @@ const fuse = new FuseBox({
   ]
 })
 
-/**p
+/**
  * Task Runners
  */
 Sparky.task(

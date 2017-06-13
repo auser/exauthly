@@ -7,7 +7,7 @@ export const ConnectAccount = (props:any) => {
   return (
     <div className={props.className}>
       <h2>here</h2>
-      <a href="/auth/gumroad">Connect your Gumroad account</a>
+      <a href="/auth/gumroad">Connect a Gumroad account</a>
     </div>
   )
 }

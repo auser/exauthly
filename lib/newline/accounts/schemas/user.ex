@@ -93,7 +93,8 @@ defmodule Newline.Accounts.User do
   def social_account_changeset(user, params \\ %{}) do
     %SocialAccount{}
     |> SocialAccount.changeset(params)
-    |> put_assoc(:user, user)
+    # |> assoc_constraint(:user, user)
+    |> put_change(:user_id, user.id)
   end
 
   @doc """

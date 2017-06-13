@@ -51,8 +51,9 @@ defmodule Newline.Web.Router do
   end
 
   scope "/", Newline.Web do
-    pipe_through :browser # Use the default browser stack
+    pipe_through [:browser, :bearer_auth]
 
+    get "/auth/proxy", AuthController, :proxy
     get "/auth/:provider", AuthController, :index
     get "/auth/:provider/callback", AuthController, :callback
     delete "/logout", AuthController, :delete

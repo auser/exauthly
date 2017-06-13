@@ -14,7 +14,8 @@ config :newline, Newline.Web.Endpoint,
   watchers: [
     node: ["fuse.js", "dev",
     cd: Path.expand("../client", __DIR__)
-  ]]
+  ]],
+  client_endpoint: "http://localhost:8080"
   # watchers: [npm: ["run", "watch", cd: Path.expand("../assets", __DIR__)]]
   # watchers: [npm: ["run", "start", cd: Path.expand("../assets", __DIR__)]]
 
@@ -66,6 +67,7 @@ config :newline, Newline.Repo,
   database: "newline_dev",
   pool_size: 10
 
+
 # Configure Guardian secret_key
 # Configure Guardian
 config :guardian, Guardian,
@@ -76,4 +78,3 @@ config :guardian, Guardian,
   verify_issuer: true,
   secret_key: "pSvhS9/LBddw5CwJGT74UYoyXQSA49kR55IllTzUJHhUMX8pXBYBjsnSzR7W7rrP",
   serializer: Newline.GuardianSerializer
-

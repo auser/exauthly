@@ -17,7 +17,7 @@ const path = require('path')
 const express = require('express')
 
 const isProduction = process.env.NODE_ENV === 'production'
-const dist = path.resolve(__dirname, './dist')
+const dist = path.resolve(__dirname, '..', 'priv', 'static', 'client')
 const rel = dir => path.resolve(__dirname, dir)
 const src = dir => rel('src', dir)
 
@@ -31,7 +31,7 @@ const env = {
 const fuse = new FuseBox({
   homeDir: 'src/',
   sourceMaps: !isProduction,
-  output: 'dist/$name.js',
+  output: '../priv/static/$name.js',
   log: isProduction,
   hash: isProduction,
   cache: !isProduction,
@@ -63,7 +63,7 @@ const fuse = new FuseBox({
   ]
 })
 
-/**
+/**p
  * Task Runners
  */
 Sparky.task(

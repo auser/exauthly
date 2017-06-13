@@ -48,15 +48,14 @@ defmodule Newline.Web.Router do
     delete "/sessions", SessionController, :delete
     post "/sessions/refresh", SessionController, :refresh
     resources "/users", UserController, only: [:create]
-
-    get "/auth/:provider", AuthController, :index
-    get "/auth/:provider/callback", AuthController, :callback
-    delete "/logout", AuthController, :delete
   end
 
   scope "/", Newline.Web do
     pipe_through :browser # Use the default browser stack
 
+    get "/auth/:provider", AuthController, :index
+    get "/auth/:provider/callback", AuthController, :callback
+    delete "/logout", AuthController, :delete
     get "/*path", PageController, :index
   end
 end

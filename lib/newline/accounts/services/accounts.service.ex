@@ -159,10 +159,39 @@ defmodule Newline.Accounts do
   end
 
   @doc """
+  args: provider, user, params
+  Chooses create or update for the user
+  """
+  def user_link_and_signup(provider, nil, params) do
+    case Repo.transaction(user_link_and_signup_social_changeset(provider, params)) do
+      {:error, _failed_op, cs, _changes} ->
+        {:error, cs}
+      {:ok, %{user: user}} ->
+        {:ok, user}
+    end
+  end
+  def user_link_and_signup(provider, user, params) do
+    associate_social_account(provider, user, social_params(provider, params))
+  end
+
+  defp social_params(provider, params) do
+    params
+      |> Map.put(:social_account_name, provider)
+      |> Map.put(:social_account_id, params.social_user_id)
+  end
+
+  # TODO: MOVE ME DOWN BELOW
+  defp user_link_and_signup_social_changeset(provider, params) do
+    Multi.new
+  |> Multi.insert(:user, User.social_registration_changeset(%User{}, params))
+  |> Multi.run(:social_account, &(associate_social_account(provider, &1[:user], social_params(provider, params))))
+  end
+
+  @doc """
   Associate a social account to the user
   """
-  def associate_social_account(:github, user, params) do
-    params = %{params | social_account_name: "github"}
+  def associate_social_account(provider, user, params) do
+    params = %{params | social_account_name: provider}
     cs = user |> User.social_account_changeset(params)
     case Repo.transaction(run_associate_account(cs)) do
       {:error, _op, failed_cs, _changes} ->
@@ -176,11 +205,11 @@ defmodule Newline.Accounts do
   @doc """
   Disassociate a social account with a user
   """
-  def disassociate_social_account(:github, user, id) do
+  def disassociate_social_account(provider, user, id) do
     query = from sa in SocialAccount,
             where: sa.id == ^"#{id}"
             and sa.user_id == ^user.id
-            and sa.social_account_name == "github",
+            and sa.social_account_name == ^provider,
             select: sa
 
     case Repo.one(query) do

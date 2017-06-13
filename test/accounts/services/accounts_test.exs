@@ -172,7 +172,7 @@ defmodule Newline.AccountsTest do
 
     test "associates github to the social account and user", %{user: user} do
       sa = params_for(:social_account)
-      {:ok, sa} = Accounts.associate_social_account(:github, user, sa)
+      {:ok, sa} = Accounts.associate_social_account("github", user, sa)
       assert sa.user == user
       user = user |> Repo.preload(:social_accounts)
       connected = Enum.map(user.social_accounts, fn(x) -> x.social_account_name end)
@@ -185,13 +185,37 @@ defmodule Newline.AccountsTest do
 
     test "deletes the social account", %{user: user} do
       sa = params_for(:social_account)
-      {:ok, sa} = Accounts.associate_social_account(:github, user, sa)
+      {:ok, sa} = Accounts.associate_social_account("github", user, sa)
 
-      Accounts.disassociate_social_account(:github, user, sa.id)
-
+      Accounts.disassociate_social_account("github", user, sa.id)
       user = Repo.get(User, user.id)
       user = user |> Repo.preload(:social_accounts)
       assert user.social_accounts == []
+    end
+  end
+
+  describe "user_link_and_signup/3" do
+    setup [:create_user]
+    test "creates the user and gives the association if there isn't one already" do
+      Accounts.user_link_and_signup("gumroad", nil, %{
+        email: "foo@bar.com",
+        social_user_id: "GumroadUserId",
+      })
+      user = Repo.get_by!(User, email: "foo@bar.com")
+      assert user
+      user = Repo.preload(user, :social_accounts)
+      assert length(user.social_accounts) == 1
+    end
+
+    test "adds a social asscociation if there is a a user", %{user: user} do
+      Accounts.user_link_and_signup("gumroad", user, %{
+        email: user.email,
+        social_user_id: "GumroadUserId2"
+      })
+      user = Repo.get!(User, user.id)
+      assert user
+      user = Repo.preload(user, :social_accounts)
+      assert length(user.social_accounts) == 1
     end
   end
 

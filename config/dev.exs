@@ -66,7 +66,6 @@ config :newline, Newline.Repo,
   database: "newline_dev",
   pool_size: 10
 
-
 # Configure Guardian secret_key
 # Configure Guardian
 config :guardian, Guardian,

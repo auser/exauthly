@@ -27,7 +27,8 @@ defmodule Newline.Mixfile do
       :comeonin,
       :ja_serializer,
       :timex,
-      :corsica
+      :corsica,
+      :oauth2
     ]
   end
 
@@ -72,6 +73,7 @@ defmodule Newline.Mixfile do
       {:canary, "~> 1.1"},
       {:corsica, "~> 1.0"},
       {:distillery, "~> 1.4"},
+      {:oauth2, "~> 0.9.1"},
     ]
   end
 

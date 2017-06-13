@@ -18,7 +18,8 @@ const express = require('express')
 
 const isProduction = process.env.NODE_ENV === 'production'
 const dist = path.resolve(__dirname, './dist')
-const src = rel => path.resolve(__dirname, 'src', rel)
+const rel = dir => path.resolve(__dirname, dir)
+const src = dir => rel('src', dir)
 
 const env = {
   BACKEND: process.env.BACKEND || 'http://localhost:4000/graphql'
@@ -45,14 +46,18 @@ const fuse = new FuseBox({
       template: "src/index.html",
       title: "Fullstack edu",
     }),
-    [SassPlugin(), CSSResourcePlugin(), CSSPlugin()],
+    [SassPlugin({
+      outputStyle: 'compressed',
+      importer: true,
+    }), CSSResourcePlugin(), CSSPlugin(),
     CSSPlugin({
-      outFile: file => `${dist}/${file}`,
-      inject: file => `${file}`
-    }),
+      outFile: file => `${dist}/${file}.css`,
+      inject: (file) => `${file}`,
+    })],
     JSONPlugin(),
-    ...(isProduction
-      ? [UglifyJSPlugin({ mangle: true })]
+    ...(isProduction ?
+      // [UglifyJSPlugin({})]
+      []
       : []),
     EnvPlugin(env)
   ]
@@ -65,8 +70,8 @@ Sparky.task(
   'remove-dist',
   () =>
     new Promise((resolve, reject) => {
-      rimraf('dist/*.js', () =>
-        rimraf('dist/*.js.map', () => rimraf('dist/styles/*', () => resolve()))
+      rimraf('dist/**/*.js', () =>
+        rimraf('dist/*.js.map', () => rimraf('dist/**/*.css', () => resolve()))
       )
     })
 )
@@ -93,7 +98,7 @@ Sparky.task('dev', ['remove-dist'], () => {
 })
 
 Sparky.task('build', ['remove-dist'], () => {
-  fuse.bundle('public/js/vendor').instructions('~ index.jsx')
-  fuse.bundle('public/js/app').instructions('!> [index.jsx]')
+  fuse.bundle('public/js/vendor').instructions('~ index.tsx +**/*.tsx')
+  fuse.bundle('public/js/app').instructions('!> [index.tsx]')
   fuse.run()
 })

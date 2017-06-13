@@ -103,3 +103,4 @@ Sparky.task('build', ['remove-dist'], () => {
   fuse.bundle('public/js/app').instructions('!> [index.tsx]')
   fuse.run()
 })
+

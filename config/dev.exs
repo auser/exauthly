@@ -12,7 +12,7 @@ config :newline, Newline.Web.Endpoint,
   code_reloader: true,
   check_origin: false,
   watchers: [
-    node: ["fuse.js", "dev",
+    node: ["node_modules/.bin/exit_on_eof", "npm run dev",
     cd: Path.expand("../client", __DIR__)
   ]],
   client_endpoint: "http://localhost:8080"

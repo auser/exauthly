@@ -37,4 +37,8 @@ defmodule Newline.Accounts.Social.Gumroad do
     |> AuthCode.get_token(params, headers)
   end
 
+  def get_products!(client) do
+    OAuth2.Client.get(client, "/v2/products")
+  end
+
 end

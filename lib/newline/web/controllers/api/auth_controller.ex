@@ -31,8 +31,6 @@ defmodule Newline.Web.AuthController do
 
     %{"user_id" => user_id} = state
 
-    IO.inspect Accounts.get_current_user(conn)
-
     client = get_token!(provider, code)
 
     {:ok, %OAuth2.Response{body: body}} = get_user!(provider, client)

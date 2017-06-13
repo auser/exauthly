@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node fuse.js",
-    "dev": "cross-env NODE_ENV=development node fuse.js dev",
+    "dev": "NODE_ENV=development node fuse.js dev",
     "build": "cross-env NODE_ENV=production node fuse.js build",
     "lint": "./node_modules/.bin/eslint ./src",
     "test": "./node_modules/.bin/jest"
@@ -37,8 +37,10 @@
     "babel-preset-react": "^6.24.1",
     "cross-env": "^5.0.1",
     "dotenv": "^4.0.0",
+    "exit_on_eof": "^1.0.4",
     "fuse-box": "^2.0.2",
     "node-sass": "^4.5.3",
+    "npm-run-all": "^4.0.2",
     "redux-devtools-extension": "^2.13.2",
     "typescript": "^2.3.4",
     "uglify-js": "^3.0.15"

@@ -8,6 +8,7 @@ query {
     name
     token
     gumroadId
+    gumroadAccessToken
   }
 }
 `

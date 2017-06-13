@@ -1,26 +1,8 @@
 import * as React from "react";
 import * as classnames from "classnames";
-import * as hello from 'hellojs'
 
+import hello from '../../../../../lib/hello'
 import styled from "styled-components";
-
-const OAuth2Settings = {
-  version: 2,
-  auth: 'https://api.gumroad.com/oauth/authorize',
-  grant: 'https://api.gumroad.com/oauth/token',
-  response_type: 'code',
-  redirect_uri: 'http://localhost:8080/index.html'
-};
-
-hello.init({
-  gumroad: {
-    name: 'gumroad',
-    oauth: OAuth2Settings,
-    base: 'https://api.gumroad.com/v2',
-  }
-}, {
-  oauth_proxy: 'http://localhost:4000/auth/proxy'
-})
 
 export class GumroadAccount extends React.Component {
 

@@ -28,7 +28,8 @@ defmodule Newline.Mixfile do
       :ja_serializer,
       :timex,
       :corsica,
-      :oauth2
+      :oauth2,
+      :httpoison
     ]
   end
 
@@ -74,6 +75,7 @@ defmodule Newline.Mixfile do
       {:corsica, "~> 1.0"},
       {:distillery, "~> 1.4"},
       {:oauth2, "~> 0.9.1"},
+      {:httpoison, "~> 0.11.2"},
     ]
   end
 

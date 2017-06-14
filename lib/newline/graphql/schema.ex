@@ -10,12 +10,14 @@ defmodule Newline.Schema do
   import_types Newline.Schema.Auth
   import_types Newline.Schema.User
   import_types Newline.Schema.Organization
+  import_types Newline.Schema.Product
   # import_types Newline.Schema.Membership
   # import_types Newline.Schema.Invitation
 
   query do
     import_fields :user_fields
     import_fields :organization_fields
+    import_fields :product_queries
     # import_fields :membership_fields
   end
 

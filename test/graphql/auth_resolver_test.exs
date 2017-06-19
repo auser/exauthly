@@ -63,7 +63,7 @@ defmodule Newline.AuthResolverTest do
     }
     """
 
-    test "updates the user's password with correct token", %{user: user, token: token} do
+    test "updates the user's password with correct token", %{user: user} do
       user = Repo.get(User, user.id)
       {:ok, %{data: %{
         "passwordReset" => %{

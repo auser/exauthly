@@ -2,7 +2,7 @@ defmodule Newline.OrganizationResolverTest do
   use Newline.DataCase
   use Newline.GqlCase
   # import Newline.AssertResult
-  import Newline.Factory
+  # import Newline.Factory
   # import Newline.BasePolicy, only: [get_membership: 2]
   # alias Newline.Resolvers.OrganizationResolver
   # alias Newline.Accounts

@@ -32,7 +32,7 @@ const env = {
 const fuse = new FuseBox({
   homeDir: 'src/',
   sourceMaps: !isProduction,
-  output: 'dist/$name.js',
+  output: `${dist}/$name.js`,
   log: isProduction,
   hash: isProduction,
   cache: !isProduction,
@@ -71,9 +71,10 @@ Sparky.task(
   'remove-dist',
   () =>
     new Promise((resolve, reject) => {
-      rimraf('dist/**/*.js', () =>
-        rimraf('dist/*.js.map', () => rimraf('dist/**/*.css', () => resolve()))
-      )
+      resolve();
+    //   rimraf(`${dist}/**/*.js`, () =>
+    //     rimraf('dist/*.js.map', () => rimraf('dist/**/*.css', () => resolve()))
+    //   )
     })
 )
 

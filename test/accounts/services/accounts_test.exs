@@ -225,7 +225,7 @@ defmodule Newline.AccountsTest do
   describe "get_social_account/2" do
     setup [:create_user]
 
-    test "can get a social account by id", %{user: user} do
+    test "can get a social account by id" do
       sa = build(:social_account, %{
         social_account_name: "gumroad",
       }) |> Repo.insert!

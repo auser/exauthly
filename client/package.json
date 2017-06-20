@@ -39,6 +39,7 @@
     "dotenv": "^4.0.0",
     "exit_on_eof": "^1.0.4",
     "fuse-box": "^2.0.2",
+    "husky": "^0.13.4",
     "node-sass": "^4.5.3",
     "npm-run-all": "^4.0.2",
     "redux-devtools-extension": "^2.13.2",

@@ -58,7 +58,7 @@ defmodule Newline.Web.AuthController do
     message = case Accounts.user_link_and_signup(provider, user_id, params) do
       {:error, reason} ->
         reason
-      {:ok, user} ->
+      {:ok, _user} ->
         "success"
     end
 
@@ -74,7 +74,7 @@ defmodule Newline.Web.AuthController do
       scope: scope,
       social_account_id: social_account_id,
       # state: Poison.encode!(%{
-      #   message: message
+        message: message
       # })
     })
     query = URI.encode(state)

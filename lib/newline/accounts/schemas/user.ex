@@ -91,10 +91,11 @@ defmodule Newline.Accounts.User do
   end
 
   def social_account_changeset(user, params \\ %{}) do
+    user_id = if (user == nil), do: nil, else: user.id
     %SocialAccount{}
     |> SocialAccount.changeset(params)
     # |> assoc_constraint(:user, user)
-    |> put_change(:user_id, user.id)
+    |> put_change(:user_id, user_id)
   end
 
   @doc """

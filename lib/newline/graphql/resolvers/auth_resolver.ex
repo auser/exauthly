@@ -18,6 +18,12 @@ defmodule Newline.Resolvers.AuthResolver do
   def login(params, _info), do: Accounts.user_login(params)
 
   @doc """
+  Social authentication
+
+  """
+  def social_login(params, _info), do: Accounts.user_social_login(params)
+
+  @doc """
   Request a password reset for the user
 
   Example mutation

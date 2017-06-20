@@ -6,7 +6,10 @@ import { graphql } from 'react-apollo'
 import { Form, FormGroup, Submit } from "../../../../components/Form";
 import { tryUserLogin } from '../../../../redux/modules/auth/actions'
 
+import SocialLogin from './SocialLogin'
+
 import LOGIN_MUTATION from '../../../../graphql/login';
+import hello from '../../../../lib/hello'
 
 export class LoginForm extends React.Component {
   loginSubmit = fields =>
@@ -37,6 +40,10 @@ export class LoginForm extends React.Component {
         <div className="submit">
           <Submit type="submit" value="Login" className="col-xs-12" />
         </div>
+        <SocialLogin
+          tryLogin={this.props.tryUserLogin}
+          history={this.props.history}
+        />
       </Form>
     );
   }

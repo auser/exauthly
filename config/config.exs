@@ -27,6 +27,11 @@ config :newline, Newline.Accounts.Social.Gumroad,
   client_secret: System.get_env("GUMROAD_CLIENT_SECRET"),
   redirect_uri: System.get_env("GUMROAD_REDIRECT_URI")
 
+config :newline, Newline.Accounts.Social.Github,
+  client_id: System.get_env("GITHUB_CLIENT_ID"),
+  client_secret: System.get_env("GITHUB_CLIENT_SECRET"),
+  redirect_uri: System.get_env("GITHUB_REDIRECT_URI")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

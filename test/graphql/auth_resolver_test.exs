@@ -30,6 +30,29 @@ defmodule Newline.AuthResolverTest do
     end
   end
 
+  describe "social_login/2" do
+    setup [:create_social_login]
+
+    @query """
+    mutation socialLogin($socialAccountId:String!, $socialAccountName:String!) {
+      socialLogin(socialAccountId:$socialAccountId, socialAccountName: $socialAccountName) {
+        token
+      }
+    }
+    """
+
+    test "logs in user with access token", %{social_account: account} do
+      {:ok, %{data: %{"socialLogin" => %{"token" => token}}}} = @query |> run(Newline.Schema, variables: %{"socialAccountId" => account.social_account_id, "socialAccountName" => account.social_account_name})
+      assert token != nil
+    end
+
+    test "rejects a user without valid access_token" do
+      {:ok, result} = @query |> run(Newline.Schema, variables: %{"socialAccountId" => "nope", "socialAccountName" => "github"})
+      {:ok, res} = Map.fetch(result, :errors)
+      assert Map.fetch(List.first(res), :message) == {:ok, "In field \"socialLogin\": Invalid token"}
+    end
+  end
+
   describe "request_reset_password/2" do
     setup [:create_user]
 
@@ -116,6 +139,13 @@ defmodule Newline.AuthResolverTest do
     user = build(:user, %{password: nil}) |> Repo.insert!
     context
     |> Map.put(:user, user)
+  end
+
+  defp create_social_login(context) do
+    account = build(:social_account) |> Repo.preload(:user) |> Repo.insert!
+    context
+    |> Map.put(:social_account, account)
+    |> Map.put(:user, account.user)
   end
 
   defp create_resetting_user(context) do

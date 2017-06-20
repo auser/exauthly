@@ -13,7 +13,8 @@ hello.init({
     name: 'gumroad',
     oauth: OAuth2Settings,
     base: 'https://api.gumroad.com/v2',
-  }
+  },
+  github: process.env.GITHUB_CLIENT_ID
 }, {
   oauth_proxy: 'http://localhost:4000/auth/proxy'
 })

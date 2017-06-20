@@ -23,7 +23,8 @@ const src = dir => rel('src', dir)
 
 const env = {
   BACKEND: process.env.BACKEND || 'http://localhost:4000/graphql',
-  GUMROAD_CLIENT_ID: process.env.GUMROAD_CLIENT_ID
+  GUMROAD_CLIENT_ID: process.env.GUMROAD_CLIENT_ID,
+  GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
 }
 
 /**

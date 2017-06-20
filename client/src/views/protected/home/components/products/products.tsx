@@ -6,10 +6,10 @@ import hello from '../../../../../lib/hello'
 
 export class Products extends React.Component {
 
-  async componentDidMount() {
-    const products = await hello('gumroad').api('/v2/products')
-    console.log(products)
-  }
+  // async componentDidMount() {
+  //   const products = await hello('gumroad').api('/v2/products')
+  //   console.log(products)
+  // }
 
   render() {
     return (

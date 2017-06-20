@@ -2,7 +2,7 @@ import * as constants from './constants'
 import storage from '../../../lib/storage'
 
 export const tryUserLogin = (user) => {
-  storage.saveToken(user.token);
+  storage.saveToken(user.token || user.access_token);
   return {
     type: constants.USER_LOGGED_IN,
     payload: user

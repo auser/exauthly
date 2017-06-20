@@ -123,6 +123,14 @@ defmodule Newline.AccountsTest do
     end
   end
 
+  describe "social_authentication/1" do
+    setup [:create_social_account_user]
+
+    test "logs in user with valid token", %{social_account: account} do
+      {:ok, _} = Accounts.social_authentication(%{social_account_name: account.social_account_name, social_account_id: account.social_account_id})
+    end
+  end
+
   describe "sign_in_user(:api)" do
     setup [:create_user]
 
@@ -202,7 +210,8 @@ defmodule Newline.AccountsTest do
     test "creates the user and gives the association if there isn't one already" do
       Accounts.user_link_and_signup("gumroad", nil, %{
         "email" => "foo@bar.com",
-        "social_user_id" => "GumroadUserId",
+        "social_account_id" => "GumroadUserId",
+        "social_account_name" => "gumroad"
       })
       user = Repo.get_by!(User, email: "foo@bar.com")
       assert user
@@ -213,7 +222,8 @@ defmodule Newline.AccountsTest do
     test "adds a social asscociation if there is a a user", %{user: user} do
       Accounts.user_link_and_signup("gumroad", user.id, %{
         "email" => user.email,
-        "social_user_id" => "GumroadUserId2"
+        "social_account_id" => "GumroadUserId2",
+        "social_account_name" => "gumroad"
       })
       user = Repo.get_by!(User, email: user.email)
       assert user
@@ -254,6 +264,13 @@ defmodule Newline.AccountsTest do
     user = build(:user) |> Repo.insert!
     context
     |> Map.put(:user, user)
+  end
+
+  defp create_social_account_user(context) do
+    account = build(:social_account) |> Repo.insert!
+    context
+    |> Map.put(:social_account, account)
+    |> Map.put(:user, account.user)
   end
 
   defp create_org(context) do

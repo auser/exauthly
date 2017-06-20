@@ -79,6 +79,15 @@ defmodule Newline.Accounts do
     end
   end
 
+  def user_social_login(params, login_claims \\ %{}) do
+    case social_authentication(params) do
+      {:error, reason} -> {:error, reason}
+      {:ok, user} ->
+        {:ok, jwt, _claims} = sign_in_user(:token, user, login_claims)
+        {:ok, Map.put(user, :token, jwt)}
+    end
+  end
+
 
   @doc """
   Updates a user.
@@ -172,7 +181,7 @@ defmodule Newline.Accounts do
   end
   def user_link_and_signup(provider, user_id, params) do
     case Repo.get(User, user_id) do
-      {:error, reason} ->
+      {:error, _reason} ->
         {:error, "User does not exist"}
       user ->
         associate_social_account(provider, user, social_params(provider, params))
@@ -185,6 +194,9 @@ defmodule Newline.Accounts do
   def associate_social_account(provider, user, params) do
     params = params
       |> Map.put("social_account_name", provider)
+      |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
+      |> Enum.into(%{})
+
     cs = user |> User.social_account_changeset(params)
     case Repo.transaction(run_associate_account(cs)) do
       {:error, _op, failed_cs, _changes} ->
@@ -371,6 +383,21 @@ defmodule Newline.Accounts do
     end
   end
 
+  @doc """
+  Social authentication
+  """
+  def social_authentication(%{social_account_name: name, social_account_id: user_id}) do
+    query = from sa in SocialAccount,
+            where: sa.social_account_id == ^user_id and
+                   sa.social_account_name == ^name,
+            preload: [:user]
+    case Repo.one(query) do
+      nil -> {:error, "Invalid token"}
+      account ->
+        {:ok, account.user}
+    end
+  end
+
   # Insert for new user
   defp run_insert(changeset) do
     Multi.new
@@ -413,14 +440,15 @@ defmodule Newline.Accounts do
   defp social_params(provider, params) do
     params
       |> Map.put("social_account_name", provider)
-      |> Map.put("social_account_id", params["social_user_id"])
+      |> Map.put("social_account_id", params["social_account_id"])
   end
 
   # TODO: MOVE ME DOWN BELOW
   defp user_link_and_signup_social_changeset(provider, params) do
     Multi.new
   |> Multi.insert(:user, User.social_registration_changeset(%User{}, params))
-  |> Multi.run(:social_account, &(associate_social_account(provider, &1[:user], social_params(provider, params))))
+  # |> Multi.insert(:social_account, SocialAccount.changeset(%SocialAccount{}, params))
+  |> Multi.run(:associate_social_account, &(associate_social_account(provider, &1[:user], social_params(provider, params))))
   end
 
 end

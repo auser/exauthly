@@ -12,6 +12,13 @@ defmodule Newline.Schema.Auth do
       resolve &Newline.Resolvers.AuthResolver.login/2
     end
 
+    field :social_login, type: :user do
+      arg :social_account_id, non_null(:string)
+      arg :social_account_name, non_null(:string)
+
+      resolve &Newline.Resolvers.AuthResolver.social_login/2
+    end
+
     field :reset_password_request, type: :boolean do
       arg :email, non_null(:string)
 

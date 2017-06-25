@@ -12,6 +12,13 @@ import LOGIN_MUTATION from '../../../../graphql/login';
 import hello from '../../../../lib/hello'
 
 export class LoginForm extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      errors: []
+    }
+  }
   loginSubmit = fields =>
     this.props.tryLogin(fields)
     .then(({ data }) => {
@@ -20,7 +27,9 @@ export class LoginForm extends React.Component {
     })
     .then(() => this.props.history.replace('/'))
     .catch(err => {
-      console.log('login error', err)
+      this.setState({
+        errors: err.graphQLErrors
+      })
     })
   render() {
     return (
@@ -40,10 +49,15 @@ export class LoginForm extends React.Component {
         <div className="submit">
           <Submit type="submit" value="Login" className="col-xs-12" />
         </div>
-        <SocialLogin
+        <div>
+          {this.state.errors && this.state.errors.map(err => (
+            <div key={err.message}>{err.message}</div>
+          ))}
+        </div>
+        {/*<SocialLogin
           tryLogin={this.props.tryUserLogin}
           history={this.props.history}
-        />
+        />*/}
       </Form>
     );
   }

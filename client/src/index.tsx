@@ -1,3 +1,5 @@
 import * as app from "./App";
-app.render("#root");
+console.log(app);
+
+// app.render("#root");
 

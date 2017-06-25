@@ -7,14 +7,18 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Hello Newline!</title>
+    <title>Newline</title>
 
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <%= {:safe, css_link_tag() } %>
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,400i,700" rel="stylesheet">
+
   </head>
 
   <body>
+    <main class="main" role="main">
       <%= render @view_module, @view_template, assigns %>
-      <div id="root"></div>
-    <script src="<% static_path(@conn, "/js/app.js") %>"></script>
+    </main>
+
+    <%= {:safe, js_script_tag() } %>
   </body>
 </html>

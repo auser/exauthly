@@ -53,6 +53,11 @@ defmodule Newline.Web.Router do
   scope "/", Newline.Web do
     pipe_through [:browser, :bearer_auth]
 
+    get "/login", SessionController, :index
+    post "/login", SessionController, :create
+    delete "/login", SessionController, :delete
+
+    # Social auth
     get "/auth/proxy", AuthController, :proxy
     get "/auth/:provider", AuthController, :index
     get "/auth/:provider/callback", AuthController, :callback

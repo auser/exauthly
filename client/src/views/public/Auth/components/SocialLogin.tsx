@@ -34,24 +34,24 @@ export class SocialLogin extends React.Component {
     }
   }
 
-  handleClick = provider => () => {
-    hello(provider).login({
-    }).then(({network, authResponse}) => {
-      const { social_account_id } = authResponse
-      this.props.socialLogin({
-        social_account_id: social_account_id,
-        social_account_name: network,
-      })
-      .then(({ data }) => {
-        const { socialLogin } = data;
-        this.props.tryLogin(socialLogin)
-      })
-      .then(() => this.props.history.replace('/'))
-      .catch(err => {
-        console.warn(err)
-      })
-    })
-  }
+  // handleClick = provider => () => {
+  //   hello(provider).login({
+  //   }).then(({network, authResponse}) => {
+  //     const { social_account_id } = authResponse
+  //     this.props.socialLogin({
+  //       social_account_id: social_account_id,
+  //       social_account_name: network,
+  //     })
+  //     .then(({ data }) => {
+  //       const { socialLogin } = data;
+  //       this.props.tryLogin(socialLogin)
+  //     })
+  //     .then(() => this.props.history.replace('/'))
+  //     .catch(err => {
+  //       console.warn(err)
+  //     })
+  //   })
+  // }
 
   render() {
     return (
@@ -64,11 +64,10 @@ export class SocialLogin extends React.Component {
         </div>
         <div className="row">
           <div className="col-xs-4">
-            <div
-              onClick={this.handleClick('github')}
+            <a href="/auth/github"
               className="btn btn-primary">
               Github
-            </div>
+            </a>
           </div>
           <div className="col-xs-4">
             Signup with Gumroad

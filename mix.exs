@@ -76,6 +76,8 @@ defmodule Newline.Mixfile do
       {:distillery, "~> 1.4"},
       {:oauth2, "~> 0.9.1"},
       {:httpoison, "~> 0.11.2"},
+      {:ueberauth, "~> 0.4.0"},
+      {:ueberauth_github, "~> 0.4.1"},
     ]
   end
 

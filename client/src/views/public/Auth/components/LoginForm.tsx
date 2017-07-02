@@ -54,10 +54,10 @@ export class LoginForm extends React.Component {
             <div key={err.message}>{err.message}</div>
           ))}
         </div>
-        {/*<SocialLogin
+        <SocialLogin
           tryLogin={this.props.tryUserLogin}
           history={this.props.history}
-        />*/}
+        />
       </Form>
     );
   }

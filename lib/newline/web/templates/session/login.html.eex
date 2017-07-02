@@ -1,0 +1,13 @@
+<%= form_for @changeset, session_path(@conn, :create), fn f -> %>
+  <div class="form-group">
+    <label>Name</label>
+    <%= text_input f, :email %>
+  </div>
+
+  <div class="form-group">
+    <label>Password</label>
+    <%= password_input f, :password %>
+  </div>
+
+  <%= submit "Login" %>
+<% end %>

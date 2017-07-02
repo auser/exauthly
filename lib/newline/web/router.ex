@@ -50,18 +50,28 @@ defmodule Newline.Web.Router do
     resources "/users", UserController, only: [:create]
   end
 
+  # AUTH
+  scope "/auth", Newline.Web do
+    pipe_through [:browser]
+
+    get "/:provider", AuthController, :request
+    get "/:provider/callback", AuthController, :callback
+    post "/:provider/callback", AuthController, :callback
+    delete "/logout", AuthController, :delete
+  end
+
   scope "/", Newline.Web do
     pipe_through [:browser, :bearer_auth]
 
-    get "/login", SessionController, :index
-    post "/login", SessionController, :create
-    delete "/login", SessionController, :delete
+    # get "/login", SessionController, :index
+    # post "/login", SessionController, :create
+    # delete "/login", SessionController, :delete
 
-    # Social auth
-    get "/auth/proxy", AuthController, :proxy
-    get "/auth/:provider", AuthController, :index
-    get "/auth/:provider/callback", AuthController, :callback
-    delete "/logout", AuthController, :delete
+    # # Social auth
+    # get "/auth/proxy", AuthController, :proxy
+    # get "/auth/:provider", AuthController, :index
+    # get "/auth/:provider/callback", AuthController, :callback
+    # delete "/logout", AuthController, :delete
     get "/*path", PageController, :index
   end
 end

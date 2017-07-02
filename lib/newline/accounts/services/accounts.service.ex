@@ -172,11 +172,13 @@ defmodule Newline.Accounts do
   Chooses create or update for the user
   """
   def user_link_and_signup(provider, nil, params) do
+    # user_changeset = %User{} |> User.registration_changeset(params)
     case Repo.transaction(user_link_and_signup_social_changeset(provider, params)) do
       {:error, _failed_op, cs, _changes} ->
+        IO.inspect cs
         {:error, cs}
-      {:ok, %{user: user}} ->
-        {:ok, user}
+      {:ok, %{social_account: social_account}} ->
+        {:ok, social_account}
     end
   end
   def user_link_and_signup(provider, user_id, params) do
@@ -184,7 +186,7 @@ defmodule Newline.Accounts do
       {:error, _reason} ->
         {:error, "User does not exist"}
       user ->
-        associate_social_account(provider, user, social_params(provider, params))
+        associate_social_account(provider, user, params)
     end
   end
 
@@ -205,7 +207,6 @@ defmodule Newline.Accounts do
         {:ok, social_account}
     end
   end
-  def associate_social_account(_, _user, _params), do: {:error, :unknown}
 
   @doc """
   Disassociate a social account with a user
@@ -446,9 +447,10 @@ defmodule Newline.Accounts do
   # TODO: MOVE ME DOWN BELOW
   defp user_link_and_signup_social_changeset(provider, params) do
     Multi.new
-  |> Multi.insert(:user, User.social_registration_changeset(%User{}, params))
-  # |> Multi.insert(:social_account, SocialAccount.changeset(%SocialAccount{}, params))
-  |> Multi.run(:associate_social_account, &(associate_social_account(provider, &1[:user], social_params(provider, params))))
+    |> Multi.insert(:user, User.social_registration_changeset(%User{}, params))
+    # |> Multi.insert(:social_account, social_params(provider, params))
+    |> Multi.insert(:social_account, SocialAccount.changeset(%SocialAccount{}, params))
+    |> Multi.run(:associate_social_account, &(associate_social_account(provider, &1[:user], params)))
   end
 
 end

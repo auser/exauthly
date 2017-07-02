@@ -1,4 +1,4 @@
-defmodule Newline.Web.AuthController do
+defmodule Newline.Web.Api.AuthController do
   use Newline.Web, :controller
 
   alias Newline.Accounts

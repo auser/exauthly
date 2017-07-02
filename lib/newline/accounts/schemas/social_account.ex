@@ -32,4 +32,24 @@ defmodule Newline.Accounts.SocialAccount do
     |> unique_constraint(:social_account_name, name: :social_account_name_to_user_id_index, message: "has already been associated")
   end
 
+  def changeset_from_auth(struct, "github", %Ueberauth.Auth{} = auth) do
+    %{
+      extra: %Ueberauth.Auth.Extra{raw_info: raw_info} = user,
+      info: %Ueberauth.Auth.Info{name: name, email: email, nickname: nickname},
+      credentials: %Ueberauth.Auth.Credentials{token: token, refresh_token: refresh_token}
+    } = auth
+    %{user: user} = raw_info
+    params = %{
+      social_account_name: "github",
+      social_account_id: "#{user["id"]}",
+      first_name: name,
+      login_name: nickname,
+      auth_token: token, refresh_token: refresh_token
+    }
+    struct
+    |> __MODULE__.changeset(params)
+  end
+
+  def changeset_from_auth(_, _, _), do: {:error, :not_handled}
+
 end

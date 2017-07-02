@@ -1,5 +1,1 @@
-<div class="container">
-  <div class="row">
-    <div class="col-xs-3">Hi</div>
-  </div>
-</div>
+<div id="root"></div>

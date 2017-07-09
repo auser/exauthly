@@ -27,3 +27,8 @@ config :guardian, Guardian,
   verify_issuer: true,
   secret_key: "Secret thing",
   serializer: Newline.GuardianSerializer
+
+config :newline, Newline.Email,
+  adapter: Bamboo.TestAdapter,
+  from: "postmaster@newline.co"
+

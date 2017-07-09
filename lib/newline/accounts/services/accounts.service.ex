@@ -7,6 +7,7 @@ defmodule Newline.Accounts do
   alias Ecto.Multi
 
   alias Newline.Accounts.{User,SocialAccount,Organization}
+  alias Newline.Email
 
   @doc """
   Returns the list of users.
@@ -267,28 +268,28 @@ defmodule Newline.Accounts do
   """
   def reset_password(token, password) do
     case user_by_password_token(token) do
-      nil -> {:error, :not_found}
+      nil ->
+        {:error, :not_found}
       user = %User{} ->
         user
         |> User.reset_password_changeset(%{password: password})
-        |> Repo.update
-        |> send_password_reset_email
+        |> Repo.update!()
+        |> send_password_reset_email()
         {:ok, jwt, claims} = sign_in_user(:token, user)
         {:ok, %{user: user, token: jwt, claims: claims}}
     end
   end
 
-  # TODO: Move
   def send_password_reset_request_email(user) do
-    {:ok, user}
+    {:ok, Email.send_password_reset_request_email(user)}
   end
 
-  def send_password_reset_email(user) do
-    {:ok, user}
+  defp send_password_reset_email(user) do
+    {:ok, Email.send_password_reset_email(user)}
   end
 
   def send_welcome_email(user) do
-    {:ok, user}
+    {:ok, Email.send_welcome_email(user)}
   end
 
   @doc """

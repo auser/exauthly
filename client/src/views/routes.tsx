@@ -1,23 +1,21 @@
-import * as React from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import * as React from 'react';
+import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
 
-import Page from '../hocs/page'
+import Page from '../hocs/page';
 
-import PublicRoutes from './public/routes'
-import ProtectedRoutes from './protected/routes'
+import Home from './Home/Home';
+import About from './About/About';
+
+// import PublicRoutes from './public/routes'
+// import ProtectedRoutes from './protected/routes'
 
 export const Routes = props => {
   return (
     <Router {...props}>
-      <div>
-        {
-        props.isAuthenticated ?
-          <Route render={renderProps => <ProtectedRoutes {...renderProps} {...props} />} />
-          :
-          <Route
-          render={renderProps => <PublicRoutes {...renderProps} {...props} />} />
-      }
-      </div>
+      <Switch>
+        <Route path="/about" component={About} />
+        <Route exact path="/" component={Home} />
+      </Switch>
     </Router>
   );
 };

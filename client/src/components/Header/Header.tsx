@@ -1,17 +1,30 @@
-import * as React from "react";
-import * as classnames from 'classnames'
-import { Link } from "react-router-dom";
+import * as React from 'react';
+import * as classnames from 'classnames';
+import {Link} from 'react-router-dom';
 
 import './Header.scss';
 
-import AuthMenu from './AuthMenu'
-import PublicMenu from "./PublicMenu";
+import AuthMenu from './AuthMenu';
+import PublicMenu from './PublicMenu';
 
-import styled from "styled-components";
+import styled from 'styled-components';
 
-export const Header = ({ isAuthenticated, className, ...rest }) =>
+interface Props {
+  isAuthenticated: Function;
+  className: string;
+  rest: any;
+}
+
+export const Header: React.SFC<Props> = ({
+  isAuthenticated,
+  className,
+  ...rest
+}) =>
   <header
-    className={classnames("navbar navbar-inverse navbar-static-top affix-top", className)}
+    className={classnames(
+      'navbar navbar-inverse navbar-static-top affix-top',
+      className
+    )}
     role="banner"
     data-spy="affix"
     data-offset-top="60"
@@ -31,11 +44,11 @@ export const Header = ({ isAuthenticated, className, ...rest }) =>
           <span className="icon-bar" />
           <span className="icon-bar" />
         </button>
-        <a href="/" className="navbar-brand">
+        <Link to="/" className="navbar-brand">
           Fullstack
-        </a>
+        </Link>
         <a
-          href="/"
+          to="/"
           className="logo-text logo-text-inverse visible-xs visible-sm-block visible-md"
           title="Fullstack"
         />
@@ -55,12 +68,12 @@ export const Header = ({ isAuthenticated, className, ...rest }) =>
         <div className="navbar-collapse-panel orderable-xs orderable-sm">
           <div className="navbar-right order-1">
             <ul className="nav navbar-nav">
-            {
-               isAuthenticated ?
-                 <AuthMenu {...rest} />
-                 :
-                 <PublicMenu {...rest} />
-             }
+              <li>
+                <Link to="/about">About</Link>
+              </li>
+              {isAuthenticated
+                ? <AuthMenu {...rest} />
+                : <PublicMenu {...rest} />}
             </ul>
           </div>
         </div>
@@ -79,6 +92,6 @@ export const Header = ({ isAuthenticated, className, ...rest }) =>
   </header>;
 
 export default styled(Header)`
-background-color: ${props => props.theme.blue};
+background-color: ${props => props.theme.navbarBg};
 color: #fff;
 `;

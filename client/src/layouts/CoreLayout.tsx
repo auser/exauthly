@@ -1,15 +1,18 @@
-import * as React from 'react'
+import * as React from 'react';
 // import styled from 'styled-components'
 
-import Header from '../components/header/Header'
+import '../styles/main.scss';
+import Header from '../components/header/Header';
 
-const CoreLayout = Wrapped => props => {
+interface Props {}
+
+const CoreLayout: React.SFC<Props> = Wrapped => props => {
   return (
     <div>
       <Header {...props} />
       <Wrapped {...props} />
     </div>
-  )
-}
+  );
+};
 
-export default CoreLayout
+export default CoreLayout;

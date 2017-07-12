@@ -15,6 +15,7 @@
     "bootstrap": "^3.3.7",
     "classnames": "^2.2.5",
     "graphql": "^0.10.1",
+    "graphql-tag": "^2.4.2",
     "hellojs": "^1.14.1",
     "invariant": "^2.2.2",
     "jquery": "^3.2.1",

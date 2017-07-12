@@ -14,9 +14,9 @@ Said another way, what does this boilerplate give you out of the box?
 * React/Redux/Apollo front-end
 * Ultra-fast development speed using [FuseBox](http://fuse-box.org/)
 * Protected pages for logged-in users only
-* GraphQL out of the box
+* GraphQL out of the box with the fantastic [Absinthe](http://absinthe-graphql.org/)
 * Logical grouping of users through organizations
-* Fine-grained permissions on assets
+* Fine-grained permissions
 * and so much more...
 
-## TODO: Finish this
+### TODO: Finish this please

@@ -1,19 +1,19 @@
-import * as React from "react";
-import * as classnames from "classnames";
-import { graphql } from 'react-apollo';
+import * as React from 'react';
+import * as classnames from 'classnames';
+import {graphql} from 'react-apollo';
 
-import { Link } from "react-router-dom";
+import {Link} from 'react-router-dom';
 
-import "./Login.scss";
-import CenterLayout from "../../../../layouts/CenterLayout";
-import styled from "styled-components";
-import LOGIN_MUTATION from '../../../../graphql/login';
+import './Login.scss';
+import CenterLayout from '../../../layouts/CenterLayout';
+import styled from 'styled-components';
+import LOGIN_MUTATION from '../../../graphql/login';
 
-import LoginForm from "../components/LoginForm";
+import LoginForm from '../components/LoginForm';
 
 const LoginView = props =>
   <div
-    className={classnames("login", "container", "text-center", props.className)}
+    className={classnames('login', 'container', 'text-center', props.className)}
   >
     <div className="col-xs-12 col-sm-8">
       <div className="panel">
@@ -31,7 +31,8 @@ const LoginView = props =>
         </div>
         <div className="panel-footer">
           <div className="row">
-            <Link to="/signup">Sign up</Link> | <Link to="/forgot_password">Forgot password</Link>
+            <Link to="/signup">Sign up</Link> |{' '}
+            <Link to="/forgot_password">Forgot password</Link>
           </div>
         </div>
       </div>

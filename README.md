@@ -26,7 +26,7 @@ The graphql and web contexts are consumers of the functionality.
 ```bash
 mix deps.get
 mix ecto.setup
-(cd assets && npm install)
+(cd client && npm install)
 mix phx.server
 ```
 

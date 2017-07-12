@@ -9,7 +9,7 @@ interface Props {}
 export const Home: React.SFC<Props> = (props: any) => {
   return (
     <div className={classnames(props.className, 'home')}>
-      <h2>Home goes here</h2>
+      <h4>Home goes here</h4>
     </div>
   );
 };

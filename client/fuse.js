@@ -17,13 +17,15 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 
+require('dotenv').load();
+
 const isProduction = process.env.NODE_ENV === 'production';
 const dist = path.resolve(__dirname, './dist');
 const rel = dir => path.resolve(__dirname, dir);
 const src = dir => rel('src', dir);
 
 const env = {
-  BACKEND: process.env.BACKEND || 'http://localhost:4000/graphql',
+  BACKEND: process.env.BACKEND || '/graphql',
   GUMROAD_CLIENT_ID: process.env.GUMROAD_CLIENT_ID,
   GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID
 };

@@ -6,7 +6,7 @@ defmodule Newline.Accounts do
   import Ecto.{Query, Changeset}, warn: false
   alias Ecto.Multi
 
-  alias Newline.Accounts.{User,SocialAccount,Organization}
+  alias Newline.Accounts.{User,SocialAccount,Organization, OrganizationService}
   alias Newline.Email
 
   @doc """
@@ -176,7 +176,6 @@ defmodule Newline.Accounts do
     # user_changeset = %User{} |> User.registration_changeset(params)
     case Repo.transaction(user_link_and_signup_social_changeset(provider, params)) do
       {:error, _failed_op, cs, _changes} ->
-        IO.inspect cs
         {:error, cs}
       {:ok, %{social_account: social_account}} ->
         {:ok, social_account}
@@ -404,6 +403,7 @@ defmodule Newline.Accounts do
   defp run_insert(changeset) do
     Multi.new
     |> Multi.insert(:user, changeset)
+    |> Multi.run(:create_and_join_org, &(Newline.Accounts.OrganizationService.create_and_join(&1[:user], %{name: &1[:user].email, slug: "ari"})))
     |> Multi.run(:send_welcome_email, &(send_welcome_email(&1[:user])))
   end
 

@@ -8,7 +8,6 @@ defmodule Newline.Web.SessionController do
 
   def index(conn, _params) do
     changeset = User.user_changeset(%User{}, %{})
-    IO.inspect changeset
     render conn, "login.html", changeset: changeset
   end
 

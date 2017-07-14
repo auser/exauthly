@@ -36,6 +36,15 @@ defmodule Newline.Accounts.OrganizationServiceTest do
     end
   end
 
+  describe "create_and_join/2" do
+    setup [:create_organization, :create_user]
+
+    test "Creates an organization", %{user: user} do
+      params = params_for(:organization, %{name: "ari's org"})
+      {:ok, _} = OrganizationService.create_and_join(user, params)
+    end
+  end
+
   describe "join_org/2" do
     setup [:create_organization, :create_user]
 

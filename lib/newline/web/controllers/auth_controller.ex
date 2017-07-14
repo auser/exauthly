@@ -22,7 +22,6 @@ defmodule Newline.Web.AuthController do
   def callback(%{assigns: %{ueberauth_auth: auth}} = conn, %{"provider" => provider} = _params) do
     # case
     cs = SocialAccount.changeset_from_auth(%SocialAccount{}, provider, auth)
-    IO.inspect cs
     conn
     |> redirect(to: "/login")
   end

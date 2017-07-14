@@ -4,6 +4,7 @@ defmodule Newline.Accounts.OrganizationService do
   """
   alias Newline.Repo
   import Ecto.{Query, Changeset}, warn: false
+  alias Ecto.Multi
 
   alias Newline.Accounts.{User, Organization, OrganizationMembership}
 
@@ -47,6 +48,27 @@ List all organizations a user is a member
       [] -> {:ok, []}
       other -> {:ok, other}
     end
+  end
+
+  @doc """
+  Create and join the organization as the owner
+  """
+  def create_and_join(user, org) do
+    case Repo.transaction(create_and_join_transaction(user, org)) do
+      {:error, _failed_op, failed_cs, changes} ->
+        {:error, failed_cs}
+      {:ok, %{join_org: org}} ->
+        {:ok, org}
+      other ->
+        IO.puts "HUh? #{inspect(other)}"
+    end
+  end
+
+  defp create_and_join_transaction(user, org) do
+    org_cs = Organization.create_changeset(%Organization{}, org)
+    Multi.new
+    |> Multi.insert(:organization, org_cs)
+    |> Multi.run(:join_org, &(join_org(user, &1[:organization], %{role: "owner"})))
   end
 
   @doc """

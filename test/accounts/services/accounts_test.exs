@@ -43,6 +43,17 @@ defmodule Newline.AccountsTest do
       short_pass = params_for(:user, password: "")
       {:error, _changeset} = Accounts.create_user(short_pass)
     end
+
+    test "creates an account for the user within an org" do
+      user = params_for(:user, %{})
+      {:ok, user} = Accounts.create_user(user)
+      # org = Organization
+            # Repo.preload(:members) |> Repo.get(user.id)
+      orgs = Repo.preload(user, :organizations)
+      assert length(orgs.organizations) == 1
+      [h|_] = orgs.organization_memberships
+      assert h.role == "owner"
+    end
   end
 
   describe "update_user" do

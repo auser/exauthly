@@ -6,7 +6,7 @@ defmodule Newline.Accounts do
   import Ecto.{Query, Changeset}, warn: false
   alias Ecto.Multi
 
-  alias Newline.Accounts.{User,SocialAccount,Organization, OrganizationService}
+  alias Newline.Accounts.{User,SocialAccount,Organization}
   alias Newline.Email
 
   @doc """
@@ -437,12 +437,6 @@ defmodule Newline.Accounts do
       nil -> Comeonin.Bcrypt.dummy_checkpw()
       _ -> Comeonin.Bcrypt.checkpw(password, user.encrypted_password)
     end
-  end
-
-  defp social_params(provider, params) do
-    params
-      |> Map.put("social_account_name", provider)
-      |> Map.put("social_account_id", params["social_account_id"])
   end
 
   # TODO: MOVE ME DOWN BELOW

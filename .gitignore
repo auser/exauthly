@@ -33,3 +33,4 @@ node_modules
 client/dist
 rel
 .env
+.DS_Store

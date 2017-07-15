@@ -4,7 +4,6 @@ defmodule Newline.Accounts.OrganizationMembership do
   """
   use Ecto.Schema
   import Ecto.{Query, Changeset}, warn: false
-  alias Newline.Repo
   alias Newline.Accounts.{User, Organization}
 
   schema "organization_memberships" do

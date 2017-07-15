@@ -29,3 +29,11 @@ iex -S mix phx.server
 ```
 
 Now, navigate in your browser to the url: [http://localhost:4000](http://localhost:4000). Feel free to play around in the app and come back when you feel comfortable with it. We'll move on to looking deeper at how it runs, how's it's built, and more.
+
+## Docs
+
+Let's get started on the docs.
+
+### Getting started
+
+We'll install exauthly in the usual way, by cloning, grabbing dependencies, compiling the application, and running it.

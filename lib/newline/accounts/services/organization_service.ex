@@ -55,7 +55,7 @@ List all organizations a user is a member
   """
   def create_and_join(user, org) do
     case Repo.transaction(create_and_join_transaction(user, org)) do
-      {:error, _failed_op, failed_cs, changes} ->
+      {:error, _failed_op, failed_cs, _changes} ->
         {:error, failed_cs}
       {:ok, %{join_org: org}} ->
         {:ok, org}

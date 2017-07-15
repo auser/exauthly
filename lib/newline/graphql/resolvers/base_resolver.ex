@@ -1,7 +1,7 @@
 defmodule Newline.Resolvers.BaseResolver do
 
   # import Canada, only: [can?: 2]
-  alias Newline.{Repo, User}
+  # alias Newline.{Repo, User}
 
   @unauthorized_error {:error, "Unauthorized"}
   @unauthenticated_error {:error, "User not logged in"}

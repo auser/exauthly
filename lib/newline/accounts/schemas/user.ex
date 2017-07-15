@@ -4,7 +4,7 @@ defmodule Newline.Accounts.User do
   import Ecto.{Query, Changeset}, warn: false
   import Comeonin.Bcrypt, only: [hashpwsalt: 1]
 
-  alias Newline.Accounts.{SocialAccount, OrganizationMembership}
+  alias Newline.Accounts.{SocialAccount}
 
   @derive {Poison.Encoder, only: [:email, :name, :admin]}
   schema "users" do

@@ -105,6 +105,6 @@ defmodule Newline.Resolvers.UserResolver do
   def update_user(params, %{context: %{current_user: user}}) do
     Accounts.update_user(user, params)
   end
-  def update_user(params, _), do: unauthenticated_error()
+  def update_user(_params, _), do: unauthenticated_error()
 
 end

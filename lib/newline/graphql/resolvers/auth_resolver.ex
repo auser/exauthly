@@ -2,7 +2,6 @@ defmodule Newline.Resolvers.AuthResolver do
   import Newline.Resolvers.BaseResolver
 
   alias Newline.Accounts
-  alias Newline.Accounts.User
 
   @doc """
   Login with a user via email and password

@@ -18,7 +18,7 @@ defmodule Newline.Web.SessionController do
         conn
         |> put_status(400)
         |> render("error.html", error: reason)
-      {:ok, user} ->
+      {:ok, _user} ->
         conn
         |> put_status(:created)
         |> render("show.html")

@@ -13,7 +13,7 @@ defmodule Newline.Policies.UserPolicy do
     @list_actions   [:list]
     @read_actions   [:read]
     @write_actions  [:update, :create]
-    @destroy_actions [:destroy]
+    # @destroy_actions [:destroy]
 
     @doc """
     User permissions

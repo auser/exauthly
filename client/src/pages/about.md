@@ -13,10 +13,19 @@ Said another way, what does this boilerplate give you out of the box?
 * Tested (exauthly was built using test-driven/test-behind development)
 * React/Redux/Apollo front-end
 * Ultra-fast development speed using [FuseBox](http://fuse-box.org/)
-* Protected pages for logged-in users only
+* Protected pages requiring authentication
 * GraphQL out of the box with the fantastic [Absinthe](http://absinthe-graphql.org/)
 * Logical grouping of users through organizations
 * Fine-grained permissions
 * and so much more...
 
-### TODO: Finish this please
+### No frills quickstart
+
+```bash
+git clone github.com:auser/exauthly.git
+cd exauthly && mix deps.get
+(cd client && yarn)
+iex -S mix phx.server
+```
+
+Now, navigate in your browser to the url: [http://localhost:4000](http://localhost:4000). Feel free to play around in the app and come back when you feel comfortable with it. We'll move on to looking deeper at how it runs, how's it's built, and more.

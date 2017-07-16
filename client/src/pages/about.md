@@ -37,3 +37,29 @@ Let's get started on the docs.
 ### Getting started
 
 We'll install exauthly in the usual way, by cloning, grabbing dependencies, compiling the application, and running it.
+
+First, let's clone it in a project directory:
+
+```bash
+git clone github.com:auser/exauthly.git
+```
+
+Let's grab the dependencies using `mix`:
+
+```bash
+cd exauthly && mix deps.get
+```
+
+We'll also install the client-side dependencies:
+
+```bash
+(cd client && yarn)
+## alternatively with npm
+(cd client && npm install)
+```
+
+Finally, we can start the server using `iex`:
+
+```bash
+iex -S mix phx.server
+```

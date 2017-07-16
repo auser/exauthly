@@ -9,10 +9,19 @@ interface Props {}
 export const Home: React.SFC<Props> = (props: any) => {
   return (
     <div className={classnames(props.className, 'home')}>
-      <h4>Home goes here</h4>
+      <div className="jumbotron">
+        <h4>Home goes here</h4>
+      </div>
     </div>
   );
 };
 
 export default styled(CoreLayout(Home))`
+.jumbotron {
+  height: 60vh;
+  text-align: center;
+  background-color: ${props => props.theme.navbarBg};
+  color: white;
+  font-weight: 300;
+}
 `;

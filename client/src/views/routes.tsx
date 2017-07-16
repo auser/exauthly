@@ -11,6 +11,7 @@ import Page from '../hocs/page';
 
 import Home from './Home/Home';
 import About from './About/About';
+import Docs from './Docs/Docs';
 
 // Auth routes
 import Login from './Auth/Login/Login';
@@ -24,6 +25,7 @@ export const Routes = props => {
     <Router {...props}>
       <Switch>
         <Route path="/about" component={About} />
+        <Route exact path="/docs" component={Docs} />
         <Route exact path="/" component={Home} />
 
         <Route path="/login" component={Login} />

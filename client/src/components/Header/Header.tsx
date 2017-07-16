@@ -71,6 +71,9 @@ export const Header: React.SFC<Props> = ({
               <li>
                 <Link to="/about">About</Link>
               </li>
+              <li>
+                <Link to="/docs">Docs</Link>
+              </li>
               {isAuthenticated
                 ? <AuthMenu {...rest} />
                 : <PublicMenu {...rest} />}

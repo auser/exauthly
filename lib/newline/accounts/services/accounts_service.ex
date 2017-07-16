@@ -439,7 +439,7 @@ defmodule Newline.Accounts do
     end
   end
 
-  # TODO: MOVE ME DOWN BELOW
+
   defp user_link_and_signup_social_changeset(provider, params) do
     Multi.new
     |> Multi.insert(:user, User.social_registration_changeset(%User{}, params))

@@ -13,7 +13,6 @@ import styled from 'styled-components';
 const compile = marksy({
   createElement: React.createElement,
   highlight(language, code) {
-    console.log(language, code);
     return hljs.highlight(language, code).value;
   }
 });

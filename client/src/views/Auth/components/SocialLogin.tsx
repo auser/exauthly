@@ -1,9 +1,8 @@
-import * as React from "react";
-import * as classnames from "classnames";
-import { graphql } from 'react-apollo'
+import * as React from 'react';
+import * as classnames from 'classnames';
+import {graphql} from 'react-apollo';
 
-import SOCIAL_LOGIN_MUTATION from '../../../../graphql/social_login';
-import hello from '../../../../lib/hello'
+import SOCIAL_LOGIN_MUTATION from '../../../graphql/social_login';
 
 export class SocialLogin extends React.Component {
   constructor(props) {
@@ -11,28 +10,12 @@ export class SocialLogin extends React.Component {
 
     this.state = {
       msg: ''
-    }
+    };
   }
 
-  componentDidMount() {
-    hello.on('auth', (evt) => {
-      console.log(evt)
-      if (evt.error) {
-        this.setState({
-          msg: evt.error.message
-        })
-      } else {
-        // this.props.tryLogin(evt)
-        // .then(() => this.props.history.replace('/'))
-      }
-    })
-  }
+  componentDidMount() {}
 
-  componentWillUnmount() {
-    if (hello) {
-      hello.off('auth')
-    }
-  }
+  componentWillUnmount() {}
 
   // handleClick = provider => () => {
   //   hello(provider).login({
@@ -64,17 +47,12 @@ export class SocialLogin extends React.Component {
         </div>
         <div className="row">
           <div className="col-xs-4">
-            <a href="/auth/github"
-              className="btn btn-primary">
+            <a href="/auth/github" className="btn btn-primary">
               Github
             </a>
           </div>
-          <div className="col-xs-4">
-            Signup with Gumroad
-          </div>
-          <div className="col-xs-4">
-            Signup with Google
-          </div>
+          <div className="col-xs-4">Signup with Gumroad</div>
+          <div className="col-xs-4">Signup with Google</div>
         </div>
       </div>
     );
@@ -82,9 +60,10 @@ export class SocialLogin extends React.Component {
 }
 
 export default graphql(SOCIAL_LOGIN_MUTATION, {
-  props: ({ ownProps, mutate }) => ({
-    socialLogin: (opts) => mutate({
-      variables: opts
-    })
+  props: ({ownProps, mutate}) => ({
+    socialLogin: opts =>
+      mutate({
+        variables: opts
+      })
   })
-})(SocialLogin)
+})(SocialLogin);

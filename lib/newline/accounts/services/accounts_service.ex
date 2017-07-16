@@ -387,7 +387,7 @@ defmodule Newline.Accounts do
   @doc """
   Social authentication
   """
-  def social_authentication(%{social_account_name: name, social_account_id: user_id}) do
+  def social_authentication(provider, %{social_account_id: user_id}) do
     query = from sa in SocialAccount,
             where: sa.social_account_id == ^user_id and
                    sa.social_account_name == ^name,

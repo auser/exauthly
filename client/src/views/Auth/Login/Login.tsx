@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import LOGIN_MUTATION from '../../../graphql/login';
 
 import LoginForm from '../components/LoginForm';
+import SocialLogin from '../components/SocialLogin';
 
 const LoginView = props =>
   <div
@@ -27,6 +28,9 @@ const LoginView = props =>
             <div className="col-xs-12">
               <LoginForm {...props} />
             </div>
+            <div className="col-xs-12">
+              <SocialLogin {...props} />
+            </div>
           </div>
         </div>
         <div className="panel-footer">
@@ -42,7 +46,8 @@ const LoginView = props =>
 export const Login = CenterLayout(LoginView);
 
 export default styled(Login)`
-background-color: ${props => props.theme.blue};
-border-color: rgb(104, 145, 162);
+background-color: ${props => props.theme.softGrey};
+border-color: ${props => props.theme.blue};
 outline: 0;
+border-radius: 5px;
 `;

@@ -37,18 +37,9 @@ export class LoginForm extends React.Component<Props, State> {
   render() {
     return (
       <Form onSubmit={this.loginSubmit}>
-        <LabelInput
-          field={'email'}
-          type="email"
-          className="col-xs-12"
-          label={'Email'}
-        />
-        <LabelInput
-          field={'password'}
-          type="password"
-          className="col-xs-12"
-          label={'Password'}
-        />
+        <LabelInput field={'email'} type="email" label={'Email'} />
+        <LabelInput field={'password'} type="password" label={'Password'} />
+
         <div className="submit">
           <Submit type="submit" value="Login" className="col-xs-12" />
         </div>

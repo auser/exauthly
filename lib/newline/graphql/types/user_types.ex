@@ -13,7 +13,7 @@ defmodule Newline.Schema.Types.UserTypes do
       resolve fn (user, _, _) ->
         case Newline.Accounts.get_social_account(user, :gumroad) do
           {:error, :not_found} -> {:ok, nil}
-          {:ok, account} -> {:ok, account.social_account_id}
+          {:ok, account} -> {:ok, account.uid}
         end
       end
     end

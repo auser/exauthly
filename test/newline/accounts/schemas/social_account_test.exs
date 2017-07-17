@@ -18,29 +18,29 @@ defmodule Newline.SocialAccountTest do
       assert sa.user != nil
     end
 
-    test "requires social_account_name" do
-      acc = params_with_assocs(:social_account, %{social_account_name: nil})
+    test "requires provider" do
+      acc = params_with_assocs(:social_account, %{provider: nil})
       cs = SocialAccount.changeset(%SocialAccount{}, acc)
       refute cs.valid?
     end
 
-    test "requires social_account_id" do
-      acc = params_with_assocs(:social_account, %{social_account_id: nil})
+    test "requires uid" do
+      acc = params_with_assocs(:social_account, %{uid: nil})
       cs = SocialAccount.changeset(%SocialAccount{}, acc)
       refute cs.valid?
     end
 
     test "cannot create the same social auth network with the same user" do
-      acc = params_with_assocs(:social_account, %{social_account_name: "Facebook"})
+      acc = params_with_assocs(:social_account, %{provider: "Facebook"})
       cs = SocialAccount.changeset(%SocialAccount{}, acc)
       assert cs.valid?
       Repo.insert!(cs)
-      acc = params_for(:social_account, %{social_account_name: "Facebook", user_id: acc[:user_id]})
+      acc = params_for(:social_account, %{provider: "Facebook", user_id: acc[:user_id]})
       cs = SocialAccount.changeset(%SocialAccount{}, acc)
 
       {:error, cs} = Repo.insert(cs)
       refute cs.valid?
-      assert cs.errors[:social_account_name] != nil
+      assert cs.errors[:provider] != nil
     end
 
   end

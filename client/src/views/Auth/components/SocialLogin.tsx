@@ -20,10 +20,10 @@ export class SocialLogin extends React.Component {
   // handleClick = provider => () => {
   //   hello(provider).login({
   //   }).then(({network, authResponse}) => {
-  //     const { social_account_id } = authResponse
+  //     const { uid } = authResponse
   //     this.props.socialLogin({
-  //       social_account_id: social_account_id,
-  //       social_account_name: network,
+  //       uid: uid,
+  //       provider: network,
   //     })
   //     .then(({ data }) => {
   //       const { socialLogin } = data;

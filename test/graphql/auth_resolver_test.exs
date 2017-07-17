@@ -34,20 +34,20 @@ defmodule Newline.AuthResolverTest do
     setup [:create_social_login]
 
     @query """
-    mutation socialLogin($socialAccountId:String!, $socialAccountName:String!) {
-      socialLogin(socialAccountId:$socialAccountId, socialAccountName: $socialAccountName) {
+    mutation socialLogin($uid:String!, $provider:String!) {
+      socialLogin(uid:$uid, provider: $provider) {
         token
       }
     }
     """
 
     test "logs in user with access token", %{social_account: account} do
-      {:ok, %{data: %{"socialLogin" => %{"token" => token}}}} = @query |> run(Newline.Schema, variables: %{"socialAccountId" => account.social_account_id, "socialAccountName" => account.social_account_name})
+      {:ok, %{data: %{"socialLogin" => %{"token" => token}}}} = @query |> run(Newline.Schema, variables: %{"uid" => account.uid, "provider" => account.provider})
       assert token != nil
     end
 
     test "rejects a user without valid access_token" do
-      {:ok, result} = @query |> run(Newline.Schema, variables: %{"socialAccountId" => "nope", "socialAccountName" => "github"})
+      {:ok, result} = @query |> run(Newline.Schema, variables: %{"uid" => "nope", "provider" => "github"})
       {:ok, res} = Map.fetch(result, :errors)
       assert Map.fetch(List.first(res), :message) == {:ok, "In field \"socialLogin\": Invalid token"}
     end

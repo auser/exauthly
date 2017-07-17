@@ -138,7 +138,7 @@ defmodule Newline.AccountsTest do
     setup [:create_social_account_user]
 
     test "logs in user with valid token", %{social_account: account} do
-      {:ok, _} = Accounts.social_authentication(%{social_account_name: account.social_account_name, social_account_id: account.social_account_id})
+      {:ok, _} = Accounts.social_authentication(%{provider: account.provider, uid: account.uid})
     end
   end
 
@@ -196,7 +196,7 @@ defmodule Newline.AccountsTest do
       {:ok, sa} = Accounts.associate_social_account("github", user, sa)
       assert sa.user_id == user.id
       user = user |> Repo.preload(:social_accounts)
-      connected = Enum.map(user.social_accounts, fn(x) -> x.social_account_name end)
+      connected = Enum.map(user.social_accounts, fn(x) -> x.provider end)
       assert connected == ["github"]
     end
   end
@@ -221,8 +221,8 @@ defmodule Newline.AccountsTest do
     test "creates the user and gives the association if there isn't one already" do
       Accounts.user_link_and_signup("gumroad", nil, %{
         "email" => "foo@bar.com",
-        "social_account_id" => "GumroadUserId",
-        "social_account_name" => "gumroad"
+        "uid" => "GumroadUserId",
+        "provider" => "gumroad"
       })
       user = Repo.get_by!(User, email: "foo@bar.com")
       assert user
@@ -233,8 +233,8 @@ defmodule Newline.AccountsTest do
     test "adds a social asscociation if there is a a user", %{user: user} do
       Accounts.user_link_and_signup("gumroad", user.id, %{
         "email" => user.email,
-        "social_account_id" => "GumroadUserId2",
-        "social_account_name" => "gumroad"
+        "uid" => "GumroadUserId2",
+        "provider" => "gumroad"
       })
       user = Repo.get_by!(User, email: user.email)
       assert user
@@ -248,7 +248,7 @@ defmodule Newline.AccountsTest do
 
     test "can get a social account by id" do
       sa = build(:social_account, %{
-        social_account_name: "gumroad",
+        provider: "gumroad",
       }) |> Repo.insert!
       user = sa.user
       {:ok, sa} = Accounts.get_social_account(user, :gumroad)

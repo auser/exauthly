@@ -34,7 +34,7 @@ defmodule Newline.Web.Api.AuthController do
     client = get_token!(provider, code)
 
     {:ok, %OAuth2.Response{body: body}} = get_user!(provider, client)
-    social_account_id = case provider do
+    uid = case provider do
       "github" ->
         %{"id" => user_id} = body
         Integer.to_string(user_id)
@@ -46,8 +46,8 @@ defmodule Newline.Web.Api.AuthController do
 
     params = params
       |> Map.put("email", body["email"])
-      |> Map.put("social_account_id", social_account_id)
-      |> Map.put("social_account_name", provider)
+      |> Map.put("uid", uid)
+      |> Map.put("provider", provider)
       |> Map.put("auth_token", client.token.access_token)
       |> Map.put("refresh_token", client.token.refresh_token)
 
@@ -72,7 +72,7 @@ defmodule Newline.Web.Api.AuthController do
       network: provider,
       display: display,
       scope: scope,
-      social_account_id: social_account_id,
+      uid: uid,
       # state: Poison.encode!(%{
         message: message
       # })
@@ -94,7 +94,7 @@ defmodule Newline.Web.Api.AuthController do
   #   )
   #   user_id = get_session(conn, :user_id)
   #   params = body["user"]
-  #     |> Map.put("social_account_id", body["user"]["user_id"])
+  #     |> Map.put("uid", body["user"]["user_id"])
 
   #   IO.inspect user_id
   #   IO.inspect params

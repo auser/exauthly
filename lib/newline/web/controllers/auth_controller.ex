@@ -32,8 +32,8 @@ defmodule Newline.Web.AuthController do
     IO.inspect auth
     # case
     params = %{
-      "social_account_name" => provider,
-      "social_account_id" => auth["id"]
+      "provider" => provider,
+      "uid" => auth["id"]
     }
     cs = Accounts.user_social_login(params)
     IO.inspect cs

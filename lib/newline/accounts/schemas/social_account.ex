@@ -4,8 +4,8 @@ defmodule Newline.Accounts.SocialAccount do
   alias Newline.Repo
 
   schema "social_accounts" do
-    field :social_account_name, :string
-    field :social_account_id, :string
+    field :provider, :string
+    field :uid, :string
 
     field :auth_token, :string
     field :refresh_token, :string
@@ -24,12 +24,12 @@ defmodule Newline.Accounts.SocialAccount do
     # user = Repo.one()
     struct
     |> Repo.preload(:user)
-    |> cast(params, [:social_account_name, :social_account_id, :auth_token,
+    |> cast(params, [:provider, :uid, :auth_token,
                     :refresh_token, :first_name, :last_name,
                     :email, :login_name, :user_id])
-    |> validate_required([:social_account_name, :social_account_id])
+    |> validate_required([:provider, :uid])
     |> assoc_constraint(:user)
-    |> unique_constraint(:social_account_name, name: :social_account_name_to_user_id_index, message: "has already been associated")
+    |> unique_constraint(:provider, name: :provider_to_user_id_index, message: "has already been associated")
   end
 
   def changeset_from_auth(struct, "github", %Ueberauth.Auth{} = auth) do
@@ -40,8 +40,8 @@ defmodule Newline.Accounts.SocialAccount do
     } = auth
     %{user: user} = raw_info
     params = %{
-      social_account_name: "github",
-      social_account_id: "#{user["id"]}",
+      provider: "github",
+      uid: "#{user["id"]}",
       first_name: name,
       login_name: nickname,
       auth_token: token, refresh_token: refresh_token

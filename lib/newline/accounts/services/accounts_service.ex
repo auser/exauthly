@@ -6,7 +6,7 @@ defmodule Newline.Accounts do
   import Ecto.{Query, Changeset}, warn: false
   alias Ecto.Multi
 
-  alias Newline.Accounts.{User,SocialAccount,Organization}
+  alias Newline.Accounts.{User, SocialAccount, Organization}
   alias Newline.Email
 
   @doc """
@@ -195,7 +195,7 @@ defmodule Newline.Accounts do
   """
   def associate_social_account(provider, user, params) do
     params = params
-      |> Map.put("social_account_name", provider)
+      |> Map.put("provider", provider)
       |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
       |> Enum.into(%{})
 
@@ -215,7 +215,7 @@ defmodule Newline.Accounts do
     query = from sa in SocialAccount,
             where: sa.id == ^"#{id}"
             and sa.user_id == ^user.id
-            and sa.social_account_name == ^provider,
+            and sa.provider == ^provider,
             select: sa
 
     case Repo.one(query) do
@@ -232,7 +232,7 @@ defmodule Newline.Accounts do
   def get_social_account(user, name) when is_atom(name), do: get_social_account(user, to_string(name))
   def get_social_account(user, name) do
     query = from sa in SocialAccount,
-            where: sa.social_account_name == ^name
+            where: sa.provider == ^name
                    and sa.user_id == ^user.id
 
     case Repo.one(query) do
@@ -387,10 +387,10 @@ defmodule Newline.Accounts do
   @doc """
   Social authentication
   """
-  def social_authentication(provider, %{social_account_id: user_id}) do
+  def social_authentication(%{provider: name, uid: user_id}) do
     query = from sa in SocialAccount,
-            where: sa.social_account_id == ^user_id and
-                   sa.social_account_name == ^name,
+            where: sa.uid == ^user_id and
+                   sa.provider == ^name,
             preload: [:user]
     case Repo.one(query) do
       nil -> {:error, "Invalid token"}

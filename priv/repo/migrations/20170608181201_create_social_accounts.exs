@@ -3,8 +3,8 @@ defmodule Newline.Repo.Migrations.CreateSocialAccounts do
 
   def change do
     create table(:social_accounts) do
-      add :social_account_name, :string, null: false
-      add :social_account_id, :string, null: false
+      add :provider, :string, null: false
+      add :uid, :string, null: false
 
       add :auth_token, :string
       add :refresh_token, :string
@@ -19,6 +19,6 @@ defmodule Newline.Repo.Migrations.CreateSocialAccounts do
       timestamps()
     end
 
-    create index(:social_accounts, [:social_account_name, :user_id], name: :social_account_name_to_user_id_index, unique: true)
+    create index(:social_accounts, [:provider, :user_id], name: :provider_to_user_id_index, unique: true)
   end
 end

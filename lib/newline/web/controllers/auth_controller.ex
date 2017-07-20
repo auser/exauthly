@@ -35,6 +35,7 @@ defmodule Newline.Web.AuthController do
       "provider" => provider,
       "uid" => auth["id"]
     }
+    Accounts.social_user_link_and_signup(provider, nil, params)
     # cs = Accounts.user_link_and_signup(params)
     # IO.inspect cs
       # {:ok, account} ->

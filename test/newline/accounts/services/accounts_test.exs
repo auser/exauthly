@@ -3,7 +3,7 @@ defmodule Newline.AccountsTest do
 
   import Newline.Factory
   alias Newline.Accounts
-  alias Newline.Accounts.{User, OrganizationService}
+  alias Newline.Accounts.{User, OrganizationService, SocialAccount}
 
   setup do
     {:ok, valid_user: build(:user)}
@@ -216,6 +216,38 @@ defmodule Newline.AccountsTest do
     end
   end
 
+  describe "social_user_link_and_signup/2" do
+    setup [:create_user]
+
+    test "finds an existing user and links a social account", %{user: user} do
+      auth = create_auth_from_user(user)
+      before_users = user_count()
+      before_auth  = authorization_count()
+      {:ok, account} = Accounts.social_user_link_and_signup("github", auth, %{})
+      assert account.email == user.email
+
+      account = Repo.get(SocialAccount, account.id) |> Repo.preload(:user)
+      assert account.email == user.email
+      assert account.user.id == user.id
+      assert user_count() == before_users
+      assert authorization_count() == before_auth + 1
+    end
+
+    test "creates a new user and links their social account" do
+      email = "ari+23@fullstack.io"
+      auth = create_auth_from_user(%{email: email, name: "Ari", provider: "github"})
+      before_users = user_count()
+      before_auth  = authorization_count()
+      {:ok, account} = Accounts.social_user_link_and_signup("github", auth, %{})
+      assert account.email == email
+
+      account = Repo.get(SocialAccount, account.id) |> Repo.preload(:user)
+      assert account.email == email
+      assert user_count() == before_users + 1
+      assert authorization_count() == before_auth + 1
+    end
+  end
+
   describe "user_link_and_signup/3" do
     setup [:create_user]
     test "creates the user and gives the association if there isn't one already" do
@@ -288,5 +320,25 @@ defmodule Newline.AccountsTest do
     org = build(:organization) |> Repo.insert!
     context
     |> Map.put(:org, org)
+  end
+
+  def user_count, do: Repo.one(from u in User, select: count(u.id))
+  def authorization_count, do: Repo.one(from a in SocialAccount, select: count(a.id))
+
+
+  defp create_auth_from_user(user) do
+    %Ueberauth.Auth{
+      uid: "uid",
+      provider: "github",
+      info: %Ueberauth.Auth.Info{
+        name: user.name,
+        email: user.email
+      },
+      credentials: %Ueberauth.Auth.Credentials{
+        token: "a-token",
+        refresh_token: "a-refresh-token",
+        expires_at: Guardian.Utils.timestamp + 1000
+      }
+    }
   end
 end

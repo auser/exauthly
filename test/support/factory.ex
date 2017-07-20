@@ -17,7 +17,7 @@ defmodule Newline.Factory do
 
   def social_account_factory do
     %Newline.Accounts.SocialAccount{
-      provider: "Github",
+      provider: "github",
       uid: "some_github_id",
       auth_token: sequence(:token, &"SomeAuthToken-#{&1}"),
       first_name: "Ari",

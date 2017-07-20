@@ -169,15 +169,31 @@ defmodule Newline.Accounts do
   end
 
   @doc """
+  Find a user/create a user and link the social account
+  """
+  def social_user_link_and_signup(provider, auth, params) do
+    email = auth.info.email
+    user = Repo.get_by(User, email: email)
+    params = params
+    |> Map.put("uid", auth.uid)
+    |> Map.put("email", email)
+    |> Map.put("name", name_from_auth(auth))
+    |> Map.put("provider", provider)
+
+    user_link_and_signup(provider, user && user.id, params)
+  end
+
+  @doc """
   args: provider, user, params
   Chooses create or update for the user
   """
   def user_link_and_signup(provider, nil, params) do
     # user_changeset = %User{} |> User.registration_changeset(params)
+    params = params |> Map.put("provider", provider)
     case Repo.transaction(user_link_and_signup_social_changeset(provider, params)) do
       {:error, _failed_op, cs, _changes} ->
         {:error, cs}
-      {:ok, %{social_account: social_account}} ->
+      {:ok, %{associate_social_account: social_account}} ->
         {:ok, social_account}
     end
   end
@@ -193,19 +209,30 @@ defmodule Newline.Accounts do
   @doc """
   Associate a social account to the user
   """
+  @spec associate_social_account(String.t, User.t, Map.t) :: {:ok, SocialAccount.t} | {:error, String.t}
   def associate_social_account(provider, user, params) do
-    params = params
-      |> Map.put("provider", provider)
-      |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
-      |> Enum.into(%{})
+    # params = params
+    #   |> Map.put("provider", provider)
+    #   |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
+    #   |> Enum.into(%{})
+
+    query = from sa in SocialAccount,
+        where: sa.user_id == ^user.id
+              and sa.provider == ^provider,
+        select: sa
 
     cs = user |> User.social_account_changeset(params)
-    case Repo.transaction(run_associate_account(cs)) do
-      {:error, _op, failed_cs, _changes} ->
-        {:error, failed_cs}
-      {:ok, %{social_account: social_account}} ->
-        {:ok, social_account}
+    if !Repo.one(query) do
+      cs |> Repo.insert
+    else
+      cs |> Repo.update
     end
+    # case cs do
+    #   {:error, reason} ->
+    #     {:error, reason}
+    #   {:ok, social_account} ->
+    #     {:ok, social_account}
+    # end
   end
 
   @doc """
@@ -240,6 +267,16 @@ defmodule Newline.Accounts do
         {:error, :not_found}
       sa ->
         {:ok, sa}
+    end
+  end
+
+  defp name_from_auth(auth) do
+    if auth.info.name do
+      auth.info.name
+    else
+      [auth.info.first_name, auth.info.last_name]
+      |> Enum.filter(&(&1 != nil and String.strip(&1) != ""))
+      |> Enum.join(" ")
     end
   end
 
@@ -444,7 +481,7 @@ defmodule Newline.Accounts do
     Multi.new
     |> Multi.insert(:user, User.social_registration_changeset(%User{}, params))
     # |> Multi.insert(:social_account, social_params(provider, params))
-    |> Multi.insert(:social_account, SocialAccount.changeset(%SocialAccount{}, params))
+    # |> Multi.insert(:social_account, SocialAccount.changeset(%SocialAccount{}, params))
     |> Multi.run(:associate_social_account, &(associate_social_account(provider, &1[:user], params)))
   end
 

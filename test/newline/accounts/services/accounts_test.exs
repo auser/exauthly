@@ -127,10 +127,16 @@ defmodule Newline.AccountsTest do
       assert logged_in.id == user.id
     end
 
-    test "with invalid creds returns error" do
-      invalid_creds = %{"email" => "no@me.com", "password" => "abc123"}
+    test "with invalid creds returns error without an error", %{user: user} do
+      invalid_creds = %{"email" => user.email, "password" => "abc123"}
       {:error, reason} = Accounts.user_login(invalid_creds)
       assert reason == "Your password does not match with the password we have on record"
+    end
+
+    test "with invalid creds returns not found" do
+      invalid_creds = %{"email" => "no@me.com", "password" => "abc123"}
+      {:error, reason} = Accounts.user_login(invalid_creds)
+      assert reason == "No user found"
     end
   end
 

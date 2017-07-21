@@ -29,7 +29,7 @@ const LoginView = props =>
               <LoginForm {...props} />
             </div>
             <div className="col-xs-12">
-              <SocialLogin {...props} />
+              {/* <SocialLogin {...props} /> */}
             </div>
           </div>
         </div>

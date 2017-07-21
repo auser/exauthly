@@ -414,11 +414,15 @@ defmodule Newline.Accounts do
   def authenticate(%{"email" => email, "password" => password}) do
     user = Repo.get_by(Newline.Accounts.User, email: String.downcase(email))
 
-    case check_password(user, password) do
-      true -> {:ok, user}
+    case user do
+      nil -> {:error, "No user found"}
       _ ->
-        {:error, "Your password does not match with the password we have on record"}
-    end
+        case check_password(user, password) do
+          true -> {:ok, user}
+          _ ->
+            {:error, "Your password does not match with the password we have on record"}
+        end
+      end
   end
 
   @doc """

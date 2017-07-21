@@ -28,6 +28,7 @@ export class LoginForm extends React.Component<Props, State> {
         console.log(resp);
       })
       .catch(err => {
+        console.log(err, fields);
         this.setState({
           errors: [err]
         });

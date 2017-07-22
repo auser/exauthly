@@ -7,6 +7,8 @@ import './Header.scss';
 import AuthMenu from './AuthMenu';
 import PublicMenu from './PublicMenu';
 
+import auth from '../../lib/auth';
+
 import styled from 'styled-components';
 
 interface Props {
@@ -74,7 +76,7 @@ export const Header: React.SFC<Props> = ({
               <li>
                 <Link to="/docs">Docs</Link>
               </li>
-              {isAuthenticated
+              {auth.isAuthenticated()
                 ? <AuthMenu {...rest} />
                 : <PublicMenu {...rest} />}
             </ul>

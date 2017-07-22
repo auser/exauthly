@@ -11,7 +11,9 @@ import {Form, LabelInput, Submit} from '../../../components/Form';
 interface State {
   errors: string[];
 }
-interface Props {}
+interface Props {
+  onSubmit: Function;
+}
 
 export class LoginForm extends React.Component<Props, State> {
   constructor(props) {
@@ -24,9 +26,7 @@ export class LoginForm extends React.Component<Props, State> {
   loginSubmit = fields => {
     this.props
       .login({variables: fields})
-      .then(resp => {
-        console.log(resp);
-      })
+      .then(resp => this.props.onSubmit(resp.data.login))
       .catch(err => {
         console.log(err, fields);
         this.setState({

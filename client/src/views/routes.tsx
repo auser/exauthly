@@ -16,6 +16,7 @@ import Docs from './Docs/Docs';
 // Auth routes
 import Login from './Auth/Login/Login';
 import Signup from './Auth/Signup/Signup';
+import Logout from './Auth/Logout/Logout';
 
 // import PublicRoutes from './public/routes'
 // import ProtectedRoutes from './protected/routes'
@@ -30,6 +31,7 @@ export const Routes = props => {
 
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
+        <Route path="/logout" component={Logout} />
         <Redirect to="/" />
       </Switch>
     </Router>

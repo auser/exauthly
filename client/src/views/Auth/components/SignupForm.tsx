@@ -27,7 +27,7 @@ export class SignupForm extends React.Component<Props, State> {
         const {token} = resp.data.signupWithEmailAndPassword;
         console.log('resp --->', token);
       })
-      // .then(() => this.props.history.replace('/'))
+      .then(() => this.props.history.replace('/'))
       .catch(err => {
         this.setState({
           errors: err

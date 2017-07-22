@@ -13,7 +13,10 @@ export const theme = {
   softYellow: 'rgba(250, 255, 189, 0.800)',
   dark: 'rgba(0, 0, 0, 1.000)',
 
-  softGrey: 'rgba(242, 242, 242, 1.000)'
+  softGrey: 'rgba(242, 242, 242, 1.000)',
+
+  smallScreen: '440px',
+  sidebarWidth: '220px'
 };
 
 export default theme;

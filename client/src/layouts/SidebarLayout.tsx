@@ -2,9 +2,17 @@ import * as React from 'react';
 
 import styled from 'styled-components';
 
+import Sidebar from '../components/Sidebar/Sidebar';
+
 interface Props {
   className: string;
 }
+
+const items = [
+  {id: 1, label: 'Profile', to: '/account'},
+  {id: 2, label: 'Billing', to: '/account/billing'},
+  {id: 3, label: 'Organizations', to: '/account/organizations'}
+];
 
 export const SidebarLayout = (Wrapped: React.SFC<Props>) => {
   const SidebarWrapper = props => {
@@ -14,35 +22,11 @@ export const SidebarLayout = (Wrapped: React.SFC<Props>) => {
           <div className="container-fluid">
             <div className="row">
               <div className="col-sm-4" id="left">
-                <div className="">
-                  <li>
-                    <a href="#/milestones">Milestones --»</a>
-                  </li>
-                </div>
+                <Sidebar items={items} {...props} />
               </div>
               <div className="col-sm-8" id="right">
-                <div className="panel-body">
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
-                  <h1>hello</h1>
+                <div className="row">
+                  <Wrapped {...props} />
                 </div>
               </div>
             </div>
@@ -53,9 +37,6 @@ export const SidebarLayout = (Wrapped: React.SFC<Props>) => {
   };
 
   return styled(SidebarWrapper)`
-  margin: 0;
-  // overflow: hidden;
-  height:100%;
 
   @media (min-width: ${props => props.theme.smallScreen}){
     #left {
@@ -78,15 +59,13 @@ export const SidebarLayout = (Wrapped: React.SFC<Props>) => {
   }
 
   #left {
-    background-color: #FC6E51;
-    text-align: center;
+    background-color: #FFFFFF;
     height:100%;
   }
 
   #right {
     height:100%;
-    background-color: #4FC1E9;
-    text-align: center;
+    background-color: ${props => props.theme.softGrey};
   }
   `;
 };

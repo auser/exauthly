@@ -18,7 +18,10 @@ import Login from './Auth/Login/Login';
 import Signup from './Auth/Signup/Signup';
 import Logout from './Auth/Logout/Logout';
 
+// Accounts
 import AccountProfile from './Account/Profile';
+import AccountBilling from './Account/Billing';
+import AccountOrgs from './Account/Organizations';
 
 // import PublicRoutes from './public/routes'
 // import ProtectedRoutes from './protected/routes'
@@ -38,6 +41,8 @@ export const Routes = props => {
         <Route path="/logout" component={Logout} />
 
         {/* Account routes  */}
+        <Route path="/account/organizations" component={AccountOrgs} />
+        <Route path="/account/billing" component={AccountBilling} />
         <Route path="/account" component={AccountProfile} />
 
         <Redirect to="/" />

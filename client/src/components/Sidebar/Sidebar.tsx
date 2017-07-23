@@ -2,13 +2,11 @@ import * as React from 'react';
 import * as classnames from 'classnames';
 import {Link} from 'react-router-dom';
 
-import * as styled from 'styled-components';
+import styled from 'styled-components';
 
 interface Props {
   className: string;
   items: any[];
-  topItems: any[];
-  bottomItems: any[];
   location: any;
 }
 
@@ -23,27 +21,14 @@ const SidebarLink: React.SFC = ({to, id, label, location}) =>
     {label}
   </Link>;
 
-export const Sidebar: React.SFC<Props> = ({
-  className,
-  topItems,
-  bottomItems,
-  location
-}) => {
+export const Sidebar: React.SFC<Props> = ({className, items, location}) => {
   console.log(location);
   return (
     <div className={className}>
-      <section>
-        {topItems &&
-          topItems.map(item => {
-            return <SidebarLink {...item} location={location} />;
-          })}
-      </section>
-      <section>
-        {bottomItems &&
-          bottomItems.map(item => {
-            return <SidebarLink {...item} location={location} />;
-          })}
-      </section>
+      {items &&
+        items.map(item => {
+          return <SidebarLink key={item.id} {...item} location={location} />;
+        })}
     </div>
   );
 };

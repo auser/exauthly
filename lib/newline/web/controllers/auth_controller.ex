@@ -33,9 +33,19 @@ defmodule Newline.Web.AuthController do
     # case
     params = %{
       "provider" => provider,
-      "uid" => auth["id"]
+      "uid" => auth.uid
     }
-    Accounts.social_user_link_and_signup(provider, nil, params)
+    case Accounts.social_user_link_and_signup(provider, auth, params) do
+      {:ok, social_account} ->
+        redirect_to = %{auth_token: social_account.auth_token}
+        |> URI.encode_query
+        IO.inspect redirect_to
+        conn
+        |> redirect(to: "/?" <> redirect_to)
+      _ ->
+        conn
+        |> redirect(to: "/")
+    end
     # cs = Accounts.user_link_and_signup(params)
     # IO.inspect cs
       # {:ok, account} ->

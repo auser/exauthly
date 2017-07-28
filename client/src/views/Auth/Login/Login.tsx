@@ -41,7 +41,7 @@ const LoginView = props => {
                 <LoginForm onSubmit={handleSubmit} {...props} />
               </div>
               <div className="col-xs-12">
-                {/* <SocialLogin {...props} /> */}
+                {<SocialLogin {...props} />}
               </div>
             </div>
           </div>

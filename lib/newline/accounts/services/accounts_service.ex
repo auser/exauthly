@@ -174,13 +174,8 @@ defmodule Newline.Accounts do
   def social_user_link_and_signup(provider, auth, params) do
     email = auth.info.email
     user = Repo.get_by(User, email: email)
-    params = params
-    |> Map.put("uid", auth.uid)
-    |> Map.put("email", email)
-    |> Map.put("name", name_from_auth(auth))
-    |> Map.put("provider", provider)
 
-    user_link_and_signup(provider, user && user.id, params)
+    user_link_and_signup(provider, user && user.id, auth)
   end
 
   @doc """
@@ -197,42 +192,35 @@ defmodule Newline.Accounts do
         {:ok, social_account}
     end
   end
-  def user_link_and_signup(provider, user_id, params) do
+  def user_link_and_signup(provider, user_id, auth) do
     case Repo.get(User, user_id) do
       {:error, _reason} ->
         {:error, "User does not exist"}
       user ->
-        associate_social_account(provider, user, params)
-    end
+        associate_social_account(provider, user, auth)
+      end
   end
 
   @doc """
   Associate a social account to the user
   """
   @spec associate_social_account(String.t, User.t, Map.t) :: {:ok, SocialAccount.t} | {:error, String.t}
-  def associate_social_account(provider, user, params) do
-    # params = params
-    #   |> Map.put("provider", provider)
-    #   |> Enum.map(fn {k, v} -> {String.to_atom(k), v} end)
-    #   |> Enum.into(%{})
-
+  def associate_social_account(provider, user, auth) do
     query = from sa in SocialAccount,
         where: sa.user_id == ^user.id
               and sa.provider == ^provider,
         select: sa
 
-    cs = user |> User.social_account_changeset(params)
-    if !Repo.one(query) do
-      cs |> Repo.insert
-    else
-      cs |> Repo.update
+    case Repo.one(query) do
+      nil ->
+        %SocialAccount{}
+        |> SocialAccount.changeset_from_auth(provider, auth, user)
+        |> Repo.insert
+      sa ->
+        sa
+        |> SocialAccount.changeset_from_auth(provider, auth, user)
+        |> Repo.update
     end
-    # case cs do
-    #   {:error, reason} ->
-    #     {:error, reason}
-    #   {:ok, social_account} ->
-    #     {:ok, social_account}
-    # end
   end
 
   @doc """

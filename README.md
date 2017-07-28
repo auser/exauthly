@@ -37,6 +37,5 @@ Exauthly is intended on being 100% tested and written using TDD or TBD. To execu
 ```bash
 MIX_ENV=test mix deps.get
 MIX_ENV=test mix do ecto.drop, ecto.setup
-mix tests
+mix test
 ```
-

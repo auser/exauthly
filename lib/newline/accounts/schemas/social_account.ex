@@ -22,34 +22,37 @@ defmodule Newline.Accounts.SocialAccount do
 
   def changeset(struct, params \\ %{}) do
     # user = Repo.one()
-    struct
-    |> Repo.preload(:user)
+    cs = struct
     |> cast(params, [:provider, :uid, :auth_token,
                     :refresh_token, :first_name, :last_name,
                     :email, :login_name, :user_id])
     |> validate_required([:provider, :uid])
     |> assoc_constraint(:user)
     |> unique_constraint(:provider, name: :provider_to_user_id_index, message: "has already been associated")
+    IO.puts "cs in changeset"
+    IO.inspect cs
   end
 
-  def changeset_from_auth(struct, "github", %Ueberauth.Auth{} = auth) do
+  def changeset_from_auth(struct, "github", %Ueberauth.Auth{} = auth, user) do
     %{
-      extra: %Ueberauth.Auth.Extra{raw_info: raw_info} = user,
+      uid: uid,
       info: %Ueberauth.Auth.Info{name: name, email: email, nickname: nickname},
       credentials: %Ueberauth.Auth.Credentials{token: token, refresh_token: refresh_token}
     } = auth
-    %{user: user} = raw_info
     params = %{
       provider: "github",
-      uid: "#{user["id"]}",
+      uid: uid,
       first_name: name,
       login_name: nickname,
-      auth_token: token, refresh_token: refresh_token
+      auth_token: token,
+      refresh_token: refresh_token,
+      user_id: user.id
     }
+    IO.inspect params
     struct
     |> __MODULE__.changeset(params)
   end
 
-  def changeset_from_auth(_, _, _), do: {:error, :not_handled}
+  def changeset_from_auth(_, _, _, _), do: {:error, :not_handled}
 
 end

@@ -80,7 +80,14 @@ defmodule Newline.Accounts do
     end
   end
 
-  def user_social_login(params, login_claims \\ %{}) do
+  def user_social_login(account, login_claims \\ %{})
+  def user_social_login(%SocialAccount{} = social_account, login_claims) do
+    sa = social_account |> Repo.preload(:user)
+    user = sa.user
+    {:ok, jwt, _claims} = sign_in_user(:token, user, login_claims)
+    {:ok, Map.put(user, :token, jwt)}
+  end
+  def user_social_login(params, login_claims) do
     case social_authentication(params) do
       {:error, reason} -> {:error, reason}
       {:ok, user} ->
@@ -171,7 +178,7 @@ defmodule Newline.Accounts do
   @doc """
   Find a user/create a user and link the social account
   """
-  def social_user_link_and_signup(provider, auth, params) do
+  def social_user_link_and_signup(provider, auth) do
     email = auth.info.email
     user = Repo.get_by(User, email: email)
 
@@ -182,10 +189,12 @@ defmodule Newline.Accounts do
   args: provider, user, params
   Chooses create or update for the user
   """
-  def user_link_and_signup(provider, nil, params) do
+  def user_link_and_signup(provider, nil, auth) do
     # user_changeset = %User{} |> User.registration_changeset(params)
-    params = params |> Map.put("provider", provider)
-    case Repo.transaction(user_link_and_signup_social_changeset(provider, params)) do
+    params = SocialAccount.params_from_ueberauth(provider, auth, nil)
+    case Repo.transaction(
+      user_link_and_signup_social_changeset(provider, params)
+    ) do
       {:error, _failed_op, cs, _changes} ->
         {:error, cs}
       {:ok, %{associate_social_account: social_account}} ->
@@ -204,7 +213,11 @@ defmodule Newline.Accounts do
   @doc """
   Associate a social account to the user
   """
-  @spec associate_social_account(String.t, User.t, Map.t) :: {:ok, SocialAccount.t} | {:error, String.t}
+  def associate_social_account(provider, user, %SocialAccount{} = sa) do
+    sa
+    |> SocialAccount.changeset_for_association(provider, user)
+    |> Repo.update
+  end
   def associate_social_account(provider, user, auth) do
     query = from sa in SocialAccount,
         where: sa.user_id == ^user.id
@@ -472,9 +485,10 @@ defmodule Newline.Accounts do
   defp user_link_and_signup_social_changeset(provider, params) do
     Multi.new
     |> Multi.insert(:user, User.social_registration_changeset(%User{}, params))
+    |> Multi.insert(:social_account, SocialAccount.changeset(%SocialAccount{}, params))
     # |> Multi.insert(:social_account, social_params(provider, params))
     # |> Multi.insert(:social_account, SocialAccount.changeset(%SocialAccount{}, params))
-    |> Multi.run(:associate_social_account, &(associate_social_account(provider, &1[:user], params)))
+    |> Multi.run(:associate_social_account, &(associate_social_account(provider, &1[:user], &1[:social_account])))
   end
 
 end

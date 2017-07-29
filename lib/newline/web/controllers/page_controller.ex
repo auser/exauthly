@@ -2,6 +2,7 @@ defmodule Newline.Web.PageController do
   use Newline.Web, :controller
 
   def index(conn, _params) do
-    render conn, "index.html"
+    conn
+    |> render("index.html", token: Guardian.Plug.current_token(conn))
   end
 end

@@ -1,6 +1,10 @@
 defmodule Newline.Web.LayoutView do
   use Newline.Web, :view
 
+  def auth_tag(conn) do
+    ~s(<script type="text/javascript">window.__TOKEN__ = '#{conn.assigns[:token]}'</script>)
+  end
+
   def js_script_tag(conn) do
     if Mix.env == :prod do
       ~s(<script src="/js/app.js"></script>)

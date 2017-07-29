@@ -53,7 +53,7 @@ defmodule Newline.Accounts.User do
     |> put_token(:verify_token)
   end
 
-    def social_registration_changeset(user, attrs) do
+  def social_registration_changeset(user, attrs) do
     user
     |> user_changeset(attrs)
     |> generate_encrypted_password

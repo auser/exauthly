@@ -30,18 +30,16 @@ defmodule Newline.Web.AuthController do
 
   def callback(%{assigns: %{ueberauth_auth: auth}} = conn, %{"provider" => provider} = _params) do
     IO.inspect auth
-    # case
-    params = %{
-      "provider" => provider,
-      "uid" => auth.uid
-    }
-    case Accounts.social_user_link_and_signup(provider, auth, params) do
+
+    case Accounts.social_user_link_and_signup(provider, auth) do
       {:ok, social_account} ->
-        redirect_to = %{auth_token: social_account.auth_token}
-        |> URI.encode_query
-        IO.inspect redirect_to
+        {:ok, user} = Accounts.user_social_login(social_account)
+        # redirect_to = %{auth_token: social_account.auth_token}
+        # |> URI.encode_query
+        # IO.inspect redirect_to
         conn
-        |> redirect(to: "/?" <> redirect_to)
+        |> Guardian.Plug.sign_in(user)
+        |> redirect(to: "/")
       _ ->
         conn
         |> redirect(to: "/")

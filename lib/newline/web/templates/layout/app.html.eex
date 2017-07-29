@@ -12,6 +12,7 @@
     <%= {:safe, css_link_tag(@conn) } %>
     <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,400i,700" rel="stylesheet">
 
+    <%= {:safe, auth_tag(@conn)} %>
   </head>
 
   <body>

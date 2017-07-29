@@ -196,8 +196,7 @@ defmodule Newline.AccountsTest do
     setup [:create_user]
 
     test "associates github to the social account and user", %{user: user} do
-      sa = params_for(:social_account)
-      |> Enum.reduce(%{}, fn ({key, val}, acc) -> Map.put(acc, to_string(key), val) end)
+      sa = build(:social_account) |> Repo.insert!
 
       {:ok, sa} = Accounts.associate_social_account("github", user, sa)
       assert sa.user_id == user.id
@@ -211,9 +210,9 @@ defmodule Newline.AccountsTest do
     setup [:create_user]
 
     test "deletes the social account", %{user: user} do
-      sa = params_for(:social_account)
-      |> Enum.reduce(%{}, fn ({key, val}, acc) -> Map.put(acc, to_string(key), val) end)
-      {:ok, sa} = Accounts.associate_social_account("github", user, sa)
+      build(:social_account, %{provider: "github", user: user}) |> Repo.insert!
+      auth = create_auth_from_user(user)
+      {:ok, sa} = Accounts.associate_social_account("github", user, auth)
 
       Accounts.disassociate_social_account("github", user, sa.id)
       user = Repo.get(User, user.id)
@@ -229,7 +228,7 @@ defmodule Newline.AccountsTest do
       auth = create_auth_from_user(user)
       before_users = user_count()
       before_auth  = authorization_count()
-      {:ok, account} = Accounts.social_user_link_and_signup("github", auth, %{})
+      {:ok, account} = Accounts.social_user_link_and_signup("github", auth)
       assert account.email == user.email
 
       account = Repo.get(SocialAccount, account.id) |> Repo.preload(:user)
@@ -244,7 +243,7 @@ defmodule Newline.AccountsTest do
       auth = create_auth_from_user(%{email: email, name: "Ari", provider: "github"})
       before_users = user_count()
       before_auth  = authorization_count()
-      {:ok, account} = Accounts.social_user_link_and_signup("github", auth, %{})
+      {:ok, account} = Accounts.social_user_link_and_signup("github", auth)
       assert account.email == email
 
       account = Repo.get(SocialAccount, account.id) |> Repo.preload(:user)
@@ -257,23 +256,20 @@ defmodule Newline.AccountsTest do
   describe "user_link_and_signup/3" do
     setup [:create_user]
     test "creates the user and gives the association if there isn't one already" do
-      Accounts.user_link_and_signup("gumroad", nil, %{
-        "email" => "foo@bar.com",
-        "uid" => "GumroadUserId",
-        "provider" => "gumroad"
-      })
-      user = Repo.get_by!(User, email: "foo@bar.com")
+      user = build(:user)
+      auth = create_auth_from_user(user)
+
+      Accounts.user_link_and_signup("github", nil, auth)
+
+      user = Repo.get_by!(User, email: user.email)
       assert user
       user = Repo.preload(user, :social_accounts)
       assert length(user.social_accounts) == 1
     end
 
     test "adds a social asscociation if there is a a user", %{user: user} do
-      Accounts.user_link_and_signup("gumroad", user.id, %{
-        "email" => user.email,
-        "uid" => "GumroadUserId2",
-        "provider" => "gumroad"
-      })
+      auth = create_auth_from_user(user)
+      Accounts.user_link_and_signup("github", user.id, auth)
       user = Repo.get_by!(User, email: user.email)
       assert user
       user = Repo.preload(user, :social_accounts)
@@ -284,12 +280,12 @@ defmodule Newline.AccountsTest do
   describe "get_social_account/2" do
     setup [:create_user]
 
-    test "can get a social account by id" do
-      sa = build(:social_account, %{
-        provider: "gumroad",
+    test "can get a social account by id", %{user: user} do
+      build(:social_account, %{
+        provider: "github",
+        user: user
       }) |> Repo.insert!
-      user = sa.user
-      {:ok, sa} = Accounts.get_social_account(user, :gumroad)
+      {:ok, sa} = Accounts.get_social_account(user, :github)
       assert sa != nil
       assert sa.user_id == user.id
     end
